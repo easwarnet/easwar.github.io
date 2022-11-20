@@ -1,0 +1,30 @@
+############
+Easwarnet
+############
+
+Welcome
+
+
+*************
+Index
+*************
+
+Index
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Resume
+
+   Introduction <components/resume/resume.md>
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: chapter2
+
+   Introduction <components/resume/resume.md>
+   components/resume/resume.md
+   components/resume/resume.md
+
+
