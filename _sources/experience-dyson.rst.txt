@@ -1,0 +1,42 @@
+Experience: Dyson
+======================
+
+Dyson, Bristol, United Kingdom
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Senior Software Engineer, Sep 2021 - Present
++++++++++++++++++++++++++++++++++++++++++++++
+**About:**
+
+Dyson is a technology company based in UK/Singapore that designs and 
+manufactures Commerical appliances such as robotic vaccum cleaners, 
+vacuum cleaners, hand dryers, bladeless fans and heaters. Was part of 
+the Design team that Robotics Software Development.
+
+**General Responsibilities:**
+
+• Worked within the cross functional Agile scrum team with the responsibility 
+  to Develop and Test Software.
+
+• Responsible for development of Platform Applications, Bugfixes, Cpp Unittest 
+  and Pytest based component tests.
+  
+**Project: Robotics Vacuum Cleaner**
+
++----------------+--------------------------------------------------------------------------------+
+| Platform:      | Intel, Linux                                                                   |
++----------------+--------------------------------------------------------------------------------+
+| Environment:   | Ubuntu, Docker                                                                 |
++----------------+--------------------------------------------------------------------------------+
+| Skills & Tools:| C++/C, Python, Pytest, mqtt                                                    |
++----------------+--------------------------------------------------------------------------------+
+
+**Technical Responsibilities:**
+
+• Responsible for development of Platform Applications for Connectivity, 
+  MQTT, Network Manager. Implementation of Unittest and Pytest based 
+  Component tests.
+
+• Implementation of Platform Applications using C++. Implementation of 
+  functional tests using pytest Framework.
+
+

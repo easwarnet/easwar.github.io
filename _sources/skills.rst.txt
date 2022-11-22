@@ -1,0 +1,22 @@
+Technical Skills
+======================
+
+**Core Skills:**
+Languages: ``C, C++, Java (Android), Python(pytest)`` 
+OS: ``Linux, Android`` 
+
+**Software:**
+Frameworks: ``Android Frameworks, Gstreamer, POSIX, Sockets``
+Protocols: ``VSOMEIP, mqtt``; Serializations: ``JSON``
+Software Tools: ``GDB``
+IDE: ``Vscode, Android Studio``
+Environment: ``Ubuntu, Docker``
+Build Environment: ``AOSP``
+Test Framework: ``Pytest, Google Unittest``
+
+**Software Process, Tools and Standards:**
+Tools: ``Gerrit, Jira, Confluence``
+Version Control: ``Git`` 
+Process: ``Agile-Scrum``
+
+

@@ -1,0 +1,63 @@
+Experience: Sanmina
+======================
+Sanmina Technologies, Chennai, India
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Senior Software Engineer, Sep 2021 - Present
++++++++++++++++++++++++++++++++++++++++++++++
+**About:**
+
+Sanmina is a 7 Billion dollar, diversified, Fortune 500 company, spread across 
+42 locations in 18 countries. Sanmina Technologies - India Design Centre is 
+located in Chennai with focus on Embedded Services. The Design Center has a rich 
+competence in Automotive, Medical and Memory & Storage Devices. 
+Was part of Automotive team that was responsible for development of Infotainment 
+and RearSeat Entertainment Unit.
+
+**Responsibilities:**
+
+• Worked as part of development center that handled Automotive Services
+• Worked within the cross functional Agile scrum team as Software developer with 
+  the responsibility to Design, Develop and Test Software. Participated in Design 
+  review, Root Cause Analysis and fixing Bugs.
+• Responsible for Design, Implementation of Software Modules in Application, Middlewares.
+• Involved in Software Requirement Understanding, Design using UML, Static Code Analysis, 
+  Dynamic Code Analysis, 
+• Responsible for Implementation of Automated Scripts and Unit Testing, Component Testing 
+  and Functional Testing.
+• Involved in meetings with suppliers and stakeholders for technical discussion. Traveled 
+  to the USA, Germany to perform technical activities. Mentor coworkers on technical front, 
+  procedures and standards.
+
+**Project: Infotainment Unit**
+
++----------------+--------------------------------------------------------------------------------+
+| Platform:      | iMX53x, Linux                                                                  |
++----------------+--------------------------------------------------------------------------------+
+| Environment:   | Ubuntu                                                                         |
++----------------+--------------------------------------------------------------------------------+
+| Skills & Tools:| C++, C, Gstreamer, VSOMEIP, GDB, CAN, Sqlite                                   |
++----------------+--------------------------------------------------------------------------------+
+
+**Technical Responsibilities:**
+
+• Implementation of Applications, Middlewares using C++, C, Gstreamer, CommonAPI, VSOMEIP, 
+  SocketCAN, Sqlite in Linux based System
+• Implementation of Climate, Vehicle Functions, HAL and Video Abstraction Library using Gstreamer.
+
+**Project: Android based Headrest Unit – Rear Seat Entertainment**
+
++----------------+--------------------------------------------------------------------------------+
+| Platform:      | Android                                                                        |
++----------------+--------------------------------------------------------------------------------+
+| Environment:   | Linux                                                                          |
++----------------+--------------------------------------------------------------------------------+
+| Skills & Tools:| C++, AOSP, Java, Git, Gstreamer, AOSP, Android, HAL, ADB                       |
++----------------+--------------------------------------------------------------------------------+
+
+**Technical Responsibilities:**
+
+• Implementation of Application, Services, Middleware using C++, Java, Android Frameworks in Android 
+  based system.
+• Implementation of Location Services, Climate Control, Ambience Control and Media Abstraction 
+  Library for Gstreamer.
+

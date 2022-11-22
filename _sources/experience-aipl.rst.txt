@@ -1,0 +1,71 @@
+Experience: AIPL
+======================
+AIPL - Automotive Infotroncs (JV Between Continental AG-Ashok Leyland)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Senior Software Engineer, Jul 2007 - Jan 2011
+++++++++++++++++++++++++++++++++++++++++++++++
+
+**About:**
+
+Automotive Infotronics Private Limited was a Joint Venture of Continental AG and 
+Ashok Leyland Group. Ashok Leyland is one of the world's largest truck and bus manufacturer. 
+Instrument Panel Cluster, Body Control unit and Telematics are some of the Products. 
+Automotive Infotronics Private Limited was later split and merged with 
+Ashok Leyland and ContinentalAG. 
+
+Was part of the team that developed software for Telematics, Navigation & Passenger Information System
+
+**General Responsibilities:**
+
+• Part of a small Embedded team that operated on the Waterfall model.
+• Responsible for Embedded Software Development such as Drivers, Middleware and Application 
+  Development in Microcontrollers and Microprocessors.
+• Responsible for Requirement Analysis, perform low level Design, Implementation and Unit & 
+  Functional Testing.
+• Participated in Design and peer Code reviews. Supported verification team on Automated test scripts.
+• Supported Board Bringup, Porting of U-Boot, Kernel and Rootfs.
+• Experience in working from Scratch development to stable release and deployment.
+  
+**Project: Telematics, Navigation & Passenger Information System**
+
++----------------+------------------------------------------------------------------------------------+
+| Platform:      | 1) Samsung SDK, Linux, Eclipse; 2) Metrowerks; 3) FreeRTOS, Keil; 4) RTX, Keil;    |
++----------------+------------------------------------------------------------------------------------+
+| Environment:   | Ubuntu, Windows, Eclipse, Keil, RTC, Codewarrior, LTIB                             |
++----------------+------------------------------------------------------------------------------------+
+| Skills & Tools:| Languages: C; Frameworks: Posix, Pthreads, DBUS, Socket, IPCs, Queues, FIFOs,      |
++----------------+------------------------------------------------------------------------------------+
+|                | OS: FreeRtos, RTX, Linux, U-Boot;                                                  |
++----------------+------------------------------------------------------------------------------------+
+|                | Lib: Bluez, WPA_Supplicant, AT Commands, fatfs, glib, CUPS, JSON-Parson library,   |
++----------------+------------------------------------------------------------------------------------+
+|                | libusb, lwip, SVN, Debuggers: GDB, Valgrind, Efence, Jtag Debugger, trace32;       |
++----------------+------------------------------------------------------------------------------------+
+|                | Protocols: SPI, I2C, UART, CAN, PCIE;                                              |
++----------------+------------------------------------------------------------------------------------+
+|                | Chipset: S3C2440A, S12XEQ512, LPC1768, LM3S6965, STM32F428;                        |
++----------------+------------------------------------------------------------------------------------+
+|                | IDE: Eclipse, Keil, RTC, Codewarrior, LTIB;                                        |
++----------------+------------------------------------------------------------------------------------+
+|                | Process & Tools: Misra, SVN                                                        |
++----------------+------------------------------------------------------------------------------------+
+
+**Technical Responsibilities:**
+
+• Development of Linux based Embedded Software for High Level Processor that include Application & 
+  Middleware Components using C, Pthreads, Sockets, IPC, Message Queue.
+• Development of Embedded Software for 3 different RTOS based Low Level Processor Modules that include 
+  Application, Middleware and Drivers Components using C, FreeRtos, RTX, Bluez, Message Queue, Sockets.
+• High-Level Module (Microprocessor based Module): Implementation of HALs for RFID Unit, Fuel Level, 
+  Network and Location Services. Implementation of Middlewares for MicroSD Card & Filesystem Handler. 
+  Implementation of Vehicle Functions for RFID based User Authentication, Immobilization, Alerts & 
+  Notifications, Geofence, GPS Route Recorder, Data Logger. U-Boot Driver for PCIE based memory, 
+  CAM Module. Kernel Driver for PWM based Wheel RPM Module.
+• Low-Level Modules (Microcontroller based Modules): Implementation of Middlewares and Low-Level Device 
+  Drivers for I2C, SPI, UART and CAN based GSM/GPRS/GPS Module, RFID, IR, Keypad with Debouncer, LCD, 
+  Memory Devices, RTC and Temperature Sensor. Implementation of Multithreaded Application using 
+  FreeRtos, RTX. Implementation of components such as EEPROM based Persistence, OTA Firmware Upgrade.
+• Implementation of Ethernet based Custom Data Exchange/Key Exchange Protocol/Stack using sockets, 
+  AES-CBC-128, SHA-1, HMAC in Linux/RTX based Subsystem. Implementation of CAN and SocketCAN based 
+  custom protocol.
+  

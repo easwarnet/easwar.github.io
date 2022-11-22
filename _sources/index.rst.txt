@@ -2,29 +2,33 @@
 Easwarnet
 ############
 
-Welcome
 
+About Me
+---------
+Im a Software Developer with 14+ years of experience in Software Development with 
+handson experience in C++/C, Java, Embedded Android, AOSP and Embedded Linux. 
 
-*************
-Index
-*************
-
-Index
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Resume
-
-   Introduction <components/resume/resume.md>
+I'm currently working in Robotics division of Dyson Ltd, writing highlevel 
+platform applications for Networking and Connectivity modules/daemons in Linux Userspace. 
 
 
 .. toctree::
    :maxdepth: 1
-   :caption: chapter2
+   :caption: Profile
 
-   Introduction <components/resume/resume.md>
-   components/resume/resume.md
-   components/resume/resume.md
+   professionalsummary.rst
+   skills.rst
+   experience-dyson.rst
+   experience-volvocars.rst
+   experience-visteon.rst
+   experience-sanmina.rst
+   experience-aipl.rst
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Others
+
+   externallinks.rst
 
 

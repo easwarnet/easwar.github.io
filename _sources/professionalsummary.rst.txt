@@ -1,0 +1,43 @@
+Professional Summary
+======================
+
+- 14+ years of Software development experience using C++, C, Java, 
+  Python and OS such as Android, Linux.
+
+- 5+ years of experience in AOSP, Android Full Stack Development 
+  (Native Application Development, VHAL and Application development). 
+  6+ years of experience in Platform Application Development in Linux 
+  based Systems. 3+ years of experience in Applications, Middleware, 
+  Platform and Drivers in Embedded Systems. 
+
+- 10+ years of experience in Object oriented programming that include 
+  different Design Patterns. 7+ years of experience in C++ that include 
+  Cpp Containers, Std Libraries. 3+ years of experience in Java that 
+  include Android Frameworks. 1 year of experience in Python that include 
+  Pytest. 3+ years of experience in C.
+
+- 12+ Years of Experience in Products such as Infotainment.
+
+- Hands-on experience in Android that includes development of AOSP, 
+  Android App development, Native Applications, Android Services using C++, 
+  Java, Binders and SELinux Compliance.
+
+- Hands-on experience in Embedded Linux that includes UserSpace Daemon 
+  Development using C++, Cpp Containers, Std Libraries, Threads, Sockets, 
+  IPC Mechanisms, RPCs & Synchronizations. 
+
+- Hands-on experience in Frameworks such as Android Frameworks, Gstreamer, 
+  VSomeip, mqtt. POSIX, Sockets.
+
+- Developed complete software for products from scratch. Exposure to complete 
+  product lifecycle from Requirements, Design, Implementation, Maintenance of 
+  Projects. Other activities include Module Level Design and Code Review. 
+  Awarded for Performance. Worked in Countries such as India, UK, Sweden, 
+  USA and Germany.
+
+
+
+
+
+
+
