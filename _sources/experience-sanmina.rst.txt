@@ -28,6 +28,8 @@ and RearSeat Entertainment Unit.
   to the USA, Germany to perform technical activities. Mentor coworkers on technical front, 
   procedures and standards.
 
+-----------------
+
 **Project: Infotainment Unit**
 
 +----------------+--------------------------------------------------------------------------------+
@@ -43,6 +45,8 @@ and RearSeat Entertainment Unit.
 • Implementation of Applications, Middlewares using C++, C, Gstreamer, CommonAPI, VSOMEIP, 
   SocketCAN, Sqlite in Linux based System
 • Implementation of Climate, Vehicle Functions, HAL and Video Abstraction Library using Gstreamer.
+
+-----------------
 
 **Project: Android based Headrest Unit – Rear Seat Entertainment**
 

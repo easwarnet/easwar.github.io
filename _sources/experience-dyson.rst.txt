@@ -10,7 +10,7 @@ Senior Software Engineer, Sep 2021 - Present
 Dyson is a technology company based in UK/Singapore that designs and 
 manufactures Commerical appliances such as robotic vaccum cleaners, 
 vacuum cleaners, hand dryers, bladeless fans and heaters. Was part of 
-the Design team that Robotics Software Development.
+the Design team that was responsible for Robotics Software Development.
 
 **General Responsibilities:**
 
@@ -19,7 +19,9 @@ the Design team that Robotics Software Development.
 
 • Responsible for development of Platform Applications, Bugfixes, Cpp Unittest 
   and Pytest based component tests.
-  
+
+-----------------
+
 **Project: Robotics Vacuum Cleaner**
 
 +----------------+--------------------------------------------------------------------------------+

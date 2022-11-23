@@ -20,6 +20,7 @@ that includes Instrument Cluster and Infotainment Unit.
   Static Code Analysis, Implementation of Unit Test & Functional Tests and Perform 
   peer Code review.
 
+-----------------
 
 **Project: Cockpit Unit (Cluster-Infotainment)**
 

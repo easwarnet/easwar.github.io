@@ -8,7 +8,8 @@ Senior Software Engineer, Aug 2018 - Aug 2021
 
 Volvo Cars is a Swedish multinational manufacturer of cars headquartered in Torslanda, Gothenburg. 
 Was part of the Team that was responsible for development of Automotive Android based 
-Infotainment System.
+Infotainment System. Worked as a consultant from a company called Cybercom AB which was later 
+acquir by KnowIT AB.
 
 **General Responsibilities:**
 
@@ -16,6 +17,8 @@ Infotainment System.
 • Responsible for Design, Implementation of Native Platform Applications and Android Activities & Services. 
 • Refactoring of existing modules. Decouple legacy codes. Performing design and code reviews. 
 • Perform Unit test using C++ based Google Mock & UnitTest, C++ and Python based Component test.
+
+-----------------
 
 **Project: Android Based Infotainment Unit**
 
@@ -26,7 +29,6 @@ Infotainment System.
 +----------------+--------------------------------------------------------------------------------+
 | Skills & Tools:| C++, Java, HIDL, HAL, SELinux, ADB, Google Unittest, stl, Python               |
 +----------------+--------------------------------------------------------------------------------+
-
 
 **Technical Responsibilities:**
 
