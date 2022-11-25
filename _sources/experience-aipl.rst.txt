@@ -16,6 +16,7 @@ Was part of the division that developed software for Telematics, Navigation & Pa
 
 Started to work as Embedded Software developer for Microcontrollers and later moved to team that developed 
 applications for Linux based system.
+
 -----------------
 
 **Project: Telematics, Navigation & Passenger Information System**
