@@ -1,5 +1,5 @@
-Experience: Volvo Cars AB
-==========================
+Volvo Cars
+===============
 Volvo Cars AB, Sweden (Consultant from KnowIT AB)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Senior Software Engineer, Aug 2018 - Aug 2021
@@ -7,16 +7,11 @@ Senior Software Engineer, Aug 2018 - Aug 2021
 **About**
 
 Volvo Cars is a Swedish multinational manufacturer of cars headquartered in Torslanda, Gothenburg. 
+
 Was part of the Team that was responsible for development of Automotive Android based 
-Infotainment System. Worked as a consultant from a company called Cybercom AB which was later 
-acquir by KnowIT AB.
+Infotainment System. 
 
-**General Responsibilities:**
-
-• Worked within a cross functional agile scrum team with the responsibility to Develop and Test Software.
-• Responsible for Design, Implementation of Native Platform Applications and Android Activities & Services. 
-• Refactoring of existing modules. Decouple legacy codes. Performing design and code reviews. 
-• Perform Unit test using C++ based Google Mock & UnitTest, C++ and Python based Component test.
+Worked as a consultant from a company called Cybercom AB which was later acquired by KnowIT AB.
 
 -----------------
 
@@ -37,5 +32,14 @@ acquir by KnowIT AB.
   and VNDK Compliance. Implementation of component tests and unit tests.
 • Implementation of Vehicle Functions, Climate Functions, Routing 
   Applications and Housekeeping Services.
+
+-----------------
+
+**General Responsibilities:**
+
+• Worked within a cross functional agile scrum team with the responsibility to Develop and Test Software.
+• Responsible for Design, Implementation of Native Platform Applications and Android Activities & Services. 
+• Refactoring of existing modules. Decouple legacy codes. Performing design and code reviews. 
+• Perform Unit test using C++ based Google Mock & UnitTest, C++ and Python based Component test.
 
 

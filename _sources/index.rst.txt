@@ -14,10 +14,15 @@ platform applications for Networking and Connectivity modules/daemons in Linux U
 
 .. toctree::
    :maxdepth: 1
-   :caption: Profile
+   :caption: Professional Summary
 
    professionalsummary.rst
    skills.rst
+   
+.. toctree::
+   :maxdepth: 1
+   :caption: Professional Experience
+
    experience-dyson.rst
    experience-volvocars.rst
    experience-visteon.rst

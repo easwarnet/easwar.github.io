@@ -1,4 +1,4 @@
-Experience: Visteon
+Visteon
 ======================
 Visteon, India
 ~~~~~~~~~~~~~~~~
@@ -8,17 +8,9 @@ Senior Software Engineer, Sep 2017 - Aug 2018
 
 Visteon Corporation is an American global automotive electronics supplier and 
 Fortune 500 Company. Visteon is a spinoff company of Ford Motors.
+
 Was part of the team that was responsible for development of Integrated Cockpit Unit
 that includes Instrument Cluster and Infotainment Unit.
-
-**General Responsibilities:**
-
-• Worked within a cross functional scrum team with the responsibility to Develop 
-  and Test Platform Software.
-  
-• Responsible for Requirement Understanding, Detailed Design, Implementation, 
-  Static Code Analysis, Implementation of Unit Test & Functional Tests and Perform 
-  peer Code review.
 
 -----------------
 
@@ -38,5 +30,16 @@ that includes Instrument Cluster and Infotainment Unit.
 
 • Implementation of Vehicle HAL and Vehicle Signal Interfaces for Vehicle 
   Functions, Alerts, Warning & Other messages.
+
+-----------------
+
+**General Responsibilities:**
+
+• Worked within a cross functional scrum team with the responsibility to Develop 
+  and Test Platform Software.
+  
+• Responsible for Requirement Understanding, Detailed Design, Implementation, 
+  Static Code Analysis, Implementation of Unit Test & Functional Tests and Perform 
+  peer Code review.
 
 
