@@ -32,8 +32,18 @@ platform applications for Networking and Connectivity modules/daemons in Linux U
 
 .. toctree::
    :maxdepth: 1
+   :caption: Personnal Summary
+
+   personnal.rst
+   education.rst
+   experience-others.rst
+
+
+.. toctree::
+   :maxdepth: 1
    :caption: Others
 
-   externallinks.rst
+   external.rst
+
 
 
