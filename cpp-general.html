@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C++ - General &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="C++ - StdLib" href="cpp-stdlib.html" />
+    <link rel="prev" title="C++ - Container" href="cpp-container.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">C++ - General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#here-s-a-comprehensive-explanation-of-const-usage-in-c-classes"><strong>Here’s a comprehensive explanation of `const` usage in C++ classes:</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#here-s-a-breakdown-of-the-use-of-const-in-the-function-void-function-const"><strong>Here’s a breakdown of the use of `const` in the function `void function() const`:</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>C++ - General</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="c-general">
+<h1>C++ - General<a class="headerlink" href="#c-general" title="Permalink to this heading"></a></h1>
+<section id="here-s-a-comprehensive-explanation-of-const-usage-in-c-classes">
+<h2><strong>Here’s a comprehensive explanation of `const` usage in C++ classes:</strong><a class="headerlink" href="#here-s-a-comprehensive-explanation-of-const-usage-in-c-classes" title="Permalink to this heading"></a></h2>
+<p><strong>1. `const` Objects:</strong></p>
+<ul class="simple">
+<li><p><strong>Declaration:</strong> <cite>const ClassName objectName;</cite></p></li>
+<li><p><strong>Meaning:</strong> The object’s state cannot be modified after its creation.</p></li>
+<li><dl class="simple">
+<dt><strong>Restrictions:</strong></dt><dd><ul>
+<li><p>Only const member functions can be called on it.</p></li>
+<li><p>It cannot be used as the left operand of assignment operators.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Example:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">const</span> <span class="n">Date</span> <span class="nf">today</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>  <span class="c1">// today&#39;s date cannot be changed</span>
+<span class="n">today</span><span class="p">.</span><span class="n">print</span><span class="p">();</span>                  <span class="c1">// Calling a const member function</span>
+</pre></div>
+</div>
+<p><strong>2. `const` Member Functions:</strong></p>
+<ul class="simple">
+<li><p><strong>Declaration:</strong> <cite>ReturnType functionName() const;</cite></p></li>
+<li><p><strong>Meaning:</strong> The function promises not to modify the object’s state.</p></li>
+<li><dl class="simple">
+<dt><strong>Restrictions:</strong></dt><dd><ul>
+<li><p>It cannot modify any non-mutable members of the class.</p></li>
+<li><p>It can only call other const member functions.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Example:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">print</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>  <span class="c1">// Can be called on const objects</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>3. `const` Data Members:</strong></p>
+<ul class="simple">
+<li><p><strong>Declaration:</strong> <cite>const DataType memberName;</cite></p></li>
+<li><p><strong>Meaning:</strong> The member variable must be initialized in the constructor and cannot be changed afterward.</p></li>
+<li><dl class="simple">
+<dt><strong>Restrictions:</strong></dt><dd><ul>
+<li><p>It can only be initialized in the constructor’s initialization list.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Example:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Employee</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="o">:</span> <span class="n">name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">{}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>  <span class="c1">// Employee&#39;s name cannot be changed</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>4. `mutable` Member Variables:</strong></p>
+<ul class="simple">
+<li><p><strong>Declaration:</strong> <cite>mutable DataType memberName;</cite></p></li>
+<li><p><strong>Meaning:</strong> This member can be modified even within const member functions.</p></li>
+<li><p><strong>Use Case:</strong> Often used for caching values or for internal state that doesn’t affect the object’s logical state.</p></li>
+<li><p><strong>Example:</strong></p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">getDayOfYear</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dayOfYearCalculated</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">calculateDayOfYear</span><span class="p">();</span>  <span class="c1">// Can modify dayOfYear despite being const</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">dayOfYear</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="k">mutable</span> <span class="kt">int</span> <span class="n">dayOfYear</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// Can be modified even in const functions</span>
+    <span class="k">mutable</span> <span class="kt">bool</span> <span class="n">dayOfYearCalculated</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p>Use <cite>const</cite> objects to protect data integrity and prevent unintended modifications.</p></li>
+<li><p>Use <cite>const</cite> member functions to clarify which functions don’t modify the object’s state.</p></li>
+<li><p>Use <cite>const</cite> data members to ensure constant values within the class.</p></li>
+<li><p>Use <cite>mutable</cite> data members sparingly for specific cases where modification is necessary within const member functions.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="here-s-a-breakdown-of-the-use-of-const-in-the-function-void-function-const">
+<h2><strong>Here’s a breakdown of the use of `const` in the function `void function() const`:</strong><a class="headerlink" href="#here-s-a-breakdown-of-the-use-of-const-in-the-function-void-function-const" title="Permalink to this heading"></a></h2>
+<dl class="simple">
+<dt><strong>1. Declares a Member Function:</strong></dt><dd><ul class="simple">
+<li><p>The <cite>void function()</cite> part declares a member function named <cite>function</cite> that belongs to a class.</p></li>
+<li><p>It doesn’t return any value (indicated by <cite>void</cite>).</p></li>
+</ul>
+</dd>
+<dt><strong>2. Enforces a “Read-Only” Promise:</strong></dt><dd><ul class="simple">
+<li><p>The <cite>const</cite> keyword after the function’s parameter list signifies that this function is a <strong>const member function</strong>.</p></li>
+<li><p>It guarantees that this function will <strong>not modify any non-mutable member variables</strong> of the object it’s called on.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Key Implications:</strong></p>
+<ul class="simple">
+<li><p><strong>Object State Preservation:</strong> Const member functions ensure that the object’s state remains unchanged after their execution, promoting data integrity and preventing unintended side effects.</p></li>
+<li><p><strong>Const Object Compatibility:</strong> Const member functions can be called on both const and non-const objects, making them more versatile.</p></li>
+<li><p><strong>Overload Resolution:</strong> Const member functions can be overloaded based on their constness, providing different versions for read-only and potentially modifying operations.</p></li>
+<li><p><strong>Encapsulation and Safety:</strong> They help enforce class invariants and prevent accidental modifications, making code more reliable and maintainable.</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Circle</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">double</span> <span class="n">radius</span><span class="p">;</span>
+
+    <span class="c1">// Non-const member function that can modify radius</span>
+    <span class="kt">void</span> <span class="nf">setRadius</span><span class="p">(</span><span class="kt">double</span> <span class="n">newRadius</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">newRadius</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Const member function that can only access radius, not modify it</span>
+    <span class="kt">double</span> <span class="nf">getArea</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mf">3.14159</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>In summary:</strong></p>
+<ul class="simple">
+<li><p>Use <cite>const</cite> member functions to explicitly declare that a function won’t modify the object’s state.</p></li>
+<li><p>This makes code more readable, maintainable, and safer by preventing accidental modifications.</p></li>
+</ul>
+<hr class="docutils" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cpp-container.html" class="btn btn-neutral float-left" title="C++ - Container" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cpp-stdlib.html" class="btn btn-neutral float-right" title="C++ - StdLib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
