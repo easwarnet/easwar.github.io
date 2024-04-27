@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Linux - Commands" href="linux-commands.html" />
-    <link rel="prev" title="C++ - StdLib" href="cpp-stdlib.html" /> 
+    <link rel="prev" title="C++ - General" href="cpp-general.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,21 +42,24 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cpp-smartptr.html">C++ - Smart Pointer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cpp-container.html">C++ - Container</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cpp-general.html">C++ - General</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-general.html">C++ - General</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">OS</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Linux - Posix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#static-linking-and-dynamic-linking">Static Linking and Dynamic Linking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fork">Fork</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="linux-commands.html">Linux - Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="os-general.html">Os - General Concepts</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">C</span></p>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="os-rtos.html">Os - RTOS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-funcpointers.html">C - Function Pointers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-general.html">C - General</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-basicalgo.html">C - Basic Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-tricks.html">C - Tricks and Others</a></li>
@@ -91,6 +94,70 @@
              
   <section id="linux-posix">
 <h1>Linux - Posix<a class="headerlink" href="#linux-posix" title="Permalink to this heading"></a></h1>
+<section id="static-linking-and-dynamic-linking">
+<h2>Static Linking and Dynamic Linking<a class="headerlink" href="#static-linking-and-dynamic-linking" title="Permalink to this heading"></a></h2>
+<p>In Linux, linking is the process of combining multiple object files (compiled code units) and libraries to create an executable program. The two main linking approaches are static linking and dynamic linking, which differ in how they handle the inclusion of library code:</p>
+<p><strong>Static Linking:</strong></p>
+<ul class="simple">
+<li><p>During compilation, the linker <strong>includes the entire object code</strong> from the required libraries <strong>directly into the final executable</strong>.</p></li>
+<li><p>The executable becomes <strong>self-contained</strong>, carrying all the necessary code to run.</p></li>
+<li><dl class="simple">
+<dt><strong>Advantages:</strong></dt><dd><ul>
+<li><p>Executable is smaller and simpler to distribute (no need for separate libraries).</p></li>
+<li><p>Program runs as long as the required libraries existed at compile time (doesn’t rely on specific library versions being present at runtime).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Disadvantages:</strong></dt><dd><ul>
+<li><p>Executable size increases with each additional library used, leading to potential disk space wastage.</p></li>
+<li><p>Any updates to libraries require recompiling the executable to incorporate the changes.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcc -o my_program my_source.c math_library.a  <span class="c1"># Statically link with math_library.a</span>
+</pre></div>
+</div>
+<p>In this example, the <cite>gcc</cite> compiler links <cite>my_source.c</cite> object file with the static library <cite>math_library.a</cite> to create the executable <cite>my_program</cite>. The final executable includes all the code from both the source file and the library.</p>
+<p><strong>Dynamic Linking:</strong></p>
+<ul class="simple">
+<li><p>During program execution, the loader <strong>loads the necessary libraries from the system’s library directories</strong> at runtime.</p></li>
+<li><p>The executable contains references (addresses) to the library functions it needs.</p></li>
+<li><dl class="simple">
+<dt><strong>Advantages:</strong></dt><dd><ul>
+<li><p>Executable size is smaller as it only contains its own code and references to libraries.</p></li>
+<li><p>Updates to libraries don’t require recompiling the executable; the program uses the latest version available at runtime (if compatible).</p></li>
+<li><p>Libraries can be shared by multiple programs, reducing memory usage.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Disadvantages:</strong></dt><dd><ul>
+<li><p>The program relies on the presence of the required libraries at runtime. Missing libraries can cause the program to fail.</p></li>
+<li><p>The program might exhibit slightly slower startup times due to the dynamic loading process.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gcc -o my_program my_source.c -lmath  <span class="c1"># Dynamically link with math library (libmath.so)</span>
+</pre></div>
+</div>
+<p>Here, the <cite>gcc</cite> compiler links <cite>my_source.c</cite> with the dynamic library <cite>libmath.so</cite> (indicated by the <cite>-lmath</cite> flag). The executable doesn’t include the library code but references the functions it needs. At runtime, the loader searches for <cite>libmath.so</cite> in standard library directories and loads it into memory for the program to use.</p>
+<p><strong>Choosing the Right Approach:</strong></p>
+<p>The choice between static and dynamic linking depends on your specific needs:</p>
+<ul class="simple">
+<li><p><strong>Static linking</strong> is preferable for small, self-contained programs or when you need complete control over the included libraries.</p></li>
+<li><p><strong>Dynamic linking</strong> is ideal for larger programs, where you want to minimize executable size and benefit from shared libraries across multiple programs.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
 <section id="fork">
 <h2>Fork<a class="headerlink" href="#fork" title="Permalink to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">main()</span> <span class="pre">{fork();fork();fork();printf(”hello</span> <span class="pre">world”);</span> <span class="pre">}</span></code> — will print 8 times.</p>
@@ -103,7 +170,7 @@ if u flush, (using “fflush”), then it will be printed only once. thats is yo
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cpp-stdlib.html" class="btn btn-neutral float-left" title="C++ - StdLib" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cpp-general.html" class="btn btn-neutral float-left" title="C++ - General" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="linux-commands.html" class="btn btn-neutral float-right" title="Linux - Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

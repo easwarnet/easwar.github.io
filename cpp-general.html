@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="C++ - StdLib" href="cpp-stdlib.html" />
-    <link rel="prev" title="C++ - Container" href="cpp-container.html" /> 
+    <link rel="next" title="Linux - Posix" href="linux-posix.html" />
+    <link rel="prev" title="C++ - StdLib" href="cpp-stdlib.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,12 +42,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="cpp-smartptr.html">C++ - Smart Pointer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">C++ - General</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#here-s-a-comprehensive-explanation-of-const-usage-in-c-classes"><strong>Here’s a comprehensive explanation of `const` usage in C++ classes:</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#here-s-a-breakdown-of-the-use-of-const-in-the-function-void-function-const"><strong>Here’s a breakdown of the use of `const` in the function `void function() const`:</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#const-usage-in-c-classes"><strong>`const` usage in C++ classes</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#const-in-the-function"><strong>`const` in the function</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#determining-system-endianness"><strong>Determining System Endianness</strong></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">OS</span></p>
 <ul>
@@ -55,9 +56,11 @@
 <li class="toctree-l1"><a class="reference internal" href="linux-commands.html">Linux - Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="os-general.html">Os - General Concepts</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">C</span></p>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="os-rtos.html">Os - RTOS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-funcpointers.html">C - Function Pointers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-general.html">C - General</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-basicalgo.html">C - Basic Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-tricks.html">C - Tricks and Others</a></li>
@@ -92,8 +95,9 @@
              
   <section id="c-general">
 <h1>C++ - General<a class="headerlink" href="#c-general" title="Permalink to this heading"></a></h1>
-<section id="here-s-a-comprehensive-explanation-of-const-usage-in-c-classes">
-<h2><strong>Here’s a comprehensive explanation of `const` usage in C++ classes:</strong><a class="headerlink" href="#here-s-a-comprehensive-explanation-of-const-usage-in-c-classes" title="Permalink to this heading"></a></h2>
+<section id="const-usage-in-c-classes">
+<h2><strong>`const` usage in C++ classes</strong><a class="headerlink" href="#const-usage-in-c-classes" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s a comprehensive explanation of `const` usage in C++ classes:</strong></p>
 <p><strong>1. `const` Objects:</strong></p>
 <ul class="simple">
 <li><p><strong>Declaration:</strong> <cite>const ClassName objectName;</cite></p></li>
@@ -183,8 +187,9 @@
 </ul>
 </section>
 <hr class="docutils" />
-<section id="here-s-a-breakdown-of-the-use-of-const-in-the-function-void-function-const">
-<h2><strong>Here’s a breakdown of the use of `const` in the function `void function() const`:</strong><a class="headerlink" href="#here-s-a-breakdown-of-the-use-of-const-in-the-function-void-function-const" title="Permalink to this heading"></a></h2>
+<section id="const-in-the-function">
+<h2><strong>`const` in the function</strong><a class="headerlink" href="#const-in-the-function" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s a breakdown of the use of `const` in the function `void function() const`:</strong></p>
 <dl class="simple">
 <dt><strong>1. Declares a Member Function:</strong></dt><dd><ul class="simple">
 <li><p>The <cite>void function()</cite> part declares a member function named <cite>function</cite> that belongs to a class.</p></li>
@@ -226,7 +231,60 @@
 <li><p>Use <cite>const</cite> member functions to explicitly declare that a function won’t modify the object’s state.</p></li>
 <li><p>This makes code more readable, maintainable, and safer by preventing accidental modifications.</p></li>
 </ul>
+</section>
 <hr class="docutils" />
+<section id="determining-system-endianness">
+<h2><strong>Determining System Endianness</strong><a class="headerlink" href="#determining-system-endianness" title="Permalink to this heading"></a></h2>
+<p>There are a few ways to determine whether your system uses big-endian or little-endian format:</p>
+<ol class="arabic simple">
+<li><p><strong>Preprocessor Macros:</strong> Some compilers define preprocessor macros like <cite>__BYTE_ORDER__</cite> or <cite>_BIG_ENDIAN</cite> depending on the system’s endianness. However, this approach might not be portable across different compilers.</p></li>
+<li><p><strong>Manual Check:</strong> You can write a small C program that explicitly assigns a value to a multi-byte variable (e.g., integer) and then prints the memory representation using a pointer cast. This involves inspecting the order of bytes in the printed output.</p></li>
+</ol>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mh">0x01234567</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">value</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Memory representation: &quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="n">In</span> <span class="n">a</span> <span class="n">big</span><span class="o">-</span><span class="n">endian</span> <span class="n">system</span><span class="p">,</span> <span class="n">the</span> <span class="n">most</span> <span class="n">significant</span> <span class="n">byte</span> <span class="p">(</span><span class="n">MSB</span><span class="p">)</span> <span class="n">will</span> <span class="n">be</span> <span class="n">printed</span> <span class="n">first</span><span class="p">.</span>
+<span class="o">-</span> <span class="n">In</span> <span class="n">a</span> <span class="n">little</span><span class="o">-</span><span class="n">endian</span> <span class="n">system</span><span class="p">,</span> <span class="n">the</span> <span class="n">least</span> <span class="n">significant</span> <span class="n">byte</span> <span class="p">(</span><span class="n">LSB</span><span class="p">)</span> <span class="n">will</span> <span class="n">be</span> <span class="n">printed</span> <span class="n">first</span><span class="p">.</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p><strong>System-Specific Checks:</strong> You might find system-specific utilities or header files that provide information about the endianness. Consult your system documentation for details.</p></li>
+</ol>
+<p>## Converting Between Endianness</p>
+<p>Here are common approaches for converting between big-endian and little-endian formats:</p>
+<ol class="arabic simple">
+<li><p><strong>Manual Swapping:</strong> You can write a function that iterates through the byte representation of the data and swaps the order of bytes. This approach can be error-prone and less efficient for large data structures.</p></li>
+<li><p><strong>Bitwise Operators:</strong> For simple data types like integers, you can use bitwise operators (e.g., <cite>&lt;&lt;</cite>, <cite>&gt;&gt;</cite>) to shift bytes to their appropriate positions based on the target endianness.</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example: Swap bytes of an integer (assuming 4 bytes)</span>
+<span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mh">0x01234567</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">isLittleEndian</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x0000FF00</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0x00FF0000</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p><strong>Endian-Neutral Libraries:</strong> Consider using libraries like Boost.Endian or third-party libraries specifically designed for endianness conversion. These libraries provide functions with well-defined behavior for data type conversions.</p></li>
+</ol>
+<p><strong>Important Considerations:</strong></p>
+<ul class="simple">
+<li><p>Be aware of the data type you’re converting and the number of bytes it occupies.</p></li>
+<li><p>Ensure proper handling of signed and unsigned values during conversion.</p></li>
+<li><p>For network communication, consider using standard network byte order (usually big-endian) to avoid inconsistencies across different architectures.</p></li>
+</ul>
+<p>Choose the approach that best suits your requirements, considering factors like code complexity, performance, and portability needs.</p>
 </section>
 </section>
 
@@ -234,8 +292,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cpp-container.html" class="btn btn-neutral float-left" title="C++ - Container" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cpp-stdlib.html" class="btn btn-neutral float-right" title="C++ - StdLib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cpp-stdlib.html" class="btn btn-neutral float-left" title="C++ - StdLib" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="linux-posix.html" class="btn btn-neutral float-right" title="Linux - Posix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

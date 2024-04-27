@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="C++ - General" href="cpp-general.html" />
+    <link rel="next" title="C++ - StdLib" href="cpp-stdlib.html" />
     <link rel="prev" title="C++ - Smart Pointer" href="cpp-smartptr.html" /> 
 </head>
 
@@ -41,9 +41,17 @@
               <p class="caption" role="heading"><span class="caption-text">C++</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="cpp-smartptr.html">C++ - Smart Pointer</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">C++ - Container</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cpp-general.html">C++ - General</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">C++ - Container</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#list-of-containers"><strong>List Of Containers</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extract-method-in-std-set">Extract Method in Std::Set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unordered-map-vs-map">unordered_map vs map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#std-set-vs-std-vector">std::set vs std::vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#std-forward-list-vs-std-vector">std::forward_list vs std::vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#std-list-vs-std-unordered-map">std::list vs std::unordered_map</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-general.html">C++ - General</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">OS</span></p>
 <ul>
@@ -51,9 +59,11 @@
 <li class="toctree-l1"><a class="reference internal" href="linux-commands.html">Linux - Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="os-general.html">Os - General Concepts</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">C</span></p>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="os-rtos.html">Os - RTOS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-funcpointers.html">C - Function Pointers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-general.html">C - General</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-basicalgo.html">C - Basic Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="c-tricks.html">C - Tricks and Others</a></li>
@@ -88,31 +98,373 @@
              
   <section id="c-container">
 <h1>C++ - Container<a class="headerlink" href="#c-container" title="Permalink to this heading"></a></h1>
-<p><strong>What happens when a std::unique_ptr is passed by value to a function? For example, in this code snippet?:</strong></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
-
-<span class="k">auto</span> <span class="nf">f</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
-  <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">ptr</span><span class="p">;</span>
-<span class="p">}</span>
+<section id="list-of-containers">
+<h2><strong>List Of Containers</strong><a class="headerlink" href="#list-of-containers" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s a list of containers in the C++ Standard Template Library (STL), organized by category:</strong></p>
+<p><strong>Sequence Containers:</strong></p>
+<ul class="simple">
+<li><p><strong>array:</strong> Fixed-size array with contiguous memory allocation.</p></li>
+<li><p><strong>vector:</strong> Dynamic array with automatic resizing.</p></li>
+<li><p><strong>deque:</strong> Double-ended queue for efficient insertion/removal at both ends.</p></li>
+<li><p><strong>list:</strong> Doubly-linked list for fast insertion/removal anywhere, not optimized for random access.</p></li>
+<li><p><strong>forward_list:</strong> Singly-linked list for even more efficient insertion/removal, but without bidirectional traversal.</p></li>
+</ul>
+<p><strong>Associative Containers:</strong></p>
+<ul class="simple">
+<li><p><strong>set:</strong> Stores unique keys in sorted order, allowing fast lookup, insertion, and removal.</p></li>
+<li><p><strong>map:</strong> Associates keys with values, maintaining key order for efficient retrieval.</p></li>
+<li><p><strong>multiset:</strong> Allows duplicate keys, otherwise similar to set.</p></li>
+<li><p><strong>multimap:</strong> Allows multiple values for the same key, otherwise similar to map.</p></li>
+</ul>
+<p><strong>Unordered Associative Containers (since C++11):</strong></p>
+<ul class="simple">
+<li><p><strong>unordered_set:</strong> Uses hashing for fast average-case lookup, insertion, and removal, but doesn’t guarantee order.</p></li>
+<li><p><strong>unordered_map:</strong> Associates keys with values using hashing, providing fast average-case access.</p></li>
+<li><p><strong>unordered_multiset:</strong> Allows duplicate keys, otherwise similar to unordered_set.</p></li>
+<li><p><strong>unordered_multimap:</strong> Allows multiple values for the same key, otherwise similar to unordered_map.</p></li>
+</ul>
+<p><strong>Container Adaptors:</strong></p>
+<ul class="simple">
+<li><p><strong>stack:</strong> LIFO (Last-In-First-Out) data structure, typically implemented using deque or vector.</p></li>
+<li><p><strong>queue:</strong> FIFO (First-In-First-Out) data structure, typically implemented using deque or list.</p></li>
+<li><p><strong>priority_queue:</strong> Stores elements with priority, typically implemented using vector and heap algorithms.</p></li>
+</ul>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p><strong>Choice of Container:</strong> Depends on your specific needs regarding element ordering, access patterns, insertion/removal frequency, duplicate handling, and memory efficiency.</p></li>
+<li><p><strong>Header Files:</strong> Each container has its corresponding header file (e.g., <cite>&lt;vector&gt;</cite> for <cite>vector</cite>, <cite>&lt;map&gt;</cite> for <cite>map</cite>).</p></li>
+<li><p><strong>Genericity:</strong> Containers are template classes, allowing you to store various data types.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="extract-method-in-std-set">
+<h2>Extract Method in Std::Set<a class="headerlink" href="#extract-method-in-std-set" title="Permalink to this heading"></a></h2>
+<p><strong>In C++17, the `extract` method was introduced for associative containers like `std::set` to provide an efficient way to remove elements without unnecessary copies or moves.</strong></p>
+<p><strong>Here’s how it works:</strong></p>
+<dl class="simple">
+<dt><strong>1. Removing and Returning a Node Handle:</strong></dt><dd><ul class="simple">
+<li><p><cite>node_type extract(const_iterator position)</cite>:
+- Removes the element pointed to by the iterator <cite>position</cite>.
+- Returns a <cite>node_type</cite> object (a special handle) that owns the extracted element.</p></li>
+</ul>
+</dd>
+<dt><strong>2. Accessing the Extracted Element:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">value_type&amp;</span> <span class="pre">value()</span></code>:
+- Returns a reference to the value of the extracted element within the <cite>node_type</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value_type&amp;&amp;</span> <span class="pre">value()</span></code>:
+- Returns an rvalue reference to the value, allowing for efficient move operations.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Key Benefits of Using `extract`:</strong></p>
+<ul class="simple">
+<li><p><strong>No Unnecessary Copies or Moves:</strong> It directly removes the element from the set without creating additional copies, potentially improving performance.</p></li>
+<li><p><strong>Move-Only Elements:</strong> It’s essential for safely removing elements that are move-only, such as unique pointers or custom move-only types.</p></li>
+<li><p><strong>Flexibility in Handling Extracted Elements:</strong> You can either reinsert the extracted element into another set, store it in a variable, or perform operations on it directly.</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">auto</span> <span class="n">ptr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">();</span>
-  <span class="n">ptr</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">mySet</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">};</span>
+
+    <span class="k">auto</span> <span class="n">extractedNode</span> <span class="o">=</span> <span class="n">mySet</span><span class="p">.</span><span class="n">extract</span><span class="p">(</span><span class="n">mySet</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span> <span class="c1">// Extract the element with value 2</span>
+    <span class="kt">int</span> <span class="n">extractedValue</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">extractedNode</span><span class="p">.</span><span class="n">value</span><span class="p">());</span> <span class="c1">// Obtain the value efficiently</span>
+
+    <span class="n">mySet</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">// Insert another element</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Extracted value: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">extractedValue</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Set contents: &quot;</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="nl">x</span> <span class="p">:</span> <span class="n">mySet</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Why this C++ question?</strong></p>
-<p>As mentioned before, memory management is a nontrivial burden for the C++ programmer. Smart pointers are helpful in this regard, but they must be well understood in order to be used correctly. This question tests for the interview candidate’s understanding of one common type of smart pointer.</p>
-<p><strong>Possible answers</strong></p>
-<p>The correct answer is that this code won’t even compile. The std::unique_ptr type cannot be copied, so passing it as a parameter to a function will fail to compile.
-To convince the compiler that this is fine, std::move can be used:</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">ptr</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">ptr</span><span class="p">));</span>
+<p><strong>Output:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Extracted</span> <span class="n">value</span><span class="p">:</span> <span class="mi">2</span>
+<span class="n">Set</span> <span class="n">contents</span><span class="p">:</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span>
 </pre></div>
 </div>
-<p><strong>Follow-up questions</strong></p>
-<p>The interview candidate might think that returning a noncopiable object from a function is also a compiler error, but in this case it’s allowed, thanks to copy elision. You can ask the candidate under what conditions copy elision is performed.</p>
-<p>Of course, the above construct with std::move is less than ideal. Ask the candidate how they would change the function f to make it better. For example, passing a (const) reference to the unique_ptr, or simply a reference to the int pointed to, is probably preferred.</p>
+</section>
+<hr class="docutils" />
+<section id="unordered-map-vs-map">
+<h2>unordered_map vs map<a class="headerlink" href="#unordered-map-vs-map" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s a comparison of std::unordered_map and std::map in C++, highlighting their key differences and when to choose each:</strong></p>
+<p><strong>Key Differences:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 35%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>std::map</p></th>
+<th class="head"><p>std::unordered_map</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ordering</p></td>
+<td><p>Stores elements in sorted order</p></td>
+<td><p>Doesn’t guarantee order of elements</p></td>
+</tr>
+<tr class="row-odd"><td><p>Implementation</p></td>
+<td><p>Red-black tree</p></td>
+<td><p>Hash table</p></td>
+</tr>
+<tr class="row-even"><td><p>Lookup time</p></td>
+<td><p>O(log n)</p></td>
+<td><p>O(1) average, O(n) worst-case</p></td>
+</tr>
+<tr class="row-odd"><td><p>Insertion time</p></td>
+<td><p>O(log n)</p></td>
+<td><p>O(1) average, O(n) worst-case</p></td>
+</tr>
+<tr class="row-even"><td><p>Deletion time</p></td>
+<td><p>O(log n)</p></td>
+<td><p>O(1) average, O(n) worst-case</p></td>
+</tr>
+<tr class="row-odd"><td><p>Memory usage</p></td>
+<td><p>More memory efficient</p></td>
+<td><p>Less memory efficient</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to Choose Which:</strong></p>
+<p><strong>Choose std::map when:</strong></p>
+<ul class="simple">
+<li><p><strong>Order matters:</strong> You need to iterate over elements in sorted order or access elements based on their relative position.</p></li>
+<li><p><strong>Guaranteed performance:</strong> You need consistent O(log n) performance for all operations, even in worst-case scenarios.</p></li>
+<li><p><strong>Memory is a priority:</strong> You’re working with limited memory and need to conserve it.</p></li>
+</ul>
+<p><strong>Choose std::unordered_map when:</strong></p>
+<ul class="simple">
+<li><p><strong>Fast lookups are crucial:</strong> You prioritize fast average-case lookups (O(1)) over strict ordering.</p></li>
+<li><p><strong>Ordering is unimportant:</strong> You don’t need to access elements in a specific order.</p></li>
+<li><p><strong>Memory usage is less critical:</strong> You have sufficient memory to accommodate potential hash collisions.</p></li>
+</ul>
+<p><strong>Additional Considerations:</strong></p>
+<ul class="simple">
+<li><p><strong>Custom keys:</strong> Ensure your keys have a well-defined hash function for efficient unordered_map usage.</p></li>
+<li><p><strong>Iterator invalidation:</strong> Inserting/removing elements can invalidate iterators in both maps, but std::unordered_map is generally more prone to this due to rehashing.</p></li>
+<li><p><strong>Hash collisions:</strong> While rare, hash collisions can impact std::unordered_map performance in the worst-case.</p></li>
+</ul>
+<p><strong>In summary:</strong></p>
+<ul class="simple">
+<li><p>Use std::map when ordering and guaranteed performance are essential.</p></li>
+<li><p>Use std::unordered_map when you prioritize fast average-case lookups and don’t require ordering.</p></li>
+<li><p>Consider the trade-offs in performance, memory usage, and key requirements when making your choice.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="std-set-vs-std-vector">
+<h2>std::set vs std::vector<a class="headerlink" href="#std-set-vs-std-vector" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s a comparison of std::set and std::vector in C++, highlighting their key differences and when to choose each:</strong></p>
+<p><strong>Key Differences:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 31%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>std::set</p></th>
+<th class="head"><p>std::vector</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ordering</p></td>
+<td><p>Stores elements in sorted order</p></td>
+<td><p>Elements in insertion order</p></td>
+</tr>
+<tr class="row-odd"><td><p>Duplicates</p></td>
+<td><p>No duplicates allowed</p></td>
+<td><p>Allows duplicates</p></td>
+</tr>
+<tr class="row-even"><td><p>Implementation</p></td>
+<td><p>Self-balancing binary tree</p></td>
+<td><p>Dynamic array</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lookup time</p></td>
+<td><p>O(log n)</p></td>
+<td><p>O(n) (linear search)</p></td>
+</tr>
+<tr class="row-even"><td><p>Insertion time</p></td>
+<td><p>O(log n)</p></td>
+<td><p>O(1) amortized, but can be O(n) if reallocation needed</p></td>
+</tr>
+<tr class="row-odd"><td><p>Deletion time</p></td>
+<td><p>O(log n)</p></td>
+<td><p>O(n) (if removing from middle)</p></td>
+</tr>
+<tr class="row-even"><td><p>Memory usage</p></td>
+<td><p>Less memory efficient</p></td>
+<td><p>More memory efficient</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to Choose Which:</strong></p>
+<p><strong>Choose std::set when:</strong></p>
+<ul class="simple">
+<li><p><strong>Order matters:</strong> You need to iterate over elements in sorted order or quickly find elements based on their value.</p></li>
+<li><p><strong>Uniqueness is required:</strong> You want to ensure that each element appears only once in the container.</p></li>
+<li><p><strong>Fast lookups are important:</strong> You need efficient O(log n) lookups, insertions, and deletions.</p></li>
+</ul>
+<p><strong>Choose std::vector when:</strong></p>
+<ul class="simple">
+<li><p><strong>Order is unimportant:</strong> You don’t need to access elements in a specific order.</p></li>
+<li><p><strong>Duplicates are allowed:</strong> You may have multiple elements with the same value.</p></li>
+<li><p><strong>Fast random access is required:</strong> You need to frequently access elements by their index.</p></li>
+<li><p><strong>Memory efficiency is crucial:</strong> You want to minimize memory usage and avoid overhead associated with balancing trees.</p></li>
+</ul>
+<p><strong>Additional Considerations:</strong></p>
+<ul class="simple">
+<li><p><strong>Iteration:</strong> std::set iterators are bidirectional, while std::vector iterators are random access.</p></li>
+<li><p><strong>Insertion at specific positions:</strong> std::set doesn’t allow insertion at arbitrary positions, while std::vector does.</p></li>
+<li><p><strong>Memory layout:</strong> std::vector’s contiguous memory allocation can be advantageous for cache locality and certain algorithms.</p></li>
+</ul>
+<p><strong>In summary:</strong></p>
+<ul class="simple">
+<li><p>Use std::set when you need a sorted collection of unique elements with efficient lookups and operations.</p></li>
+<li><p>Use std::vector when you need a flexible array-like container for storing elements in insertion order, potentially with duplicates, and require fast random access.</p></li>
+<li><p>Consider the trade-offs in ordering, duplicates, performance, and memory usage when making your choice.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="std-forward-list-vs-std-vector">
+<h2>std::forward_list vs std::vector<a class="headerlink" href="#std-forward-list-vs-std-vector" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s a comparison of std::forward_list and std::vector in C++, highlighting their key differences and when to choose each:</strong></p>
+<p><strong>Key Differences:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 37%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>std::forward_list</p></th>
+<th class="head"><p>std::vector</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Structure</p></td>
+<td><p>Singly-linked list</p></td>
+<td><p>Dynamic array</p></td>
+</tr>
+<tr class="row-odd"><td><p>Memory layout</p></td>
+<td><p>Non-contiguous nodes</p></td>
+<td><p>Contiguous memory block</p></td>
+</tr>
+<tr class="row-even"><td><p>Insertion/removal</p></td>
+<td><p>Efficient at front/middle</p></td>
+<td><p>Efficient at back, slow elsewhere</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lookups</p></td>
+<td><p>Linear time (O(n))</p></td>
+<td><p>Random access (O(1))</p></td>
+</tr>
+<tr class="row-even"><td><p>Iterators</p></td>
+<td><p>Forward iterators only</p></td>
+<td><p>Random access iterators</p></td>
+</tr>
+<tr class="row-odd"><td><p>Bidirectional access</p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+</tr>
+<tr class="row-even"><td><p>Size in memory</p></td>
+<td><p>Smaller overhead per element</p></td>
+<td><p>Larger overhead for container</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to Choose Which:</strong></p>
+<p><strong>Choose std::forward_list when:</strong></p>
+<ul class="simple">
+<li><p><strong>Frequent insertions/removals at the front or middle:</strong> It excels in these operations due to its singly-linked structure.</p></li>
+<li><p><strong>Memory efficiency is a primary concern:</strong> It has lower overhead per element compared to std::vector.</p></li>
+<li><p><strong>Random access is not required:</strong> It only supports forward iteration.</p></li>
+</ul>
+<p><strong>Choose std::vector when:</strong></p>
+<ul class="simple">
+<li><p><strong>Fast random access is crucial:</strong> It provides direct access to any element in constant time.</p></li>
+<li><p><strong>Frequent insertions/removals at the back:</strong> It’s very efficient for these operations.</p></li>
+<li><p><strong>Bidirectional iteration is needed:</strong> It supports both forward and backward traversal.</p></li>
+<li><p><strong>Memory layout is important:</strong> Its contiguous memory allocation can be advantageous for cache locality and certain algorithms.</p></li>
+</ul>
+<p><strong>Additional Considerations:</strong></p>
+<ul class="simple">
+<li><p><strong>Range-based for loops:</strong> Both containers support range-based for loops for convenient iteration.</p></li>
+<li><p><strong>Algorithms:</strong> Many STL algorithms work with both containers, but some might be less efficient with std::forward_list due to its linked structure.</p></li>
+</ul>
+<p><strong>In summary:</strong></p>
+<ul class="simple">
+<li><p>Use std::forward_list when you need a memory-efficient list with efficient insertions/removals at the front/middle and don’t require random access.</p></li>
+<li><p>Use std::vector when you need fast random access, frequent insertions/removals at the back, and the flexibility of bidirectional iteration.</p></li>
+<li><p>Consider the trade-offs in performance, memory usage, and access patterns when making your choice.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="std-list-vs-std-unordered-map">
+<h2>std::list vs std::unordered_map<a class="headerlink" href="#std-list-vs-std-unordered-map" title="Permalink to this heading"></a></h2>
+<p><strong>The speed of std::list and std::unordered_map depends on the specific operations you’re performing:</strong></p>
+<p><strong>Key Operations and Performance:</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 38%" />
+<col style="width: 43%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Operation</p></th>
+<th class="head"><p>std::list</p></th>
+<th class="head"><p>std::unordered_map</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Lookup by value</p></td>
+<td><p>O(n) (linear search)</p></td>
+<td><p>O(1) average, O(n) worst-case</p></td>
+</tr>
+<tr class="row-odd"><td><p>Insertion</p></td>
+<td><p>O(1) anywhere in the list</p></td>
+<td><p>O(1) average, O(n) worst-case</p></td>
+</tr>
+<tr class="row-even"><td><p>Deletion</p></td>
+<td><p>O(1) if you have an iterator</p></td>
+<td><p>O(1) average, O(n) worst-case</p></td>
+</tr>
+<tr class="row-odd"><td><p>Iteration</p></td>
+<td><p>Bidirectional, O(n)</p></td>
+<td><p>Unordered, O(n)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>When std::list is faster:</strong></p>
+<ul class="simple">
+<li><p><strong>Frequent insertions/removals anywhere in the list:</strong> Its linked structure makes these operations very efficient.</p></li>
+<li><p><strong>Order of elements is not important:</strong> It doesn’t preserve any particular order.</p></li>
+<li><p><strong>Duplicate values are allowed:</strong> It can store multiple elements with the same value.</p></li>
+<li><p><strong>Iterating through elements in order is not required:</strong> It doesn’t provide random access.</p></li>
+</ul>
+<p><strong>When std::unordered_map is faster:</strong></p>
+<ul class="simple">
+<li><p><strong>Fast lookups by key are crucial:</strong> It provides average-case O(1) lookups, significantly faster than std::list’s linear search.</p></li>
+<li><p><strong>Order of elements is not important:</strong> It doesn’t maintain any specific order.</p></li>
+<li><p><strong>Duplicate keys are not allowed:</strong> Each key can only be associated with one value.</p></li>
+<li><p><strong>Random access to elements is not required:</strong> It doesn’t support direct access by index.</p></li>
+</ul>
+<p><strong>In summary:</strong></p>
+<ul class="simple">
+<li><p>Choose std::list for fast insertions/removals anywhere in the list, flexibility with order and duplicates, and frequent traversals.</p></li>
+<li><p>Choose std::unordered_map for lightning-fast lookups by key, when you don’t need ordering and can handle potential hash collisions.</p></li>
+<li><p>The best choice depends on your specific use case and performance requirements.</p></li>
+</ul>
+</section>
 </section>
 
 
@@ -120,7 +472,7 @@ To convince the compiler that this is fine, std::move can be used:</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="cpp-smartptr.html" class="btn btn-neutral float-left" title="C++ - Smart Pointer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cpp-general.html" class="btn btn-neutral float-right" title="C++ - General" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cpp-stdlib.html" class="btn btn-neutral float-right" title="C++ - StdLib" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
