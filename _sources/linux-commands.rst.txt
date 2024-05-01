@@ -1,0 +1,52 @@
+Linux - Commands
+======================
+
+**Track of mounted file systems**
+----------------------------------
+
+/etc/mtab, it keeps track of mounted file systems.
+
+---------------
+
+**Inotify**
+--------------------------------
+
+inotify utility is an effective tool to monitor and notify filesystem changes. 
+
+---------------
+
+**Remount Partition**
+--------------------------------
+
+.. code-block:: bash
+
+    mount -o remount,rw /
+
+---------------
+
+**Fix - tty Resource temporarily unavailable**
+----------------------------------------------------------------
+
+.. code-block:: bash
+
+    sudo lsof /dev/tty*
+    sudo kill -9 <PID>
+
+**Find Path of C/Cpp Includes**
+----------------------------------------------------------------
+
+.. code-block:: bash
+
+    pkg-config --cflags dbus-1
+
+
+
+
+
+
+
+
+
+
+
+

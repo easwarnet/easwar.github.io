@@ -1,0 +1,267 @@
+07-AndroidIPC - HIDL - HAL Interface Descriptive Language 
+======================================================================
+Native Applications in Android are the application that are coded primarily in C/C++. This is done for creating abstraction layers for few interfaces in Kernel or Hardware. One such instances is creating HAL for Sensors and other devices. HAL is usually implemented using HIDL. HAL interface definition language or HIDL is an interface description language (IDL) to specify the interface between a HAL and its users. It allows specifying types and method calls, collected into interfaces and packages.
+
+Implementation steps
+----------------------
+
+1. HAL file
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: shell
+
+    $ mkdir -p <AOSP>/vendor/vendorname/hardware/interfaces/testhidl/1.0/
+    $ vi <AOSP>/vendor/vendorname/hardware/interfaces/testhidl/1.0/ITestHidl.hal
+
+Sample HAL Content
+
+.. code-block::
+
+    package vendor.vendorname.hardware.testhidl@1.0;
+
+    interface ITestHidl
+    {
+        ClientRequest(uint32_t request) generates (bool status);
+    };
+
+2. Generate HIDL
+~~~~~~~~~~~~~~~~~~~~
+Use the hidl-gen command to automatically generate related files:
+
+Before we need to load the hidl-gen tool which is located at ./out/soong/host/linux-x86/bin/hidl-gen :
+
+.. code-block:: shell
+
+    $ source build/envsetup
+    $ make hidl-gen
+    $ hidl-gen -Landroidbp -r android.vendor:vendor vendor.vendorname.hardware.testhidl@1.0
+    $ PACKAGE=vendor.vendorname.hardware.testhidl@1.0
+    $ LOC=android root directory vendor/vendorname/hardware/testhidl/1.0/default/
+    $ hidl-gen -o $LOC -Lc++-impl -r android.vendor:vendor -r android.hidl:system/libhidl/transport $PACKAGE
+    $ hidl-gen -o $LOC -Landroidbp-impl -r android.vendor:vendor -r android.hidl:system/libhidl/transport $PACKAGE
+    $ ./hardware/interfaces/update-makefiles.sh
+
+3. HIDL Server
+~~~~~~~~~~~~~~~~~~~~
+**Sample Source Code**
+
+.. code-block:: c++
+
+    #include <hidl/HidlTransportSupport.h>
+    #include <log/log.h>
+    #include <chrono>
+    #include <iostream>
+    #include <thread>
+    #include <vendor/vendorname/hardware/testhidl/1.0/ITestHidl.h>
+
+    #undef LOG_TAG
+    #define LOG_TAG "ITestHidlServer"
+
+    using namespace vendor::vendorname::hardware::testhidl::V1_0::implementation;
+
+    class TestHidl : public ITestHidl {
+        public:
+        TestHidl() = default;
+        ~TestHidl() = default;
+
+        Return<bool> ClientRequest(uint32_t requestid) {
+            bool retval = false;
+            ALOGI("Client Request");
+
+            switch (requestid) {
+                case 1:
+                /*Do Something*/;
+            retval = true;
+                break;
+
+                case 2:
+                /*Do Something*/;
+                retval = true;
+                break;
+
+                default:
+                retval = false;
+                break;
+            }
+
+        return retval;
+        }
+    }
+
+    int main() {
+        android::hardware::configureRpcThreadpool(1, true /* callerWillJoin */);
+        android::sp<ITestHidl> service = new TestHidl();
+
+        android::status_t status = service->registerAsService();
+        if (status != android::OK) {
+            ALOGE("Failed to register service: %d", status);
+            return EXIT_FAILURE;
+        }
+
+        service->Init();
+
+        ALOGI("Registering as service done.");
+
+        android::hardware::joinRpcThreadpool();
+
+        return EXIT_SUCCESS;
+    }
+
+**Makefile**
+
+.. code-block::
+
+    cc_binary {
+        name: "testhidlserver",
+        proprietary: true,
+        init_rc: ["init/testhidl.rc"],
+
+        srcs: [
+            "src/*.cpp"
+        ],
+
+        local_include_dirs: [
+            "src",
+        ],
+
+        shared_libs: [
+            "libbase",
+            "libhidlbase",
+            "libhidltransport",
+            "liblog",
+            "libutils",
+            "libcutils",
+            "libhwbinder",
+            "vendor.vendorname.hardware.testhidl@1.0",
+        ],
+
+    }
+    
+**Rc File**
+
+.. code-block::
+
+    on boot
+        start testhidlserver
+
+    service testhidlserver /vendor/bin/testhidlserver
+        user vendor_testhidl
+        group vendor_testhidl
+        oneshot
+        seclabel u:r:testhidlserver:s0
+
+
+**selinux**
+Create Selinux file which provides permissions for your HIDL Service.
+
+.. code-block::
+
+    type testhidlserver, domain;
+    type testhidlserver_exec, exec_type, file_type, vendor_file_type;
+
+    init_daemon_domain(testhidlserver)
+
+    hwbinder_use(testhidlserver)
+
+    hal_server_domain(testhidlserver, hal_testhidlclient)
+
+    allow testhidlserver hwservicemanager_prop:file { open read getattr map };
+
+
+**filecontext**
+Add your service in filecontext file "file_contexts" located under devices directory.
+
+.. code-block::
+
+    /vendor/bin/testhidlserver u:object_r:testhidlserver:s0
+ 
+4. HIDL Client
+~~~~~~~~~~~~~~~~~~~~
+**Sample Client Listener Source Code**
+
+.. code-block:: c++
+
+    #include <android/log.h>
+    #include <binder/IPCThreadState.h>
+    #include <binder/ProcessState.h>
+    #include <hidl/HidlTransportSupport.h>
+    #include <hidl/Status.h>
+    #include <vendor/vendorname/hardware/testhidl/1.0/ITestHidl.h>
+    #include <iostream>
+    #include <thread>
+
+    #undef LOG_TAG
+    #define LOG_TAG "ITestHidlClient"
+
+    using namespace vendor::vendorname::hardware::testhidl::V1_0;
+
+    int main(int argc, char** argv) {
+        ALOGI("Starting Client");
+        android::sp<ITestHidl> testHidlServer;
+        uint32_t request_1 = 1;
+
+        auto clientreq = testHidlServer->ClientRequest(request_1);
+        if (clientreq.isOk()) {
+            if (clientreq) {
+                ALOGI(LOG_TAG, "Request from Client Processed by Server");
+            } else {
+                ALOGI(LOG_TAG, "Request from Client could not be Processed by Server");
+                return EXIT_FAILURE;
+            }
+        } else {
+            ALOGE("Binder call not OK");
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
+
+**Makefile**
+
+.. code-block::
+
+    cc_binary {
+        name: "testhidlclient",
+        proprietary: true,
+
+        srcs: [
+        "*.cpp",
+        ],
+
+        local_include_dirs: [
+        ],
+
+        shared_libs: [
+        "libhidlbase",
+        "libbinder",
+        "libhidltransport",
+        "liblog",
+        "libutils",
+        "vendor.vendorname.hardware.testhidl@1.0",
+        ],
+
+    }
+
+5. Build
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: shell
+
+    ### Below line w ill load the application to out/target/product/generic_x86_64/vendor/bin/hw/testhidl
+    $ mmm hardware/interfaces/testhidl/1.0
+
+    ### Build the entire sources and run the emulator
+    $ m
+    $ emulator
+
+    ### Test the application
+    # will list the echo service
+    $ lshal | grep echo
+    # will show the service is up and running
+    $ ps -A | grep ITestHidlServer
+
+
+
+
+
+

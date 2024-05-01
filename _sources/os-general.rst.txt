@@ -1,0 +1,108 @@
+Os - General Concepts
+======================
+
+**Re-entrant code**
+------------------------
+
+**What is reentrant code?**
+
+Re-entrant code is code written to safely allow more than one thread of control to access it at once. 
+
+-----------------
+
+**What is RTOS?**
+-------------------
+
+**What is RTOS?**
+
+A real-time operating system (RTOS) is an operating system that guarantees a certain capability within a specified time constraint. For example, an operating system might be designed to ensure that a certain object was available for a robot on an assembly line. In what is usually called a “hard” real-time operating system, if the calculation could not be performed for making the object available at the designated time, the operating system would terminate with a failure. In a “soft” real-time operating system, the assembly line would continue to function but the production output might be lower as objects failed to appear at their designated time, causing the robot to be temporarily unproductive. Some real-time operating systems are created for a special application and others are more general purpose. Some existing general purpose operating systems claim to be a real-time operating systems. To some extent, almost any general purpose operating system such as Microsoft’s Windows 2000 or IBM’s OS/390 can be evaluated for its real-time operating system qualities. That is, even if an operating system doesn’t qualify, it may have characteristics that enable it to be considered as a solution to a particular real-time application problem.
+In general, real-time operating systems are said to require:
+* multitasking
+* Process threads that can be prioritized
+* A sufficient number of interrupt levels
+Real-time operating systems are often required in small embedded operating systems that are packaged as part of micro devices. Some kernels can be considered to meet the requirements of a real-time operating system. However, since other components, such as device drivers, are also usually needed for a particular solution, a real-time operating system is usually larger than just the kernel.
+
+-----------------
+
+**Hard real-time and Soft real-time OS**
+---------------------------------------------------------
+
+**What is the difference between hard real-time and soft real-time OS?**
+
+A hard real time system guarantees that critical tasks complete on time this goal requires that all delays in the system be bounded from the retrieval of the stored data to the time that it takes the o.s to finish any request made of it.
+A soft real time system where a critical real time task gets priority over other tasks and retains that priority until it completes.As in hard real time system kernel delays need to be bounded.
+
+-----------------
+
+
+**Scheduling in RTOS**
+--------------------------
+
+**What type of scheduling is there in RTOS?**
+
+In typical designs, a task has three states: 1) running, 2) ready, 3) blocked. Most tasks are blocked, most of the time. Only one task per CPU is running. In simpler systems, the ready list is usually short, two or three tasks at most.
+The real key is designing the scheduler. Usually the data structure of the ready list in the scheduler is designed to minimize the worst-case length of time spent in the scheduler’s critical section, during which preemption is inhibited, and, in some cases, all interrupts are disabled. But, the choice of data structure depends also on the maximum number of tasks that can be on the ready list.
+
+-----------------
+
+**Priority inversion**
+----------------------------
+
+Priority inversion is a situation where in lower priority tasks will run blocking higher priority tasks waiting for resource (mutex). For ex: consider 3 tasks. A, B and C, A being highest priority task and C is lowest. Look at sequence of context swaps 
+A goes for I/O . unlocks mutex.
+C was ready to run. So C starts running. locks mutex
+B is ready to run. Swaps out C and takes mutex.
+A is ready to run. but A is blocked as mutex is locked by B. but B will never relinqishes the mutex as its higher priority than C.
+The solution to priority inversion is Priority inheritance.
+
+-----------------
+
+**Priority inheritance**
+--------------------------------------
+
+Priority inheritance is a method for eliminating priority inversion problems. Using this programming method, a process scheduling algorithm will increase the priority of a process to the maximum priority of any process waiting for any resource on which the process has a resource lock.
+The basic idea of the priority inheritance protocol is that when a job blocks one or more high priority jobs, it ignores its original priority assignment and executes its critical section at the highest priority level of all the jobs it blocks. After executing its critical section, the job returns to its original priority level.
+
+-----------------
+
+**Binary semaphore and mutex**
+--------------------------------------
+
+**What is difference between binary semaphore and mutex?**
+
+The differences are:
+1) Mutex can be used only for mutual exclusion, while binary can be used of mutual exclusion as well as synchronisation.
+2) Mutex can be given only by the task that took it.
+3) Mutex cannot be given from an ISR.
+4) Mutual-exclusion semaphores can be taken recursively. This means that the semaphore can be taken more than once by the task that holds it before finally being released.
+5) Mutex provides a options for making the task that took it as DELETE_SAFE. This means, that the task cannot be deleted when it holds mutex.
+
+-----------------
+
+**Linux Process States**
+--------------------------------------
+
+Life cycle of a normal Linux process seems pretty much like real life. Processes are born, share resources with parents for sometime, get their own copy of resources when they are ready to make changes, go through various states depending upon their priority and then finally die. In this section will will discuss various states of Linux processes :
+
+**RUNNING:**
+This state specifies that the process is either in execution or waiting to get executed.
+
+**INTERRUPTIBLE:**
+This state specifies that the process is waiting to get interrupted as it is in sleep mode and waiting for some action to happen that can wake this process up. The action can be a hardware interrupt, signal etc.
+
+**UN-INTERRUPTIBLE:**
+It is just like the INTERRUPTIBLE state, the only difference being that a process in this state cannot be waken up by delivering a signal.
+
+**STOPPED:**
+This state specifies that the process has been stopped. This may happen if a signal like SIGSTOP, SIGTTIN etc is delivered to the process.
+
+**TRACED:**
+This state specifies that the process is being debugged. Whenever the process is stopped by debugger (to help user debug the code) the process enters this state.
+
+**ZOMBIE:**
+This state specifies that the process is terminated but still hanging around in kernel process table because the parent of this process has still not fetched the termination status of this process. Parent uses wait() family of functions to fetch the termination status.
+
+**DEAD:**
+This state specifies that the process is terminated and entry is removed from process table. This state is achieved when the parent successfully fetches the termination status as explained in ZOMBIE state.
+
+

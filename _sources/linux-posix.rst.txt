@@ -1,0 +1,65 @@
+Linux - Posix
+======================
+
+Static Linking and Dynamic Linking
+-------------------------------------
+
+In Linux, linking is the process of combining multiple object files (compiled code units) and libraries to create an executable program. The two main linking approaches are static linking and dynamic linking, which differ in how they handle the inclusion of library code:
+
+**Static Linking:**
+
+* During compilation, the linker **includes the entire object code** from the required libraries **directly into the final executable**.
+* The executable becomes **self-contained**, carrying all the necessary code to run.
+* **Advantages:**
+    * Executable is smaller and simpler to distribute (no need for separate libraries).
+    * Program runs as long as the required libraries existed at compile time (doesn't rely on specific library versions being present at runtime).
+* **Disadvantages:**
+    * Executable size increases with each additional library used, leading to potential disk space wastage.
+    * Any updates to libraries require recompiling the executable to incorporate the changes.
+
+**Example:**
+
+.. code-block:: bash
+
+    gcc -o my_program my_source.c math_library.a  # Statically link with math_library.a
+
+In this example, the `gcc` compiler links `my_source.c` object file with the static library `math_library.a` to create the executable `my_program`. The final executable includes all the code from both the source file and the library.
+
+**Dynamic Linking:**
+
+* During program execution, the loader **loads the necessary libraries from the system's library directories** at runtime.
+* The executable contains references (addresses) to the library functions it needs.
+* **Advantages:**
+    * Executable size is smaller as it only contains its own code and references to libraries.
+    * Updates to libraries don't require recompiling the executable; the program uses the latest version available at runtime (if compatible).
+    * Libraries can be shared by multiple programs, reducing memory usage.
+* **Disadvantages:**
+    * The program relies on the presence of the required libraries at runtime. Missing libraries can cause the program to fail.
+    * The program might exhibit slightly slower startup times due to the dynamic loading process.
+
+**Example:**
+
+.. code-block:: bash
+
+    gcc -o my_program my_source.c -lmath  # Dynamically link with math library (libmath.so)
+
+Here, the `gcc` compiler links `my_source.c` with the dynamic library `libmath.so` (indicated by the `-lmath` flag). The executable doesn't include the library code but references the functions it needs. At runtime, the loader searches for `libmath.so` in standard library directories and loads it into memory for the program to use.
+
+**Choosing the Right Approach:**
+
+The choice between static and dynamic linking depends on your specific needs:
+
+- **Static linking** is preferable for small, self-contained programs or when you need complete control over the included libraries.
+- **Dynamic linking** is ideal for larger programs, where you want to minimize executable size and benefit from shared libraries across multiple programs.
+
+-----------------
+
+Fork
+--------
+
+``main() {fork();fork();fork();printf(”hello world”); }`` — will print 8 times.
+
+It will print 8 times. Because, each fork will print twice.
+if u flush, (using “fflush”), then it will be printed only once. thats is you need to flush the iostreams.
+
+

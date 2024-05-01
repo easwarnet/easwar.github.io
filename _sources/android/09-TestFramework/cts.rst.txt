@@ -1,0 +1,67 @@
+09-TestFramework - Android CTS 
+==================================
+The Compatibility Test Suite (CTS) is a downloadable testing suite that tests the compatility of the Target Hardware. The CTS runs on a desktop machine and executes test cases directly on attached devices or an emulator. Once the test is completes and the hardware compatilibility is achieved, the test report needs to be submitted to ``cts@android.com``, requesting access to the Market.
+
+.. figure:: cts1.png
+   :scale: 100 %
+
+Steps
+----------
+- Download CTS from ``https://source.android.com/docs/compatibility/cts/downloads``
+
+- Connect the target hardware device through adb. Ensure device is visible via 'adb devices'
+
+- CTS can also be locally built using command
+
+.. code-block:: shell
+
+    $ make cts -j TARGET_PRODUCT=aosp_arm64
+
+- Launch the cts console
+
+.. code-block:: shell
+
+    $ out/host/linux-x86/cts/android-cts/tools/cts-tradefed
+
+- Run the default CTS plan
+
+.. code-block:: shell
+
+    cts-tradefed > run cts
+
+- To run a test module
+
+.. code-block:: shell
+
+    cts-tradefed > run cts --module <module_name>
+
+- To run a specific test
+
+.. code-block:: shell
+
+    cts-tradefed > run cts --module <module_name> --test <test_name>
+
+- CTS Help
+
+.. code-block:: shell
+
+    cts-tradefed > run cts --help
+
+Block Diagram:
+----------------
+
+.. figure:: cts2.png
+   :scale: 100 %
+
+Reference:
+----------------
+
+[1]: ``https://source.android.com/docs/compatibility/cts/run``
+
+[2]: ``https://android.googlesource.com/platform/cts/+/android-o-mr1-iot-release-1.0.0/tools/cts-tradefed/README``
+
+
+
+
+
+ 

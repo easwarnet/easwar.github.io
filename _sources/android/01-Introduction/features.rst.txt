@@ -1,0 +1,52 @@
+01-Introduction - Features
+=============================
+
+Application framework
+------------------------
+Android provides Framework that is used for both Java App development and 
+C++ based Native Application Devlopment.
+
+ART - Android RunTime
+------------------------
+Android runtime (ART) is the managed runtime used by applications and system 
+services on Android. ART are run runtimes that runs Dex bytecode. Features of 
+ART includes Ahead-of-time (AOT) compilation, Garbage collection, Development 
+and Debugging, Profiling Support for tracing application execution.
+
+Integrated browser
+------------------------
+Android provides WebKit based browser. WebView Class can be used for integrating 
+WebKit engine in app development.
+
+Optimized graphics
+------------------------
+Android provides 2D and OpenGL based 3D graphics Libraries.
+
+SQLite
+------------------------
+SQLite is the Standard database used in Android. It can be used through the 
+Application Framwork.
+
+Media support
+------------------------
+AndroidX Media is collection of libraries that supports wide range of media formats 
+and media codecs.
+
+GSM telephony support
+------------------------
+Telephony support for 3G, Edge, Bluetooth and WiFi is largely dependant on Hardware 
+chipsets. Android provides HAL (Hardware Abstraction Layer) support to interface 
+with the respective hardware chipset. While the upper layers of Stack is handled 
+by Android similair to Linux.
+
+Camera, GPS, compass, and accelerometer
+------------------------------------------------
+Hardware support for Camera, GPS, compass, and accelerometer is largely dependant 
+on Hardware chipsets. Android provides HAL support to interface with the respective 
+hardware chipset.
+
+
+
+ 
+
+ 

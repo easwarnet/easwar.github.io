@@ -1,0 +1,41 @@
+04-SoftwareUpdate - OTA 
+=============================
+Android devices use GPT. The GUID Partition Table (GPT) is a standard for the layout of partition tables of a physical computer storage device. GUID Partition Table (GPT) was introduced with UEFI booting system which isn't dependent on first boot sector and hence may contain up to 128 partitions. One of the features Android offers is A/B Seamless Update
+
+What is A/B seamless update?
+--------------------------------------
+
+.. figure:: seamlessupdate.png
+   :scale: 100 %
+
+A/B system updates, also known as seamless updates, ensures a bootable system and minimum downtime when performing a OTA update.
+
+Seamless updates work by having two different system partitions on a device. When using a device that can perform seamless updates, while one system partition is running, the second partition is updated in parallel. Once this is done, the system reboots and starts to use the newly updatd partition, while the last partition that was used just before reboot will be used as a partition for next update. A configuration memory points to the memory region of the newly updated partition. When the system boots, this configuration memory is read by the bootloader and boots the newly updated memory. The next upgrade process will update the other system partition. They swap back and forth seamlessly.
+
+A/B system updates, also known as seamless updates, ensures a boot able system and minimum downtime when performing a OTA update.
+
+Seamless updates work by having two different system partitions on a device. When using a device that can perform seamless updates, all the transferring is done while one system partition is running, as things are copied and moved into the second partition. Once all this is done, you can reboot and use the new system partition. This is done without moving the partitions or renaming them because they are numbered. A configuration file used during the boot process is read that tells the kernel and boot process where each partition starts and stops. This file is changed to point to the new system partition instead of the current one(becomes inactive). The next time you update, the other system partition will be wiped and used. They swap back and forth seamlessly.
+
+- We start with two system partitions, system_a and system_b, both on the same version of Android.
+- Assuming that system_a is active, the OTA update will patch system_b, the inactive partition, in the background.
+- system_a is set to inactive and system_b then becomes active once the user reboots.
+- The now-inactive partition, system_a, will be updated when the next OTA update rolls out.
+
+Benefits
+---------------------
+
+- If an update fails, the device will roll back to the working build on the other slot.
+- Your data is kept perfectly intact, even if the update is borked, as there is only one partition (userdata) which houses your data.
+- Update streaming: If your data partition is full, then the update can be downloaded and streamed to the inactive slot. It’s a pretty neat feature and means that you don’t have to waste any temporary storage on your updates. That’s why there’s no cache partition on A/B devices as they’re no longer needed.
+
+Recovery Partition
+----------------------
+The underlying Linux kernel on Android devices is what lets Android recognize and use the hardware properly on a smartphone. On A-only Android devices, you generally have two versions of the kernel: One is packed inside of the recovery partition while the other is in the boot partition. On A/B devices supporting seamless updates, the recovery is now inside of the boot image along with the kernel. The recovery’s main function was to install updates, but since that’s handled by the system itself (update_engine) while Android is booted up the dedicated recovery partition is no longer needed.
+
+To install a custom recovery on A/B devices, we thus need to modify the boot partition and replace the stock recovery with our own. This is why to install TWRP you need to use a fastboot command to boot a custom boot image first and then flash the TWRP installation script, as fastboot can’t patch partitions—only flash over them entirely. You could technically pre-patch your existing boot image with TWRP and then flash it via fastboot, but that’s more trouble than it’s worth. The TWRP installer script patches both the boot_a and boot_b partitions to install TWRP.
+
+
+
+ 
+
+ 

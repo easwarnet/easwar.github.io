@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>05-BootAndPartitions - Boot Sequence &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="05-BootAndPartitions - Partitions in Android" href="partitions.html" />
+    <link rel="prev" title="04-SoftwareUpdate - OTA" href="../04-SoftwareUpdate/ota.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/androidarchitecture.html">01-Introduction - Android Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/features.html">01-Introduction - Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/hardwarecompatibility.html">01-Introduction - Hardware Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/characteristics.html">01-Introduction - Characteristics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/aospoverview.html">02-AndroidBuildSystem - AOSP Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/downloadaosp.html">02-AndroidBuildSystem - Download AOSP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/androidbuildsystem.html">02-AndroidBuildSystem - Android Build System in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/buildingandroid.html">02-AndroidBuildSystem - Building Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/adb.html">03-AndroidTools - ADB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/fastboot.html">03-AndroidTools - Fastboot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/othertools.html">03-AndroidTools - Other Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/flashingandroid.html">04-SoftwareUpdate - Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/ota.html">04-SoftwareUpdate - OTA</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">05-BootAndPartitions - Boot Sequence</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#boot-sequence-diagram">Boot Sequence Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#primary-bootloader">Primary Bootloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#secondary-bootloader">Secondary Bootloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kernel">Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initramfs">Initramfs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rootfs">RootFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#init-process">Init Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zygote">Zygote</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-services">System Services</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="partitions.html">05-BootAndPartitions - Partitions in Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="secureboot.html">05-BootAndPartitions - Secure Boot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="treble.html">05-BootAndPartitions - Project Treble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/initrc.html">06-NativeAppDevelopment - Init RC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/selinux.html">06-NativeAppDevelopment - SELinux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/nativeapplications.html">06-NativeAppDevelopment - Native Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/ndk.html">06-NativeAppDevelopment - NDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemservices.html">06-NativeAppDevelopment - System Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemproperties.html">06-NativeAppDevelopment - System Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/hal.html">06-NativeAppDevelopment - Hardware Abstraction Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vhal.html">06-NativeAppDevelopment - VHAL - Vehicle HAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vndk.html">06-NativeAppDevelopment - Vendor Native Development Kit (VNDK)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/loggingdebugging.html">06-NativeAppDevelopment - Logging and Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/binder.html">07-AndroidIPC - Binder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/hidl.html">07-AndroidIPC - HIDL - HAL Interface Descriptive Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/aidl.html">07-AndroidIPC - Android Interface Definition Language (AIDL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/activities.html">08-AppCoreComponents - Activities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/services.html">08-AppCoreComponents - Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/broadcast.html">08-AppCoreComponents - Broadcast Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/contentproviders.html">08-AppCoreComponents - Content Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/cts.html">09-TestFramework - Android CTS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/vts.html">09-TestFramework - Android VTS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html#coming-soon">Coming Soon</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>05-BootAndPartitions - Boot Sequence</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="bootandpartitions-boot-sequence">
+<h1>05-BootAndPartitions - Boot Sequence<a class="headerlink" href="#bootandpartitions-boot-sequence" title="Permalink to this heading"></a></h1>
+<p>This topic explains how Android Boots from when its powered on till Android UI starts to run.</p>
+<section id="boot-sequence-diagram">
+<h2>Boot Sequence Diagram<a class="headerlink" href="#boot-sequence-diagram" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/bootsequence.png"><img alt="../../_images/bootsequence.png" src="../../_images/bootsequence.png" style="width: 342.0px; height: 590.0px;" /></a>
+</figure>
+</section>
+<section id="primary-bootloader">
+<h2>Primary Bootloader<a class="headerlink" href="#primary-bootloader" title="Permalink to this heading"></a></h2>
+<p>Primary Bootloader is first pice of code that executes on Power-ON. Primary Bootloader is located on Boot ROM of the processor. The functionality of the primary bootloader is to verify the authenticity of the secondary bootloader and load it. Usually if primary bootloader fails to load the Secondary Bootloader, it will load EDL or Emergency Download Mode, which is compatible with Fastboot. The EDL Mode shall prompt us in flashing the new software on to the device.</p>
+</section>
+<section id="secondary-bootloader">
+<h2>Secondary Bootloader<a class="headerlink" href="#secondary-bootloader" title="Permalink to this heading"></a></h2>
+<p>Secondary Bootloader usually resides on a NAND based eMMC. The secondary bootloader is responsible for initializing and setting Networks, RAM, Flash Memory and so on. Once the secondary bootloader is successfully loaded, its functionality is to invoke TrustZone, which verifies integrity of each images. More covered on topic Android Partitions.</p>
+</section>
+<section id="kernel">
+<h2>Kernel<a class="headerlink" href="#kernel" title="Permalink to this heading"></a></h2>
+<p>Secondary bootloader then passes the control to Kernel. Seconday Bootloader shares DTBO memory region with Kernel, where Hardware topology and hardcoded information is found. The Kernel used in Android is modified version of Linux Kernel. Kernel initializes the complete Scheduler, Process Subsystem, Memory Subsystem, Hardware Drivers and so on. Android Kernel also consist of additional modules such as Binder, Ashmem (Android Shared Memory), Drivers for ADB (Android Debug Bridge), Wakelocks, Logcat Support, OOM_handler (Low Memory Handling) and so on. Kernel then loads the initramfs.</p>
+</section>
+<section id="initramfs">
+<h2>Initramfs<a class="headerlink" href="#initramfs" title="Permalink to this heading"></a></h2>
+<p>On Android, like on many Linux-based systems, the kernel first mounts an initramfs on /init/. initramfs is a RAM based filesystem that mounts the actual root filsystem at /, thereby replacing the initramfs. Android keeps the initramfs mounted forever. Android’s initramfs contains only /init, adbd and a few configuration files.</p>
+</section>
+<section id="rootfs">
+<h2>RootFS<a class="headerlink" href="#rootfs" title="Permalink to this heading"></a></h2>
+<p>Once the Root filesystem is mounted it tries to execute the very first process init.</p>
+</section>
+<section id="init-process">
+<h2>Init Process<a class="headerlink" href="#init-process" title="Permalink to this heading"></a></h2>
+<p>Init is the first process that executes once the rootfs mounted. Init runs init.rc script. Refer init.rc topic for more details.</p>
+</section>
+<section id="zygote">
+<h2>Zygote<a class="headerlink" href="#zygote" title="Permalink to this heading"></a></h2>
+<p>Android Framework starts loading and Zygote is considered to be the first service started by Android. Zygote is spawned by the init process, which is responsible for starting Android applications and service processes. It loads and initializes classes that are supposed to be used very often into the heap. For example, dex data structures of libraries. After Zygote has started, it listens for commands on a socket. When a new applications starts, a command is sends to Zygote which executes a fork() system call.</p>
+</section>
+<section id="system-services">
+<h2>System Services<a class="headerlink" href="#system-services" title="Permalink to this heading"></a></h2>
+<p>Zygote forks and launches multiple core system services such as Power manager, Activity Manager, Telephony, Battery service, Alarm manager, Sensor service, Bluetooth service, Location Services and so on.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../04-SoftwareUpdate/ota.html" class="btn btn-neutral float-left" title="04-SoftwareUpdate - OTA" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="partitions.html" class="btn btn-neutral float-right" title="05-BootAndPartitions - Partitions in Android" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

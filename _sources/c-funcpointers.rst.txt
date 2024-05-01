@@ -1,0 +1,62 @@
+C - Function Pointers
+======================
+
+
+**Array of Function Pointers**
+---------------------------------
+
+The code snippet `void (*fptr[10])()` declares an array of function pointers in C. Here's a breakdown of its components:
+
+**1. `void`:** This specifies the return type of the functions the pointers will point to. In this case, they will return `void`, meaning they don't return any value.
+
+**2. `*`:** This is the pointer declaration operator. It indicates that the elements of the array will be pointers.
+
+**3. `fptr`:** This is the name of the array. You can choose any descriptive name for your array.
+
+**4. `[10]`:** This specifies the size of the array. Here, it can hold 10 function pointers.
+
+**5. `()`:** These parentheses are part of the function pointer declaration. They define that the pointers will point to functions that take no arguments.
+
+**In essence, this code declares an array named `fptr` that can store 10 pointers to functions that all return `void` and take no arguments.**
+
+Here's an example of how you might use this array:
+
+.. code-block:: c++
+
+    void function1() {
+      // Do something
+    }
+
+    void function2() {
+      // Do something else
+    }
+
+    int main() {
+      // Initialize the array with function addresses
+      void (*fptr[10])() = {function1, function2, /* ... more functions */};
+
+      // Call functions through the array
+      for (int i = 0; i < 10; ++i) {
+        if (fptr[i] != nullptr) { // Check for null pointers (optional)
+          fptr[i]();
+        }
+      }
+
+      return 0;
+    }
+
+In this example:
+
+- Two functions, `function1` and `function2`, are defined.
+- The `fptr` array is initialized with the addresses of these functions.
+- A loop iterates through the array, calling each function pointed to by the elements (if they are not null pointers).
+
+**Key Points:**
+
+- Function pointers are a powerful tool for achieving polymorphism in C.
+- You can use them to create flexible and dynamic code.
+- Be cautious when working with function pointers, as they can introduce errors if not handled properly (e.g., null pointer dereference).
+
+
+
+test

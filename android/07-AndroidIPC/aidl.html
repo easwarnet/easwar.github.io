@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>07-AndroidIPC - Android Interface Definition Language (AIDL) &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="08-AppCoreComponents - Activities" href="../08-AppCoreComponents/activities.html" />
+    <link rel="prev" title="07-AndroidIPC - HIDL - HAL Interface Descriptive Language" href="hidl.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/androidarchitecture.html">01-Introduction - Android Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/features.html">01-Introduction - Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/hardwarecompatibility.html">01-Introduction - Hardware Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/characteristics.html">01-Introduction - Characteristics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/aospoverview.html">02-AndroidBuildSystem - AOSP Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/downloadaosp.html">02-AndroidBuildSystem - Download AOSP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/androidbuildsystem.html">02-AndroidBuildSystem - Android Build System in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/buildingandroid.html">02-AndroidBuildSystem - Building Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/adb.html">03-AndroidTools - ADB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/fastboot.html">03-AndroidTools - Fastboot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/othertools.html">03-AndroidTools - Other Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/flashingandroid.html">04-SoftwareUpdate - Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/ota.html">04-SoftwareUpdate - OTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/bootsequence.html">05-BootAndPartitions - Boot Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/partitions.html">05-BootAndPartitions - Partitions in Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/secureboot.html">05-BootAndPartitions - Secure Boot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/treble.html">05-BootAndPartitions - Project Treble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/initrc.html">06-NativeAppDevelopment - Init RC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/selinux.html">06-NativeAppDevelopment - SELinux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/nativeapplications.html">06-NativeAppDevelopment - Native Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/ndk.html">06-NativeAppDevelopment - NDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemservices.html">06-NativeAppDevelopment - System Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemproperties.html">06-NativeAppDevelopment - System Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/hal.html">06-NativeAppDevelopment - Hardware Abstraction Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vhal.html">06-NativeAppDevelopment - VHAL - Vehicle HAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vndk.html">06-NativeAppDevelopment - Vendor Native Development Kit (VNDK)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/loggingdebugging.html">06-NativeAppDevelopment - Logging and Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="binder.html">07-AndroidIPC - Binder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hidl.html">07-AndroidIPC - HIDL - HAL Interface Descriptive Language</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">07-AndroidIPC - Android Interface Definition Language (AIDL)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#defining-an-aidl-interface">Defining an AIDL interface:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calling-an-ipc-method">Calling an IPC method:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference">Reference:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/activities.html">08-AppCoreComponents - Activities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/services.html">08-AppCoreComponents - Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/broadcast.html">08-AppCoreComponents - Broadcast Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/contentproviders.html">08-AppCoreComponents - Content Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/cts.html">09-TestFramework - Android CTS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/vts.html">09-TestFramework - Android VTS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html#coming-soon">Coming Soon</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>07-AndroidIPC - Android Interface Definition Language (AIDL)</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="androidipc-android-interface-definition-language-aidl">
+<h1>07-AndroidIPC - Android Interface Definition Language (AIDL)<a class="headerlink" href="#androidipc-android-interface-definition-language-aidl" title="Permalink to this heading"></a></h1>
+<p>The Android Interface Definition Language (AIDL) is Interface Descriptive Language that allows you to define the programming interface that both the client and service using interprocess communication (IPC). RPC is used to call the remote methods. AIDL interfaceuses direct function calls.</p>
+<ul class="simple">
+<li><p>Calls made from the local process are executed in the same thread that is making the call. If this is your main UI thread, that thread continues to execute in the AIDL interface. If it is another thread, that is the one that executes your code in the service. Thus, if only local threads are accessing the service, you can completely control which threads are executing in it (but if that is the case, then you shouldn’t be using AIDL at all, but should instead create the interface by implementing a Binder).</p></li>
+<li><p>Calls from a remote process are dispatched from a thread pool the platform maintains inside of your own process. You must be prepared for incoming calls from unknown threads, with multiple calls happening at the same time. In other words, an implementation of an AIDL interface must be completely thread-safe. Calls made from one thread on the same remote object arrive in order on the receiver end.</p></li>
+<li><p>The oneway keyword modifies the behavior of remote calls. When used, a remote call does not block; it simply sends the transaction data and immediately returns. The implementation of the interface eventually receives this as a regular call from the Binder thread pool as a normal remote call. If oneway is used with a local call, there is no impact and the call is still synchronous.</p></li>
+</ul>
+<section id="defining-an-aidl-interface">
+<h2>Defining an AIDL interface:<a class="headerlink" href="#defining-an-aidl-interface" title="Permalink to this heading"></a></h2>
+<p>You must define your AIDL interface in an .aidl file using the Java programming language syntax, then save it in the source code (in the src/ directory) of both the application hosting the service and any other application that binds to the service.</p>
+<p>To create a bounded service using AIDL, follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Aidl file</p></li>
+</ol>
+<p>Example AIDL File</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// IRemoteService.aidl</span>
+<span class="kn">package</span> <span class="nn">com.example.android</span><span class="o">;</span>
+
+<span class="c1">// Declare any non-default types here with import statements</span>
+
+<span class="cm">/** Example service interface */</span>
+<span class="kd">interface</span> <span class="nc">IRemoteService</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="nf">message</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Simply save your .aidl file in your project’s src/ directory and when you build your application, the SDK tools generate the IBinder interface file in your project’s gen/ directory. The generated file name matches the .aidl file name, but with a .java extension (for example, IRemoteService.aidl results in IRemoteService.java).</p>
+<ol class="arabic simple" start="2">
+<li><p>Implement Interface</p></li>
+</ol>
+<p>The Android SDK tools generate an interface in the Java programming language, based on your .aidl file. This interface has an inner abstract class named Stub that extends Binder and implements methods from your AIDL interface. You must extend the Stub class and implement the methods.</p>
+<p>When you build your application, the Android SDK tools generate a .java interface file named after your .aidl file. The generated interface includes a subclass named Stub that is an abstract implementation of its parent interface (for example, YourInterface.Stub) and declares all the methods from the .aidl file.</p>
+<p>To implement the interface generated from the .aidl, extend the generated Binder interface (for example, YourInterface.Stub) and implement the methods inherited from the .aidl file. Implement a Service and override onBind() to return your implementation of the Stub class. Once you’ve implemented the interface for your service, you need to expose it to clients so they can bind to it. To expose the interface for your service, extend Service and implement onBind() to return an instance of your class that implements the generated Stub (as discussed in the previous section). Here’s an example service that implement an interface called IRemoteService and exposes the IRemoteService example interface to clients.</p>
+<p>Here is an example (defined by the IRemoteService.aidl example, above) using an anonymous instance:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AidlRemoteServiceStub</span> <span class="kd">extends</span> <span class="n">Service</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TAG</span> <span class="o">=</span> <span class="s">&quot;AidlRemoteServiceStub&quot;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">className</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getSimpleName</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="nf">AidlRemoteServiceStub</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; Constructor&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">IBinder</span> <span class="nf">onBind</span><span class="o">(</span><span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; onBind&quot;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">IRemoteService</span><span class="o">.</span><span class="na">asBinder</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">();</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; onCreate&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDestroy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onDestroy</span><span class="o">();</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; onDestroy&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="n">IRemoteService</span><span class="o">.</span><span class="na">Stub</span> <span class="n">iRemoteService</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IRemoteService</span><span class="o">.</span><span class="na">Stub</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">message</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">&quot;Message from AIDL Stub&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Now the binder is an instance of the Stub class (a Binder), which defines the RPC interface for the service. In the next step, this instance is exposed to clients so they can interact with the service.</p>
+<ol class="arabic simple" start="3">
+<li><p>Client Implementation</p></li>
+</ol>
+<p>Now, when a client (such as an activity) calls bindService() to connect to this service, the client’s onServiceConnected() callback receives the binder instance returned by the service’s onBind() method.</p>
+<p>The client must also have access to the interface class, so if the client and service are in separate applications, then the client’s application must have a copy of the .aidl file in its src/ directory (which generates the android.os.Binder interface—providing the client access to the AIDL methods).</p>
+<p>When the client receives the IBinder in the onServiceConnected() callback, it must call YourServiceInterface.Stub.asInterface(service) to cast the returned parameter to YourServiceInterface type. For example:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AIDLDemo</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TAG</span> <span class="o">=</span> <span class="s">&quot;AIDLDemo&quot;</span><span class="o">;</span>
+    <span class="n">IRemoteService</span> <span class="n">service</span><span class="o">;</span>
+    <span class="n">RemoteServiceConnection</span> <span class="n">connection</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">    * This class represents the actual service connection. It casts the bound</span>
+<span class="cm">    * stub implementation of the service to the AIDL interface.</span>
+<span class="cm">    */</span>
+    <span class="kd">class</span> <span class="nc">RemoteServiceConnection</span> <span class="kd">implements</span> <span class="n">ServiceConnection</span> <span class="o">{</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onServiceConnected</span><span class="o">(</span><span class="n">ComponentName</span> <span class="n">name</span><span class="o">,</span> <span class="n">IBinder</span> <span class="n">boundService</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">service</span> <span class="o">=</span> <span class="n">IRemoteService</span><span class="o">.</span><span class="na">Stub</span><span class="o">.</span><span class="na">asInterface</span><span class="o">((</span><span class="n">IBinder</span><span class="o">)</span> <span class="n">boundService</span><span class="o">);</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;onServiceConnected() connected&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onServiceDisconnected</span><span class="o">(</span><span class="n">ComponentName</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">service</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;onServiceDisconnected() disconnected&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Binds this activity to the service. */</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RemoteServiceConnection</span><span class="o">();</span>
+        <span class="n">Intent</span> <span class="n">i</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">();</span>
+        <span class="kt">boolean</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">bindService</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">connection</span><span class="o">,</span> <span class="n">Context</span><span class="o">.</span><span class="na">BIND_AUTO_CREATE</span><span class="o">);</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;initService() bound with &quot;</span> <span class="o">+</span> <span class="n">ret</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Unbinds this activity from the service. */</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">releaseService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">unbindService</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;releaseService() unbound.&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Called when the activity is first created. */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">main</span><span class="o">);</span>
+
+        <span class="n">initService</span><span class="o">();</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="na">message</span><span class="o">();</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;Message received: &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RemoteException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;Service Request failed with: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Called when the activity is about to be destroyed. */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onDestroy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">releaseService</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="calling-an-ipc-method">
+<h2>Calling an IPC method:<a class="headerlink" href="#calling-an-ipc-method" title="Permalink to this heading"></a></h2>
+<p>Here are the steps a calling class must take to call a remote interface defined with AIDL:</p>
+<ul class="simple">
+<li><p>Include the .aidl file in the project src/ directory.</p></li>
+<li><p>Declare an instance of the IBinder interface (generated based on the AIDL).</p></li>
+<li><p>Implement ServiceConnection.</p></li>
+<li><p>Call Context.bindService(), passing in your ServiceConnection implementation.</p></li>
+<li><p>In your implementation of onServiceConnected(), you will receive an IBinder instance (called service). Call YourInterfaceName.Stub.asInterface((IBinder)service) to cast the returned parameter to YourInterface type.</p></li>
+<li><p>Call the methods that you defined on your interface. You should always trap DeadObjectException exceptions, which are thrown when the connection has broken. You should also trap SecurityException exceptions, which are thrown when the two processes involved in the IPC method call have conflicting AIDL definitions.</p></li>
+<li><p>To disconnect, call Context.unbindService() with the instance of your interface.</p></li>
+</ul>
+<p>A few comments on calling an IPC service:
+- Objects are reference counted across processes.
+- You can send anonymous objects as method arguments.</p>
+<p>For more information about binding to a service, read the Bound Services document.</p>
+</section>
+<section id="reference">
+<h2>Reference:<a class="headerlink" href="#reference" title="Permalink to this heading"></a></h2>
+<p>[1]: <code class="docutils literal notranslate"><span class="pre">https://developer.android.com/guide/components/aidl</span></code></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hidl.html" class="btn btn-neutral float-left" title="07-AndroidIPC - HIDL - HAL Interface Descriptive Language" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../08-AppCoreComponents/activities.html" class="btn btn-neutral float-right" title="08-AppCoreComponents - Activities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

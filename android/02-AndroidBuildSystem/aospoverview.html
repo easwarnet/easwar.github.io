@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>02-AndroidBuildSystem - AOSP Overview &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="02-AndroidBuildSystem - Download AOSP" href="downloadaosp.html" />
+    <link rel="prev" title="01-Introduction - Characteristics" href="../01-Introduction/characteristics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/androidarchitecture.html">01-Introduction - Android Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/features.html">01-Introduction - Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/hardwarecompatibility.html">01-Introduction - Hardware Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/characteristics.html">01-Introduction - Characteristics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">02-AndroidBuildSystem - AOSP Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#aosp-directory-structures">AOSP Directory Structures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#art">1. art</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bionic">2. bionic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bootable">3. bootable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build">4. build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cts">5. cts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development">6. development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#devices">7. devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#external">8. external</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#framework">9. framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware">10. hardware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kernel">11. kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#out">12. out</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#packages">13. packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prebuilt">14. prebuilt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system">15. system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tools">16. tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vendor">17. vendor</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="downloadaosp.html">02-AndroidBuildSystem - Download AOSP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="androidbuildsystem.html">02-AndroidBuildSystem - Android Build System in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="buildingandroid.html">02-AndroidBuildSystem - Building Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/adb.html">03-AndroidTools - ADB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/fastboot.html">03-AndroidTools - Fastboot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/othertools.html">03-AndroidTools - Other Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/flashingandroid.html">04-SoftwareUpdate - Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/ota.html">04-SoftwareUpdate - OTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/bootsequence.html">05-BootAndPartitions - Boot Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/partitions.html">05-BootAndPartitions - Partitions in Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/secureboot.html">05-BootAndPartitions - Secure Boot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/treble.html">05-BootAndPartitions - Project Treble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/initrc.html">06-NativeAppDevelopment - Init RC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/selinux.html">06-NativeAppDevelopment - SELinux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/nativeapplications.html">06-NativeAppDevelopment - Native Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/ndk.html">06-NativeAppDevelopment - NDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemservices.html">06-NativeAppDevelopment - System Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemproperties.html">06-NativeAppDevelopment - System Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/hal.html">06-NativeAppDevelopment - Hardware Abstraction Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vhal.html">06-NativeAppDevelopment - VHAL - Vehicle HAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vndk.html">06-NativeAppDevelopment - Vendor Native Development Kit (VNDK)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/loggingdebugging.html">06-NativeAppDevelopment - Logging and Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/binder.html">07-AndroidIPC - Binder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/hidl.html">07-AndroidIPC - HIDL - HAL Interface Descriptive Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/aidl.html">07-AndroidIPC - Android Interface Definition Language (AIDL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/activities.html">08-AppCoreComponents - Activities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/services.html">08-AppCoreComponents - Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/broadcast.html">08-AppCoreComponents - Broadcast Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/contentproviders.html">08-AppCoreComponents - Content Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/cts.html">09-TestFramework - Android CTS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/vts.html">09-TestFramework - Android VTS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html#coming-soon">Coming Soon</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>02-AndroidBuildSystem - AOSP Overview</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="androidbuildsystem-aosp-overview">
+<h1>02-AndroidBuildSystem - AOSP Overview<a class="headerlink" href="#androidbuildsystem-aosp-overview" title="Permalink to this heading"></a></h1>
+<p>AOSP or Android Open Source Project is a Code Project with Build System that is used to build the Android System for the target hardware.
+AOSP in Brief</p>
+<ul class="simple">
+<li><p>Source Codes for Bootloader, Kernel, Native Applications, Libraries, HALs, Frameworks, Packages, Services and Standard Apps</p></li>
+<li><p>Device Configurations to customize project to different target device</p></li>
+<li><p>Test Suite for checking the Device compatibility</p></li>
+<li><p>Tools to facilitate development</p></li>
+<li><p>Tool chains to compile and build C, C++, Java codes to Images, File System, Binaries, Services.</p></li>
+</ul>
+<section id="aosp-directory-structures">
+<h2>AOSP Directory Structures<a class="headerlink" href="#aosp-directory-structures" title="Permalink to this heading"></a></h2>
+<section id="art">
+<h3>1. art<a class="headerlink" href="#art" title="Permalink to this heading"></a></h3>
+<p>Directory which consists of compilation of the latest android ART run time.</p>
+</section>
+<section id="bionic">
+<h3>2. bionic<a class="headerlink" href="#bionic" title="Permalink to this heading"></a></h3>
+<p>Directory which consists of the C-runtime for Android. Android does not use glibc like most Linux distributions. Instead it uses c-library called bionic which is based mostly on BSD-derived sources. You will also find the source for the c-library, math and other core runtime libraries in this directory.</p>
+</section>
+<section id="bootable">
+<h3>3. bootable<a class="headerlink" href="#bootable" title="Permalink to this heading"></a></h3>
+<p>Directory which consists of boot and startup related code. Fastboot, a protocol which is used by Android to update partitions, is also part of Bootable Directory.</p>
+</section>
+<section id="build">
+<h3>4. build<a class="headerlink" href="#build" title="Permalink to this heading"></a></h3>
+<p>Directory which consists of build system implementations such as core make files, environment setup scripts and so on. The environment setup script “source build/envsetup.sh” is used for setting environment variables, build specific modules, checking necessary applications available in the local machine, setup the build information based out of “device” directory.</p>
+</section>
+<section id="cts">
+<h3>5. cts<a class="headerlink" href="#cts" title="Permalink to this heading"></a></h3>
+<p>Directory which consists of files related to CTS. CTS or Compatibility Test Suite is a test suite that is part of AOSP. Intent of CTS is to test Device and reveal software incompatibilities on the target device. CTS runs on a Desktop Machine and execute test cases directly on attached devices. The test cases are written in Java as Junit test and are packaged under Android .apk files.</p>
+</section>
+<section id="development">
+<h3>6. development<a class="headerlink" href="#development" title="Permalink to this heading"></a></h3>
+<p>Directory which consists of source cod of tools such SDK and NDK.</p>
+</section>
+<section id="devices">
+<h3>7. devices<a class="headerlink" href="#devices" title="Permalink to this heading"></a></h3>
+<p>Directory which consists of product specific codes, build configuration files related to Different Target Devices. The sub directories under devices include common, generic and so on.</p>
+</section>
+<section id="external">
+<h3>8. external<a class="headerlink" href="#external" title="Permalink to this heading"></a></h3>
+<p>This directory consists of source code for all external open source project like SQLite, v4l2_codecs, toybox, webkit, scrypt and so on</p>
+</section>
+<section id="framework">
+<h3>9. framework<a class="headerlink" href="#framework" title="Permalink to this heading"></a></h3>
+<p>This directory consists of source code for Android Frameworks. Here you will find the implementation of key services such as the System Server with the Package- and Activity managers. A lot of the mapping between the java application APIs and the native libraries is also done here.</p>
+</section>
+<section id="hardware">
+<h3>10. hardware<a class="headerlink" href="#hardware" title="Permalink to this heading"></a></h3>
+<p>This directory consists of Hardware Abstraction Layers, Radio Abstraction Layers, Radio interface layer to communicate with Radio Modem and Hardware related source codes.</p>
+</section>
+<section id="kernel">
+<h3>11. kernel<a class="headerlink" href="#kernel" title="Permalink to this heading"></a></h3>
+<p>Android uses Linux Kernel. This directory consists of source code for complete Linux Kernel. The linux kernel will be configured to support Target Hardware when environment setup script is run.</p>
+</section>
+<section id="out">
+<h3>12. out<a class="headerlink" href="#out" title="Permalink to this heading"></a></h3>
+<p>This directory consists of build output. Once the make is run, the output is generated under out/target/product. In the default build for the emulator the output will be placed in out/target/product/generic. This is where you will find the images used by the emulator to start or to be downloaded and flashed to a device if you are building for a hardware target.</p>
+</section>
+<section id="packages">
+<h3>13. packages<a class="headerlink" href="#packages" title="Permalink to this heading"></a></h3>
+<p>This directory contains the source code of Standard Android application that are available as part of the AOSP — Camera, SMS, Dialer, Launcher, etc</p>
+</section>
+<section id="prebuilt">
+<h3>14. prebuilt<a class="headerlink" href="#prebuilt" title="Permalink to this heading"></a></h3>
+<p>This directory contains files that are distributed in binary form for convenience. Examples include the cross compilations toolchains for different development machines</p>
+</section>
+<section id="system">
+<h3>15. system<a class="headerlink" href="#system" title="Permalink to this heading"></a></h3>
+<p>This directory contains source code files for the core Android system. This includes the source code for the init process and the default init.rc script that provide the dynamic configuration of the platform.</p>
+</section>
+<section id="tools">
+<h3>16. tools<a class="headerlink" href="#tools" title="Permalink to this heading"></a></h3>
+<p>This directory contains of various tools such as doc_generation, android studio, adt</p>
+</section>
+<section id="vendor">
+<h3>17. vendor<a class="headerlink" href="#vendor" title="Permalink to this heading"></a></h3>
+<p>Thi directory consists of complete packages of vendor specific tools, vendor specific hardware related codes, app packages, vendor defined interfaces, vendor defined security rules and so on.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../01-Introduction/characteristics.html" class="btn btn-neutral float-left" title="01-Introduction - Characteristics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="downloadaosp.html" class="btn btn-neutral float-right" title="02-AndroidBuildSystem - Download AOSP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

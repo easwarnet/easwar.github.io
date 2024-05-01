@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>06-NativeAppDevelopment - System Services &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="06-NativeAppDevelopment - System Properties" href="systemproperties.html" />
+    <link rel="prev" title="06-NativeAppDevelopment - NDK" href="ndk.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/androidarchitecture.html">01-Introduction - Android Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/features.html">01-Introduction - Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/hardwarecompatibility.html">01-Introduction - Hardware Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/characteristics.html">01-Introduction - Characteristics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/aospoverview.html">02-AndroidBuildSystem - AOSP Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/downloadaosp.html">02-AndroidBuildSystem - Download AOSP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/androidbuildsystem.html">02-AndroidBuildSystem - Android Build System in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/buildingandroid.html">02-AndroidBuildSystem - Building Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/adb.html">03-AndroidTools - ADB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/fastboot.html">03-AndroidTools - Fastboot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/othertools.html">03-AndroidTools - Other Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/flashingandroid.html">04-SoftwareUpdate - Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/ota.html">04-SoftwareUpdate - OTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/bootsequence.html">05-BootAndPartitions - Boot Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/partitions.html">05-BootAndPartitions - Partitions in Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/secureboot.html">05-BootAndPartitions - Secure Boot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/treble.html">05-BootAndPartitions - Project Treble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="initrc.html">06-NativeAppDevelopment - Init RC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="selinux.html">06-NativeAppDevelopment - SELinux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nativeapplications.html">06-NativeAppDevelopment - Native Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndk.html">06-NativeAppDevelopment - NDK</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">06-NativeAppDevelopment - System Services</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-steps">Implementation steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="systemproperties.html">06-NativeAppDevelopment - System Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hal.html">06-NativeAppDevelopment - Hardware Abstraction Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vhal.html">06-NativeAppDevelopment - VHAL - Vehicle HAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vndk.html">06-NativeAppDevelopment - Vendor Native Development Kit (VNDK)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loggingdebugging.html">06-NativeAppDevelopment - Logging and Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/binder.html">07-AndroidIPC - Binder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/hidl.html">07-AndroidIPC - HIDL - HAL Interface Descriptive Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/aidl.html">07-AndroidIPC - Android Interface Definition Language (AIDL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/activities.html">08-AppCoreComponents - Activities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/services.html">08-AppCoreComponents - Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/broadcast.html">08-AppCoreComponents - Broadcast Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/contentproviders.html">08-AppCoreComponents - Content Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/cts.html">09-TestFramework - Android CTS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/vts.html">09-TestFramework - Android VTS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html#coming-soon">Coming Soon</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>06-NativeAppDevelopment - System Services</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nativeappdevelopment-system-services">
+<h1>06-NativeAppDevelopment - System Services<a class="headerlink" href="#nativeappdevelopment-system-services" title="Permalink to this heading"></a></h1>
+<p>System services are derived from SystemService class. They reside in com.android.server package in AOSP tree. System Services are started by SystemServer hence they run as a System process which gives them additional privileges which normal Android Service will never get. System Service plays a key role in exposing functions to access or control hardware and Linux Kernel to Android Applications. SystemServices has a different Sepolicy and has fewer restrictions as Compared system_app or unknown_app.</p>
+<p>System services can be registered and obtained by the following methods:</p>
+<section id="implementation-steps">
+<h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading"></a></h2>
+<p><strong>1. Register</strong></p>
+<p>A service can be added using method ServiceManager.addService.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">addService</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">IBinder</span> <span class="n">service</span><span class="p">)</span>
+
+<span class="n">Parameter</span><span class="p">:</span>
+
+<span class="n">The</span> <span class="n">method</span> <span class="n">addService</span><span class="p">()</span> <span class="n">has</span> <span class="n">the</span> <span class="n">following</span> <span class="n">parameter</span><span class="p">:</span>
+
+<span class="n">String</span> <span class="n">name</span> <span class="o">-</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">new</span> <span class="n">service</span>
+<span class="n">IBinder</span> <span class="n">service</span> <span class="o">-</span> <span class="n">the</span> <span class="n">service</span> <span class="nb">object</span>
+
+<span class="n">Example</span><span class="p">:</span>
+
+<span class="n">ServiceManager</span><span class="o">.</span><span class="n">addService</span><span class="p">(</span><span class="s2">&quot;TestSystemService&quot;</span><span class="p">,</span> <span class="n">this</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>2. Obtain</strong></p>
+<p>A service can be obtained using method ServiceManager.getService.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">static</span> <span class="n">IBinder</span> <span class="n">getService</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="n">Parameter</span>
+
+<span class="n">The</span> <span class="n">method</span> <span class="n">getService</span><span class="p">()</span> <span class="n">has</span> <span class="n">the</span> <span class="n">following</span> <span class="n">parameter</span><span class="p">:</span>
+
+<span class="n">String</span> <span class="n">name</span> <span class="o">-</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">service</span> <span class="n">to</span> <span class="n">get</span>
+
+
+<span class="n">IBinder</span> <span class="n">b</span> <span class="o">=</span> <span class="n">ServiceManager</span><span class="o">.</span><span class="n">getService</span><span class="p">(</span><span class="s2">&quot;TestSystemService&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>3. Registering under System Service</strong></p>
+<p>A system service needs to be registered under SystemService in <code class="docutils literal notranslate"><span class="pre">SystemServiceRegistry.java</span></code> and adding it into <code class="docutils literal notranslate"><span class="pre">SystemServer.java</span></code>.
+The Path is found under: <code class="docutils literal notranslate"><span class="pre">frameworks/base/core/java/android/app/</span></code>:</p>
+<p><strong>SystemServiceRegistry.java</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">registerService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">,</span> <span class="n">TestSystemServiceManager</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+    <span class="k">new</span> <span class="n">CachedServiceFetcher</span><span class="o">&lt;</span><span class="n">TestSystemServiceServiceManager</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">TestSystemServiceManager</span> <span class="nf">createService</span><span class="o">(</span><span class="n">ContextImpl</span> <span class="n">ctx</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServiceNotFoundException</span> <span class="o">{</span>
+        <span class="n">IBinder</span> <span class="n">binder</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span><span class="c1">//ctx.getApplicationInfo().targetSdkVersion &gt;= Build.VERSION_CODES.O) {</span>
+            <span class="n">binder</span> <span class="o">=</span> <span class="n">ServiceManager</span><span class="o">.</span><span class="na">getServiceOrThrow</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">binder</span> <span class="o">=</span> <span class="n">ServiceManager</span><span class="o">.</span><span class="na">getService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">TestSystemServiceManager</span><span class="o">(</span><span class="n">ctx</span><span class="o">,</span><span class="n">ITestSystemServiceManagerAidlInterface</span><span class="o">.</span><span class="na">Stub</span><span class="o">.</span><span class="na">asInterface</span><span class="o">(</span><span class="n">binder</span><span class="o">));</span>
+    <span class="o">}});</span>
+</pre></div>
+</div>
+<p><strong>SystemServer.java</strong></p>
+<p>In SystemServer add your service inside startBootstrapServices(). You will find other default system services under
+path <code class="docutils literal notranslate"><span class="pre">/frameworks/base/services/java/com/android/server/SystemServer.java</span></code></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">TestSystemService</span> <span class="n">androidservice</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="k">try</span><span class="o">{</span>
+    <span class="n">traceBeginAndSlog</span><span class="o">(</span><span class="s">&quot;TestSystemService&quot;</span><span class="o">);</span>
+    <span class="n">androidservice</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TestSystemService</span><span class="o">(</span><span class="n">mSystemContext</span><span class="o">);</span>
+    <span class="n">ServiceManager</span><span class="o">.</span><span class="na">addService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">,</span><span class="n">androidservice</span><span class="o">);</span>
+<span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">){</span>
+    <span class="n">Slog</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;Starting TestSystemService failed!!! &quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="n">traceEnd</span><span class="o">();</span>
+</pre></div>
+</div>
+<p><strong>Context</strong></p>
+<p>Declare the context in Context.java under path /frameworks/base/core/java/android/content/Context.java</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TESTSYSTEM_SERVICE</span> <span class="o">=</span> <span class="s">&quot;TestSystemService&quot;</span><span class="o">;</span>
+</pre></div>
+</div>
+<p><strong>Update Makefile</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">api</span><span class="o">-</span><span class="n">stubs</span><span class="o">-</span><span class="n">docs</span><span class="o">-</span><span class="n">update</span><span class="o">-</span><span class="n">current</span><span class="o">-</span><span class="n">api</span>
+</pre></div>
+</div>
+<p><strong>Selinux</strong></p>
+<p>Add Selinux policy which provides permissions for your Service. The file can be found under <code class="docutils literal notranslate"><span class="pre">system/sepolicy/private/service_contexts</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TestSystemService</span> <span class="n">u</span><span class="p">:</span><span class="n">object_r</span><span class="p">:</span><span class="n">testsystem_service</span><span class="p">:</span><span class="n">s0</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ndk.html" class="btn btn-neutral float-left" title="06-NativeAppDevelopment - NDK" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="systemproperties.html" class="btn btn-neutral float-right" title="06-NativeAppDevelopment - System Properties" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

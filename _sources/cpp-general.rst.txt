@@ -1,0 +1,281 @@
+C++ - General
+======================
+
+**`const` usage in C++ classes**
+---------------------------------------------------------------------------
+
+**Here's a comprehensive explanation of `const` usage in C++ classes:**
+
+
+**1. `const` Objects:**
+
+* **Declaration:** `const ClassName objectName;`
+* **Meaning:** The object's state cannot be modified after its creation.
+* **Restrictions:**
+    - Only const member functions can be called on it.
+    - It cannot be used as the left operand of assignment operators.
+* **Example:**
+
+.. code-block:: c++
+
+   const Date today(2024, 1, 18);  // today's date cannot be changed
+   today.print();                  // Calling a const member function
+
+**2. `const` Member Functions:**
+
+* **Declaration:** `ReturnType functionName() const;`
+* **Meaning:** The function promises not to modify the object's state.
+* **Restrictions:**
+    - It cannot modify any non-mutable members of the class.
+    - It can only call other const member functions.
+* **Example:**
+
+.. code-block:: c++
+
+   class Date {
+   public:
+       void print() const { ... }  // Can be called on const objects
+   };
+
+**3. `const` Data Members:**
+
+* **Declaration:** `const DataType memberName;`
+* **Meaning:** The member variable must be initialized in the constructor and cannot be changed afterward.
+* **Restrictions:**
+    - It can only be initialized in the constructor's initialization list.
+* **Example:**
+
+.. code-block:: c++
+
+   class Employee {
+   public:
+       Employee(const std::string& name) : name(name) {}
+   private:
+       const std::string name;  // Employee's name cannot be changed
+   };
+
+**4. `mutable` Member Variables:**
+
+* **Declaration:** `mutable DataType memberName;`
+* **Meaning:** This member can be modified even within const member functions.
+* **Use Case:** Often used for caching values or for internal state that doesn't affect the object's logical state.
+* **Example:**
+
+.. code-block:: c++
+
+   class Date {
+   public:
+       int getDayOfYear() const {
+           if (!dayOfYearCalculated) {
+               calculateDayOfYear();  // Can modify dayOfYear despite being const
+           }
+           return dayOfYear;
+       }
+   private:
+       mutable int dayOfYear = 0;  // Can be modified even in const functions
+       mutable bool dayOfYearCalculated = false;
+   };
+
+**Key Points:**
+
+* Use `const` objects to protect data integrity and prevent unintended modifications.
+* Use `const` member functions to clarify which functions don't modify the object's state.
+* Use `const` data members to ensure constant values within the class.
+* Use `mutable` data members sparingly for specific cases where modification is necessary within const member functions.
+
+-----------------
+
+**`const` in the function**
+-------------------------------------------------------------------------------------------
+
+**Here's a breakdown of the use of `const` in the function `void function() const`:**
+
+**1. Declares a Member Function:**
+   - The `void function()` part declares a member function named `function` that belongs to a class.
+   - It doesn't return any value (indicated by `void`).
+
+**2. Enforces a "Read-Only" Promise:**
+   - The `const` keyword after the function's parameter list signifies that this function is a **const member function**.
+   - It guarantees that this function will **not modify any non-mutable member variables** of the object it's called on.
+
+**Key Implications:**
+
+* **Object State Preservation:** Const member functions ensure that the object's state remains unchanged after their execution, promoting data integrity and preventing unintended side effects.
+* **Const Object Compatibility:** Const member functions can be called on both const and non-const objects, making them more versatile.
+* **Overload Resolution:** Const member functions can be overloaded based on their constness, providing different versions for read-only and potentially modifying operations.
+* **Encapsulation and Safety:** They help enforce class invariants and prevent accidental modifications, making code more reliable and maintainable.
+
+**Example:**
+
+.. code-block:: c++
+
+    class Circle {
+    public:
+        double radius;
+
+        // Non-const member function that can modify radius
+        void setRadius(double newRadius) {
+            radius = newRadius;
+        }
+
+        // Const member function that can only access radius, not modify it
+        double getArea() const {
+            return 3.14159 * radius * radius;
+        }
+    };
+
+**In summary:**
+
+* Use `const` member functions to explicitly declare that a function won't modify the object's state.
+* This makes code more readable, maintainable, and safer by preventing accidental modifications.
+
+
+**Other Explanation**
+
+
+
+In C++, when you declare a member function with `const` after the closing parenthesis like this:
+
+.. code-block:: c++
+
+    void func() const {}
+
+It makes the function itself a **const member function**. This has a few key implications:
+
+**1. Promises Not to Modify Member Variables:**
+
+* A `const` member function guarantees that it will not modify any non-static member variables (`this` object) of the class.
+* This is useful for member functions that only access or perform calculations based on the object's state without changing it.
+
+**2. Read-Only Access:**
+
+* By convention, `const` member functions typically indicate they primarily provide read-only access to the object's data.
+
+**3. Usage Scenarios:**
+
+* Getter functions (accessors) that return the values of member variables without modifying them.
+* Member functions that perform calculations based on the object's state but don't alter it (e.g., calculating length of a string).
+
+**Example:**
+
+.. code-block:: c++
+
+    class Point {
+    public:
+        int x, y;
+
+        // Getter function (const member function)
+        int getX() const {
+            return x;  // Accesses x but doesn't modify it
+        }
+
+        // Mutator function (not const)
+        void setX(int newX) {
+            x = newX;  // Modifies x
+        }
+    };
+
+**Benefits of Using `const` Member Functions:**
+
+* **Enhances Code Clarity:** Clearly communicates the function's intent (read-only access).
+* **Prevents Accidental Modifications:** Helps avoid unintended changes to the object's state.
+* **Enables Calls from Const Objects:** Allows calling the function even on constant objects of the class.
+
+**Key Points:**
+
+* Use `const` member functions when you want to guarantee a function doesn't modify the object's state.
+* It promotes code safety and readability.
+* Consider using non-const member functions when modifications are necessary.
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------
+
+**Determining System Endianness**
+-------------------------------------------------------------------------------------------
+
+There are a few ways to determine whether your system uses big-endian or little-endian format:
+
+1. **Preprocessor Macros:** Some compilers define preprocessor macros like `__BYTE_ORDER__` or `_BIG_ENDIAN` depending on the system's endianness. However, this approach might not be portable across different compilers.
+
+2. **Manual Check:** You can write a small C program that explicitly assigns a value to a multi-byte variable (e.g., integer) and then prints the memory representation using a pointer cast. This involves inspecting the order of bytes in the printed output.
+
+.. code-block:: c++
+
+   #include <iostream>
+
+   int main() {
+       int value = 0x01234567;
+       unsigned char* ptr = reinterpret_cast<unsigned char*>(&value);
+
+       std::cout << "Memory representation: ";
+       for (int i = 0; i < sizeof(int); ++i) {
+           std::cout << std::hex << static_cast<int>(ptr[i]) << " ";
+       }
+       std::cout << std::endl;
+
+       return 0;
+   }
+
+   - In a big-endian system, the most significant byte (MSB) will be printed first.
+   - In a little-endian system, the least significant byte (LSB) will be printed first.
+
+3. **System-Specific Checks:** You might find system-specific utilities or header files that provide information about the endianness. Consult your system documentation for details.
+
+## Converting Between Endianness
+
+Here are common approaches for converting between big-endian and little-endian formats:
+
+1. **Manual Swapping:** You can write a function that iterates through the byte representation of the data and swaps the order of bytes. This approach can be error-prone and less efficient for large data structures.
+
+2. **Bitwise Operators:** For simple data types like integers, you can use bitwise operators (e.g., `<<`, `>>`) to shift bytes to their appropriate positions based on the target endianness.
+
+.. code-block:: c
+
+   // Example: Swap bytes of an integer (assuming 4 bytes)
+   int value = 0x01234567;
+   if (isLittleEndian()) {
+       value = (value >> 24) | ((value >> 8) & 0x0000FF00) | ((value << 8) & 0x00FF0000) | (value << 24);
+   }
+
+3. **Endian-Neutral Libraries:** Consider using libraries like Boost.Endian or third-party libraries specifically designed for endianness conversion. These libraries provide functions with well-defined behavior for data type conversions.
+
+**Important Considerations:**
+
+* Be aware of the data type you're converting and the number of bytes it occupies.
+* Ensure proper handling of signed and unsigned values during conversion.
+* For network communication, consider using standard network byte order (usually big-endian) to avoid inconsistencies across different architectures.
+
+Choose the approach that best suits your requirements, considering factors like code complexity, performance, and portability needs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

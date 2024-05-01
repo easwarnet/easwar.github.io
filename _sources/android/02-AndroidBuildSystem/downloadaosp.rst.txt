@@ -1,0 +1,43 @@
+02-AndroidBuildSystem - Download AOSP
+=========================================
+repo tool is used for download and sync the AOSP Repository. Repo uses manifest files to aggregate Git projects into the Android superproject. First step involves downloading and setting up repo tool. 
+
+Download and setup repo tool
+------------------------------
+
+.. code-block:: shell
+
+    $ mkdir ~/bin
+    $ PATH=~/bin:$PATH
+    $ curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+    $ chmod a+x ~/bin/repo
+
+Download and Sync AOSP
+------------------------
+
+.. code-block:: shell
+
+    $ mkdir WORKING_DIRECTORY
+    $ cd WORKING_DIRECTORY
+    $ repo init -u https://android.googlesource.com/platform/manifest
+    $ repo sync
+
+
+Repo internally uses git tool. repo init creates ``.repo`` 
+directory under AOSP root directory. It starts with cloning of ``repo`` 
+git repository from the url ``https://android.googlesource.com/tools/repo`` 
+to ``<AOSP_ROOT_DIR>/.repo/repo``.
+
+The next step involves setting manifest. Manifest consists of all the 
+git repository configured for the target device. The repo pulls and 
+sets up the manifest under ``.repo`` directory and setups the pointer 
+or softlink to currently configured manifest. ``.repo/manifest.xml`` 
+will point to the specified file (-m option) in ``.repo/manifests``, 
+by default it points to ``.repo/manifests/default.xml``. 
+More information on repo tool and manifest can be found 
+under ``<AOSP>/.repo/repo/docs/manifest-format.txt``.
+
+
+
+
+

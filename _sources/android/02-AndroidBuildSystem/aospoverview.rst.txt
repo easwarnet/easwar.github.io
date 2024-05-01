@@ -1,0 +1,91 @@
+02-AndroidBuildSystem - AOSP Overview
+=======================================
+
+AOSP or Android Open Source Project is a Code Project with Build System that is used to build the Android System for the target hardware.
+AOSP in Brief
+
+- Source Codes for Bootloader, Kernel, Native Applications, Libraries, HALs, Frameworks, Packages, Services and Standard Apps
+
+- Device Configurations to customize project to different target device
+
+- Test Suite for checking the Device compatibility
+
+- Tools to facilitate development
+
+- Tool chains to compile and build C, C++, Java codes to Images, File System, Binaries, Services.
+
+AOSP Directory Structures
+------------------------------
+
+1. art
+~~~~~~~~~~~~~~~~~
+Directory which consists of compilation of the latest android ART run time.
+
+2. bionic
+~~~~~~~~~~~~~~~~~
+Directory which consists of the C-runtime for Android. Android does not use glibc like most Linux distributions. Instead it uses c-library called bionic which is based mostly on BSD-derived sources. You will also find the source for the c-library, math and other core runtime libraries in this directory.
+
+3. bootable
+~~~~~~~~~~~~~~~~~
+Directory which consists of boot and startup related code. Fastboot, a protocol which is used by Android to update partitions, is also part of Bootable Directory.
+
+4. build
+~~~~~~~~~~~~~~~~~
+Directory which consists of build system implementations such as core make files, environment setup scripts and so on. The environment setup script "source build/envsetup.sh" is used for setting environment variables, build specific modules, checking necessary applications available in the local machine, setup the build information based out of "device" directory.
+
+5. cts
+~~~~~~~~~~~~~~~~~
+Directory which consists of files related to CTS. CTS or Compatibility Test Suite is a test suite that is part of AOSP. Intent of CTS is to test Device and reveal software incompatibilities on the target device. CTS runs on a Desktop Machine and execute test cases directly on attached devices. The test cases are written in Java as Junit test and are packaged under Android .apk files.
+
+6. development
+~~~~~~~~~~~~~~~~~
+Directory which consists of source cod of tools such SDK and NDK.
+
+7. devices
+~~~~~~~~~~~~~~~~~
+Directory which consists of product specific codes, build configuration files related to Different Target Devices. The sub directories under devices include common, generic and so on.
+
+8. external
+~~~~~~~~~~~~~~~~~
+This directory consists of source code for all external open source project like SQLite, v4l2_codecs, toybox, webkit, scrypt and so on
+
+9. framework
+~~~~~~~~~~~~~~~~~
+This directory consists of source code for Android Frameworks. Here you will find the implementation of key services such as the System Server with the Package- and Activity managers. A lot of the mapping between the java application APIs and the native libraries is also done here.
+
+10. hardware
+~~~~~~~~~~~~~~~~~
+This directory consists of Hardware Abstraction Layers, Radio Abstraction Layers, Radio interface layer to communicate with Radio Modem and Hardware related source codes.
+
+11. kernel
+~~~~~~~~~~~~~~~~~
+Android uses Linux Kernel. This directory consists of source code for complete Linux Kernel. The linux kernel will be configured to support Target Hardware when environment setup script is run.
+
+12. out
+~~~~~~~~~~~~~~~~~
+This directory consists of build output. Once the make is run, the output is generated under out/target/product. In the default build for the emulator the output will be placed in out/target/product/generic. This is where you will find the images used by the emulator to start or to be downloaded and flashed to a device if you are building for a hardware target.
+
+13. packages
+~~~~~~~~~~~~~~~~~
+This directory contains the source code of Standard Android application that are available as part of the AOSP — Camera, SMS, Dialer, Launcher, etc
+
+14. prebuilt
+~~~~~~~~~~~~~~~~~
+This directory contains files that are distributed in binary form for convenience. Examples include the cross compilations toolchains for different development machines
+
+15. system
+~~~~~~~~~~~~~~~~~
+This directory contains source code files for the core Android system. This includes the source code for the init process and the default init.rc script that provide the dynamic configuration of the platform.
+
+16. tools
+~~~~~~~~~~~~~~~~~
+This directory contains of various tools such as doc_generation, android studio, adt
+
+17. vendor
+~~~~~~~~~~~~~~~~~
+Thi directory consists of complete packages of vendor specific tools, vendor specific hardware related codes, app packages, vendor defined interfaces, vendor defined security rules and so on.
+
+
+
+
+

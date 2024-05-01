@@ -1,0 +1,252 @@
+C - General
+======================
+
+**Volatile**
+---------------------------------
+
+volatile is a type which has been proposed in the ANSI standard. The idea behind this type is to allow memory mapped input/output to be held in C variables. Variables which are declared volatile will be able to have their values altered in ways which a program does not explicitly define: that is, by external influences such as clocks, external ports, hardware, interrupts etc...
+
+The volatile datatype has found another use since the arrival of multiprocessor, multithreaded operating systems. Independent processes which share common memory could each change a variable independently. In other words, in a multithreaded environment the value of a variable set by one process in shared memory might be altered by another process without its knowledge. The keyword volatile servers as a warning to the compiler that any optimizing code it produces should not rely on caching the value of the variable, it should always reread its value. 
+
+---------------------------------
+
+**Const and Volatile**
+------------------------------------------------
+
+**Can a variable be both const and volatile?**
+
+Yes. The const modifier means that this code cannot change the value
+of the variable, but that does not mean that the value cannot be
+changed by means outside this code. For instance, in the example in
+FAQ 8, the timer structure was accessed through a volatile const
+pointer. The function itself did not change the value of the timer, so it
+was declared const. However, the value was changed by hardware on
+the computer, so it was declared volatile. If a variable is both const and
+volatile, the two modifiers can appear in either order.
+
+---------------------------------
+
+
+**lvalue**
+------------------------------------------------
+**What is an lvalue?**
+
+An lvalue is an expression to which a value can be assigned. The lvalue
+expression is located on the left side of an assignment statement,
+whereas an rvalue is located on the right side of an assignment
+statement. Each assignment statement must have an lvalue and an
+rvalue. The lvalue expression must reference a storable variable in
+memory. It cannot be a constant.
+
+---------------------------------
+
+**Linker and linkage**
+------------------------------------------------
+
+**Differentiate between a linker and linkage?**
+
+A linker converts an object code into an executable code by linking
+together the necessary build in functions. The form and place of
+declaration where the variable is declared in a program determine the
+linkage of variable.
+
+---------------------------------
+
+**Bit field members in structure**
+----------------------------------------------------------------
+
+**How can you define a structure with bit field members?**
+
+struct abc {
+unsigned int a:1;
+unisgned int b:2;
+};
+
+---------------------------------
+
+**Storage Classes**
+------------------------------------------------
+
+C provides several storage classes to control the lifetime, scope, and linkage of variables. Here's a breakdown of commonly used storage classes and their memory allocation:
+
+**1. Automatic Storage Class (auto):**
+   - **Scope:** Local to a function block.
+   - **Lifetime:** Created when the function enters execution and destroyed when it exits.
+   - **Memory:** Stack (LIFO - Last In, First Out).
+   - **Examples:** Local variables, function parameters, `return` statements in functions.
+
+**2. Register Storage Class (register):**
+   - **Scope:** Local to a function block.
+   - **Lifetime:** Same as automatic variables.
+   - **Memory:** CPU registers (if possible, compiler decides).
+   - **Examples:** Variables intended for frequent access with potential performance benefit. **Use cautiously** due to limited number of registers and compiler control.
+
+**3. Static Storage Class (static):**
+   - **Scope:** Local to a file or translation unit.
+   - **Lifetime:** Throughout the program execution.
+   - **Memory:** **Data segment (bss for uninitialized, initialized data segment for initialized)**.
+   - **Examples:** Global variables with internal linkage (not accessible from other files), variables for persistent state within a file.
+
+**4. External Storage Class (extern):**
+   - **Scope:** Global to the entire program.
+   - **Lifetime:** Throughout the program execution.
+   - **Memory:** **Data segment (bss for uninitialized, initialized data segment for initialized)**.
+   - **Linkage:** Defined in one file and declared in others.
+   - **Examples:** Global variables with external linkage (accessible from other files), accessing variables defined in other source files.
+
+**5. Thread Local Storage (thread_local):**
+   - **Scope:** Local to a thread.
+   - **Lifetime:** Throughout the thread's execution.
+   - **Memory:** Thread-specific storage (implementation-defined).
+   - **Availability:** Requires C11 or later compilers.
+   - **Examples:** Thread-specific data that should not be shared between threads.
+
+**Note:**
+
+- **`bss`** (Block Started by Symbol) holds uninitialized global and static variables.
+- The **initialized data segment** holds initialized global and static variables, literal strings, and other constant data.
+
+Understanding storage classes is crucial for managing variable memory allocation, visibility, and lifetime in C programs. Choose the appropriate storage class based on the intended use case and your needs.
+
+**auto**
+    Local variable (redundant keyword)
+**const**
+    No variable allocated, value doesn't change
+**extern**
+    Variable is defined in another file
+**static**
+    Value is preserved between function calls
+**register**
+    Stored in a register, if possible
+**volatile**
+    Value can be changed by agents outside the program. 
+
+---------------------------------
+
+**Different qualifiers in C**
+------------------------------------------------
+
+**What are the different qualifiers in C?**
+
+1) Volatile:
+A variable should be declared volatile whenever its value could change unexpectedly. In practice, only three types of variables could change:
+* Memory-mapped peripheral registers
+* Global variables modified by an interrupt service routine
+* Global variables within a multi-threaded application
+
+2) Constant:
+The addition of a 'const' qualifier indicates that the (relevant part of the) program may not modify the
+variable.
+
+---------------------------------
+
+**Forward reference in pointers**
+------------------------------------------------------
+
+**What is forward reference w.r.t. pointers in c?**
+
+.. code-block:: c++
+
+    int a=10;
+    int *p=&a;
+
+``*p`` is called forward Reference.
+
+---------------------------------
+
+**Error**
+-------------
+
+Error is the preprocessor directive which produces compile time error messages. 
+These directives are most useful for detecting programmer inconsistencies and 
+violation of constraints during preprocessing 
+
+---------------------------------
+
+**Link objects**
+---------------------------------------------------
+
+**Compile two C files and link them together:**
+
+gcc -Wall -g -c file1.c
+gcc -Wall -g -c file2.c
+gcc -o my_prog file1.o file2.o
+
+Could do the same thing in one step but without the
+object files being generated...
+gcc -Wall -g -o my_prog file1.c file2.c
+But then it doesn't produce any .o files.
+
+---------------------------------
+
+**Internal static and External static variable**
+--------------------------------------------------------------------------------
+
+**Differentiate between an internal static and external static variable?**
+
+An internal static variable is declared inside a block with static storage
+class whereas an external static variable is declared outside all the
+blocks in a file.An internal static variable has persistent storage,block
+scope and no linkage.An external static variable has permanent
+storage,file scope and internal linkage.
+
+---------------------------------
+
+**Static Function**
+------------------------------------------------
+
+**What is a static function?**
+
+A static function is a function whose scope is limited to the current
+source file. Scope refers to the visibility of a function or variable. If the
+function or variable is visible outside of the current source file, it is said
+to have global, or external, scope. If the function or variable is not
+visible outside of the current source file, it is said to have local, or
+static, scope.
+
+---------------------------------
+
+**Function and built-in function**
+------------------------------------------------
+
+**What is a function and built-in function?**
+
+A large program is subdivided into a number of smaller programs or
+subprograms. Each subprogram specifies one or more actions to be
+performed for a large program. such subprograms are functions.
+The function supports only static and extern storage classes. By
+default, function assumes extern storage class. functions have global
+scope. Only register or auto storage class is allowed in the function
+parameters. Built-in functions that predefined and supplied along with
+the compiler are known as built-in functions. They are also known as
+library functions.
+
+---------------------------------
+
+**Nested Include files**
+------------------------------------------------
+
+**Can include files be nested?**
+
+Yes. Include files can be nested any number of times. As long as you
+use precautionary measures , you can avoid including the same file
+twice. In the past, nesting header files was seen as bad programming
+practice, because it complicates the dependency tracking function of
+the MAKE program and thus slows down compilation. Many of today’s
+popular compilers make up for this difficulty by implementing a
+concept called precompiled headers, in which all headers and
+associated dependencies are stored in a precompiled state.
+
+---------------------------------
+
+**Modulus operator**
+--------------------------------------------------------------------------------------
+
+**What is a modulus operator? What are the restrictions of a modulus operator?**
+
+A Modulus operator gives the remainder value. The result of x%y is
+obtained by (x-(x/y)*y). This operator is applied only to integral
+operands and cannot be applied to float or double.
+
+
+

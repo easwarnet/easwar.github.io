@@ -1,0 +1,315 @@
+C++ - Container
+======================
+
+**List Of Containers**
+------------------------
+
+**Here's a list of containers in the C++ Standard Template Library (STL), organized by category:**
+
+**Sequence Containers:**
+
+- **array:** Fixed-size array with contiguous memory allocation.
+- **vector:** Dynamic array with automatic resizing.
+- **deque:** Double-ended queue for efficient insertion/removal at both ends.
+- **list:** Doubly-linked list for fast insertion/removal anywhere, not optimized for random access.
+- **forward_list:** Singly-linked list for even more efficient insertion/removal, but without bidirectional traversal.
+
+**Associative Containers:**
+
+- **set:** Stores unique keys in sorted order, allowing fast lookup, insertion, and removal.
+- **map:** Associates keys with values, maintaining key order for efficient retrieval.
+- **multiset:** Allows duplicate keys, otherwise similar to set.
+- **multimap:** Allows multiple values for the same key, otherwise similar to map.
+
+**Unordered Associative Containers (since C++11):**
+
+- **unordered_set:** Uses hashing for fast average-case lookup, insertion, and removal, but doesn't guarantee order.
+- **unordered_map:** Associates keys with values using hashing, providing fast average-case access.
+- **unordered_multiset:** Allows duplicate keys, otherwise similar to unordered_set.
+- **unordered_multimap:** Allows multiple values for the same key, otherwise similar to unordered_map.
+
+**Container Adaptors:**
+
+- **stack:** LIFO (Last-In-First-Out) data structure, typically implemented using deque or vector.
+- **queue:** FIFO (First-In-First-Out) data structure, typically implemented using deque or list.
+- **priority_queue:** Stores elements with priority, typically implemented using vector and heap algorithms.
+
+**Key Points:**
+
+- **Choice of Container:** Depends on your specific needs regarding element ordering, access patterns, insertion/removal frequency, duplicate handling, and memory efficiency.
+- **Header Files:** Each container has its corresponding header file (e.g., `<vector>` for `vector`, `<map>` for `map`).
+- **Genericity:** Containers are template classes, allowing you to store various data types.
+
+--------------------------------------------------------
+
+Extract Method in Std::Set
+----------------------------
+
+**In C++17, the `extract` method was introduced for associative containers like `std::set` to provide an efficient way to remove elements without unnecessary copies or moves.**
+
+**Here's how it works:**
+
+**1. Removing and Returning a Node Handle:**
+   - `node_type extract(const_iterator position)`:
+     - Removes the element pointed to by the iterator `position`.
+     - Returns a `node_type` object (a special handle) that owns the extracted element.
+
+**2. Accessing the Extracted Element:**
+   - ``value_type& value()``:
+     - Returns a reference to the value of the extracted element within the `node_type`.
+   - ``value_type&& value()``:
+     - Returns an rvalue reference to the value, allowing for efficient move operations.
+
+**Key Benefits of Using `extract`:**
+
+- **No Unnecessary Copies or Moves:** It directly removes the element from the set without creating additional copies, potentially improving performance.
+- **Move-Only Elements:** It's essential for safely removing elements that are move-only, such as unique pointers or custom move-only types.
+- **Flexibility in Handling Extracted Elements:** You can either reinsert the extracted element into another set, store it in a variable, or perform operations on it directly.
+
+**Example:**
+
+.. code-block:: c++
+
+    #include <set>
+    #include <iostream>
+
+    int main() {
+        std::set<int> mySet = {3, 1, 4, 2};
+
+        auto extractedNode = mySet.extract(mySet.find(2)); // Extract the element with value 2
+        int extractedValue = std::move(extractedNode.value()); // Obtain the value efficiently
+
+        mySet.insert(5); // Insert another element
+
+        std::cout << "Extracted value: " << extractedValue << std::endl;
+        std::cout << "Set contents: ";
+        for (int x : mySet) {
+            std::cout << x << " ";
+        }
+        std::cout << std::endl;
+    }
+
+
+**Output:**
+
+.. code-block:: 
+
+    Extracted value: 2
+    Set contents: 1 3 4 5
+
+--------------------------------------------------------
+
+unordered_map vs map
+----------------------------
+
+**Here's a comparison of std::unordered_map and std::map in C++, highlighting their key differences and when to choose each:**
+
+**Key Differences:**
+
++----------------+---------------------------------+--------------------------------------------+
+| Feature        | std::map                        | std::unordered_map                         |
++================+=================================+============================================+
+| Ordering       | Stores elements in sorted order | Doesn't guarantee order of elements        |
++----------------+---------------------------------+--------------------------------------------+
+| Implementation | Red-black tree                  | Hash table                                 |
++----------------+---------------------------------+--------------------------------------------+
+| Lookup time    | O(log n)                        | O(1) average, O(n) worst-case              |
++----------------+---------------------------------+--------------------------------------------+
+| Insertion time | O(log n)                        | O(1) average, O(n) worst-case              |
++----------------+---------------------------------+--------------------------------------------+
+| Deletion time  | O(log n)                        | O(1) average, O(n) worst-case              |
++----------------+---------------------------------+--------------------------------------------+
+| Memory usage   | More memory efficient           | Less memory efficient                      |
++----------------+---------------------------------+--------------------------------------------+
+
+
+**When to Choose Which:**
+
+**Choose std::map when:**
+
+- **Order matters:** You need to iterate over elements in sorted order or access elements based on their relative position.
+- **Guaranteed performance:** You need consistent O(log n) performance for all operations, even in worst-case scenarios.
+- **Memory is a priority:** You're working with limited memory and need to conserve it.
+
+**Choose std::unordered_map when:**
+
+- **Fast lookups are crucial:** You prioritize fast average-case lookups (O(1)) over strict ordering.
+- **Ordering is unimportant:** You don't need to access elements in a specific order.
+- **Memory usage is less critical:** You have sufficient memory to accommodate potential hash collisions.
+
+**Additional Considerations:**
+
+- **Custom keys:** Ensure your keys have a well-defined hash function for efficient unordered_map usage.
+- **Iterator invalidation:** Inserting/removing elements can invalidate iterators in both maps, but std::unordered_map is generally more prone to this due to rehashing.
+- **Hash collisions:** While rare, hash collisions can impact std::unordered_map performance in the worst-case.
+
+**In summary:**
+
+- Use std::map when ordering and guaranteed performance are essential.
+- Use std::unordered_map when you prioritize fast average-case lookups and don't require ordering.
+- Consider the trade-offs in performance, memory usage, and key requirements when making your choice.
+
+--------------------------------------------------------
+
+std::set vs std::vector
+----------------------------
+
+**Here's a comparison of std::set and std::vector in C++, highlighting their key differences and when to choose each:**
+
+**Key Differences:**
+
++----------------+---------------------------------+--------------------------------------------------------+
+| Feature        | std::set                        | std::vector                                            |
++================+=================================+========================================================+
+| Ordering       | Stores elements in sorted order | Elements in insertion order                            |
++----------------+---------------------------------+--------------------------------------------------------+
+| Duplicates     | No duplicates allowed           | Allows duplicates                                      |
++----------------+---------------------------------+--------------------------------------------------------+
+| Implementation | Self-balancing binary tree      | Dynamic array                                          |
++----------------+---------------------------------+--------------------------------------------------------+
+| Lookup time    | O(log n)                        | O(n) (linear search)                                   |
++----------------+---------------------------------+--------------------------------------------------------+
+| Insertion time | O(log n)                        | O(1) amortized, but can be O(n) if reallocation needed |
++----------------+---------------------------------+--------------------------------------------------------+
+| Deletion time  | O(log n)                        | O(n) (if removing from middle)                         |
++----------------+---------------------------------+--------------------------------------------------------+
+| Memory usage   | Less memory efficient           | More memory efficient                                  |
++----------------+---------------------------------+--------------------------------------------------------+
+
+**When to Choose Which:**
+
+**Choose std::set when:**
+
+- **Order matters:** You need to iterate over elements in sorted order or quickly find elements based on their value.
+- **Uniqueness is required:** You want to ensure that each element appears only once in the container.
+- **Fast lookups are important:** You need efficient O(log n) lookups, insertions, and deletions.
+
+**Choose std::vector when:**
+
+- **Order is unimportant:** You don't need to access elements in a specific order.
+- **Duplicates are allowed:** You may have multiple elements with the same value.
+- **Fast random access is required:** You need to frequently access elements by their index.
+- **Memory efficiency is crucial:** You want to minimize memory usage and avoid overhead associated with balancing trees.
+
+**Additional Considerations:**
+
+- **Iteration:** std::set iterators are bidirectional, while std::vector iterators are random access.
+- **Insertion at specific positions:** std::set doesn't allow insertion at arbitrary positions, while std::vector does.
+- **Memory layout:** std::vector's contiguous memory allocation can be advantageous for cache locality and certain algorithms.
+
+**In summary:**
+
+- Use std::set when you need a sorted collection of unique elements with efficient lookups and operations.
+- Use std::vector when you need a flexible array-like container for storing elements in insertion order, potentially with duplicates, and require fast random access.
+- Consider the trade-offs in ordering, duplicates, performance, and memory usage when making your choice.
+
+--------------------------------------------------------
+
+std::forward_list vs std::vector
+------------------------------------
+
+**Here's a comparison of std::forward_list and std::vector in C++, highlighting their key differences and when to choose each:**
+
+**Key Differences:**
+
++----------------------+---------------------------------+-----------------------------------+
+| Feature              | std::forward_list               | std::vector                       |
++======================+=================================+===================================+
+| Structure            | Singly-linked list              | Dynamic array                     |
++----------------------+---------------------------------+-----------------------------------+
+| Memory layout        | Non-contiguous nodes            | Contiguous memory block           |
++----------------------+---------------------------------+-----------------------------------+
+| Insertion/removal    | Efficient at front/middle       | Efficient at back, slow elsewhere |
++----------------------+---------------------------------+-----------------------------------+
+| Lookups              | Linear time (O(n))              | Random access (O(1))              |
++----------------------+---------------------------------+-----------------------------------+
+| Iterators            | Forward iterators only          | Random access iterators           |
++----------------------+---------------------------------+-----------------------------------+
+| Bidirectional access | No                              | Yes                               |
++----------------------+---------------------------------+-----------------------------------+
+| Size in memory       | Smaller overhead per element    | Larger overhead for container     |
++----------------------+---------------------------------+-----------------------------------+
+
+**When to Choose Which:**
+
+**Choose std::forward_list when:**
+
+- **Frequent insertions/removals at the front or middle:** It excels in these operations due to its singly-linked structure.
+- **Memory efficiency is a primary concern:** It has lower overhead per element compared to std::vector.
+- **Random access is not required:** It only supports forward iteration.
+
+**Choose std::vector when:**
+
+- **Fast random access is crucial:** It provides direct access to any element in constant time.
+- **Frequent insertions/removals at the back:** It's very efficient for these operations.
+- **Bidirectional iteration is needed:** It supports both forward and backward traversal.
+- **Memory layout is important:** Its contiguous memory allocation can be advantageous for cache locality and certain algorithms.
+
+**Additional Considerations:**
+
+- **Range-based for loops:** Both containers support range-based for loops for convenient iteration.
+- **Algorithms:** Many STL algorithms work with both containers, but some might be less efficient with std::forward_list due to its linked structure.
+
+**In summary:**
+
+- Use std::forward_list when you need a memory-efficient list with efficient insertions/removals at the front/middle and don't require random access.
+- Use std::vector when you need fast random access, frequent insertions/removals at the back, and the flexibility of bidirectional iteration.
+- Consider the trade-offs in performance, memory usage, and access patterns when making your choice.
+
+--------------------------------------------------------
+
+std::list vs std::unordered_map
+--------------------------------
+
+**The speed of std::list and std::unordered_map depends on the specific operations you're performing:**
+
+**Key Operations and Performance:**
+
++------------------+------------------------------------+-----------------------------------------+
+| Operation        | std::list                          | std::unordered_map                      |
++==================+====================================+=========================================+
+| Lookup by value  | O(n) (linear search)               | O(1) average, O(n) worst-case           |
++------------------+------------------------------------+-----------------------------------------+
+| Insertion        | O(1) anywhere in the list          | O(1) average, O(n) worst-case           |
++------------------+------------------------------------+-----------------------------------------+
+| Deletion         | O(1) if you have an iterator       | O(1) average, O(n) worst-case           |
++------------------+------------------------------------+-----------------------------------------+
+| Iteration        | Bidirectional, O(n)                | Unordered, O(n)                         |
++------------------+------------------------------------+-----------------------------------------+
+
+**When std::list is faster:**
+
+- **Frequent insertions/removals anywhere in the list:** Its linked structure makes these operations very efficient.
+- **Order of elements is not important:** It doesn't preserve any particular order.
+- **Duplicate values are allowed:** It can store multiple elements with the same value.
+- **Iterating through elements in order is not required:** It doesn't provide random access.
+
+**When std::unordered_map is faster:**
+
+- **Fast lookups by key are crucial:** It provides average-case O(1) lookups, significantly faster than std::list's linear search.
+- **Order of elements is not important:** It doesn't maintain any specific order.
+- **Duplicate keys are not allowed:** Each key can only be associated with one value.
+- **Random access to elements is not required:** It doesn't support direct access by index.
+
+**In summary:**
+
+- Choose std::list for fast insertions/removals anywhere in the list, flexibility with order and duplicates, and frequent traversals.
+- Choose std::unordered_map for lightning-fast lookups by key, when you don't need ordering and can handle potential hash collisions.
+- The best choice depends on your specific use case and performance requirements.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

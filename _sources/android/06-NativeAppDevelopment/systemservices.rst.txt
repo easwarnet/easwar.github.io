@@ -1,0 +1,111 @@
+06-NativeAppDevelopment - System Services 
+=============================================
+System services are derived from SystemService class. They reside in com.android.server package in AOSP tree. System Services are started by SystemServer hence they run as a System process which gives them additional privileges which normal Android Service will never get. System Service plays a key role in exposing functions to access or control hardware and Linux Kernel to Android Applications. SystemServices has a different Sepolicy and has fewer restrictions as Compared system_app or unknown_app.
+
+System services can be registered and obtained by the following methods:
+
+Implementation steps
+----------------------
+
+**1. Register**
+
+A service can be added using method ServiceManager.addService.
+
+.. code-block::
+
+    public static void addService(String name, IBinder service)
+
+    Parameter:
+
+    The method addService() has the following parameter:
+
+    String name - the name of the new service
+    IBinder service - the service object
+
+    Example:
+
+    ServiceManager.addService("TestSystemService", this);
+
+**2. Obtain**
+
+A service can be obtained using method ServiceManager.getService.
+
+.. code-block::
+
+    public static IBinder getService(String name)
+
+    Parameter
+
+    The method getService() has the following parameter:
+
+    String name - the name of the service to get
+
+
+    IBinder b = ServiceManager.getService("TestSystemService");
+
+**3. Registering under System Service**
+
+A system service needs to be registered under SystemService in ``SystemServiceRegistry.java`` and adding it into ``SystemServer.java``. 
+The Path is found under: ``frameworks/base/core/java/android/app/``:
+
+**SystemServiceRegistry.java**
+
+.. code-block:: java
+
+    registerService(Context.TESTSYSTEM_SERVICE, TestSystemServiceManager.class,
+        new CachedServiceFetcher<TestSystemServiceServiceManager>() {
+        @Override
+        public TestSystemServiceManager createService(ContextImpl ctx) throws ServiceNotFoundException {
+            IBinder binder;
+            if (true){//ctx.getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.O) {
+                binder = ServiceManager.getServiceOrThrow(Context.TESTSYSTEM_SERVICE);
+            } else {
+                binder = ServiceManager.getService(Context.TESTSYSTEM_SERVICE);
+            }
+            return new TestSystemServiceManager(ctx,ITestSystemServiceManagerAidlInterface.Stub.asInterface(binder));
+        }});
+
+**SystemServer.java**
+
+In SystemServer add your service inside startBootstrapServices(). You will find other default system services under 
+path ``/frameworks/base/services/java/com/android/server/SystemServer.java``
+
+.. code-block:: java
+
+    TestSystemService androidservice = null;
+    try{
+        traceBeginAndSlog("TestSystemService");
+        androidservice = new TestSystemService(mSystemContext);
+        ServiceManager.addService(Context.TESTSYSTEM_SERVICE,androidservice);
+    }catch(Throwable e){
+        Slog.e(TAG, "Starting TestSystemService failed!!! ", e);
+    }
+    traceEnd();
+
+**Context**
+
+Declare the context in Context.java under path /frameworks/base/core/java/android/content/Context.java
+
+.. code-block:: java
+
+    public static final String TESTSYSTEM_SERVICE = "TestSystemService";
+
+**Update Makefile**
+
+.. code-block::
+
+    make api-stubs-docs-update-current-api
+
+**Selinux**
+
+Add Selinux policy which provides permissions for your Service. The file can be found under ``system/sepolicy/private/service_contexts``
+
+.. code-block::
+
+    TestSystemService u:object_r:testsystem_service:s0
+
+
+
+
+
+

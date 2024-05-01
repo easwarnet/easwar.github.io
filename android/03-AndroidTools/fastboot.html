@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>03-AndroidTools - Fastboot &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="03-AndroidTools - Other Tools" href="othertools.html" />
+    <link rel="prev" title="03-AndroidTools - ADB" href="adb.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/androidarchitecture.html">01-Introduction - Android Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/features.html">01-Introduction - Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/hardwarecompatibility.html">01-Introduction - Hardware Compatibility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/characteristics.html">01-Introduction - Characteristics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/aospoverview.html">02-AndroidBuildSystem - AOSP Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/downloadaosp.html">02-AndroidBuildSystem - Download AOSP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/androidbuildsystem.html">02-AndroidBuildSystem - Android Build System in Detail</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/buildingandroid.html">02-AndroidBuildSystem - Building Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adb.html">03-AndroidTools - ADB</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">03-AndroidTools - Fastboot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#useful-commands-for-flashing-android">Useful Commands for Flashing Android</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="othertools.html">03-AndroidTools - Other Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/flashingandroid.html">04-SoftwareUpdate - Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/ota.html">04-SoftwareUpdate - OTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/bootsequence.html">05-BootAndPartitions - Boot Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/partitions.html">05-BootAndPartitions - Partitions in Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/secureboot.html">05-BootAndPartitions - Secure Boot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/treble.html">05-BootAndPartitions - Project Treble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/initrc.html">06-NativeAppDevelopment - Init RC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/selinux.html">06-NativeAppDevelopment - SELinux</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/nativeapplications.html">06-NativeAppDevelopment - Native Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/ndk.html">06-NativeAppDevelopment - NDK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemservices.html">06-NativeAppDevelopment - System Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/systemproperties.html">06-NativeAppDevelopment - System Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/hal.html">06-NativeAppDevelopment - Hardware Abstraction Layer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vhal.html">06-NativeAppDevelopment - VHAL - Vehicle HAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/vndk.html">06-NativeAppDevelopment - Vendor Native Development Kit (VNDK)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/loggingdebugging.html">06-NativeAppDevelopment - Logging and Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/binder.html">07-AndroidIPC - Binder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/hidl.html">07-AndroidIPC - HIDL - HAL Interface Descriptive Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/aidl.html">07-AndroidIPC - Android Interface Definition Language (AIDL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/activities.html">08-AppCoreComponents - Activities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/services.html">08-AppCoreComponents - Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/broadcast.html">08-AppCoreComponents - Broadcast Receivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/contentproviders.html">08-AppCoreComponents - Content Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/cts.html">09-TestFramework - Android CTS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/vts.html">09-TestFramework - Android VTS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html#coming-soon">Coming Soon</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>03-AndroidTools - Fastboot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="androidtools-fastboot">
+<h1>03-AndroidTools - Fastboot<a class="headerlink" href="#androidtools-fastboot" title="Permalink to this heading"></a></h1>
+<p>Fastboot is a protocol and a tool of the same name. It is included with the Android SDK package used primarily to modify the flash filesystem via a USB connection from a host computer. It requires that the device be started in Fastboot mode. If the mode is enabled, it will accept a specific set of commands sent to it via USB using a command line. Fastboot allows to boot from a custom recovery image. Fastboot does not require USB debugging to be enabled on the device. Not all Android devices have fastboot enabled. To use fastboot, a specific combination of keys must be held during boot.</p>
+<section id="useful-commands-for-flashing-android">
+<h2>Useful Commands for Flashing Android<a class="headerlink" href="#useful-commands-for-flashing-android" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Check List of Connected Devices:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb devices
+</pre></div>
+</div>
+<p>2. Boot into bootloader mode:
+This step will enable the device boot into fastboot mode.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb reboot bootloader
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Check connected devices in Fastboot mode:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot devices
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Flashing All Partitions:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot flashall
+</pre></div>
+</div>
+<p>5. Erase or Format Partition:
+Format Userdata Partition</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot format:ext4 userdata
+</pre></div>
+</div>
+<p>6. Flashing All Partitions from Zip File
+This steps is used for flashing a custom ROM that is available in the form of a ZIP file containing all the image files:</p>
+<p>format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ fastboot update &lt;zip_containing_all_androidimages&gt;.zip
+----------------------------------------------
+Bootloader Version...: BootloaderVersion
+Baseband Version.....: BasebandVersion
+Serial Number........:
+----------------------------------------------
+Checking &#39;product&#39;
+OKAY [ 0.000s ] Setting current slot to &#39;a&#39;
+OKAY [ 0.0115] Sending &#39;boot_a&#39; (32768 KB)
+OKAY [ 1.2965] Writing &#39;boot_a&#39;
+OKAY [ 0.157s] Sending &#39;dtbo_a&#39; (8192 KB)
+OKAY [ 0.3075] Writing &#39;dtbo_a&#39;
+OKAY [ 0.042s] Sending &#39;vbmeta_a&#39; (4 KB)
+OKAY [ 0.0095] Writing &#39;vbmeta_a&#39;
+OKAY [ 0.001s] Sending sparse &#39;system_a&#39; 1/3 (524284 KB)
+OKAY [ 12.7025] Writing &#39;system_a&#39;
+OKAY [ 0.000s] Sending sparse &#39;system_a&#39; 2/3 (524284 KB)
+OKAY [ 14.8465] Writing &#39;system_a&#39;
+OKAY [ 0.001s] Sending sparse &#39;system_a&#39; 3/3 (42204 KB)
+OKAY [ 3.47751 Writing &#39;system_a&#39;
+OKAY [ 0.000s] Sending system_b&#39; (82736 KB)
+OKAY [ 1.9635] Writing &#39;system_b&#39;
+OKAY [ 0.001s] Sending &#39;vendor_a&#39; (357093 KB)
+OKAY [ 8.465s ] Writing &#39;vendor_a&#39;
+OKAY [ 0.001s] Erasing &#39;userdata&#39;
+OKAY [ 0.7235] mke2fs 1.45.4 (23-Sep-2019) Creating filesystem with 13933563 4k blocks and 3489792 inodes Filesystem UUID: 4ala13e4-990a-11ea-809b-9b806a091fe2 Superblock backups stored on blocks:
+32768, 98384, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 4096000, 7962624, 11239424
+Allocating group tables: done Writing inode tables: done Creating journal (65536 blocks): done Writing superblocks and filesystem accounting information: done
+Sending &#39;userdata&#39; (316 KB) Writing &#39;userdata&#39; Rebooting Finished. Total time: 103.4905 PS C:\&gt;
+OKAY [ 0.0115] OKAY [ 0.001s] OKAY [ 0.0005]
+</pre></div>
+</div>
+<p>7. Erase or Format Partition:
+Format Userdata Partition</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot format:ext4 userdata
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Boot into ROM:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot reboot
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Boot into recovery:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot reboot recovery
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Flash Specific Image:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Flashing Boot Image</span>
+$ fastboot flash boot boot.img
+<span class="c1"># Flashing System Image</span>
+$ fastboot flash system system.img
+<span class="c1"># Flashing Recovery Image</span>
+$ fastboot flash recovery recovery.img
+<span class="c1"># Flashing Cache</span>
+$ fastboot flash cache cache.img
+<span class="c1"># Flashing Modem</span>
+$ fastboot flash modem NON-HLOS.bin
+<span class="c1"># Flashing Trustzone</span>
+$ fastboot flash tz tz.mbn
+<span class="c1"># Flashing Logo</span>
+$ fastboot flash LOGO logo.bin
+<span class="c1"># Flashing Other Partitions</span>
+$ fastboot flash sbl1 sbl1.mbn
+$ fastboot flash dbi sdi.mbn
+$ fastboot flash aboot emmc_appsboot.mbn
+$ fastboot flash rpm rpm.mbn
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Unlocking Partition:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check OEM Specific Boot Partition Lock Status</span>
+$ fastboot oem device-info
+<span class="c1"># Unlock OEM Specific Boot Partition</span>
+$ fastboot oem unlock
+<span class="c1"># Unlocking all partitions</span>
+$ fastboot flashing unlock
+<span class="c1"># Unlock Boot Partition</span>
+$ fastboot flashing unlock_critical
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="adb.html" class="btn btn-neutral float-left" title="03-AndroidTools - ADB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="othertools.html" class="btn btn-neutral float-right" title="03-AndroidTools - Other Tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+C++ - StdLib
+======================
+
+**std::for_each**
+---------------------
+
+**Here are several examples demonstrating the versatility of `std::for_each` in C++:**
+
+
+**1. Printing Elements:**
+
+.. code-block:: c++
+
+    #include <iostream>
+    #include <vector>
+    #include <algorithm>
+
+    int main() {
+        std::vector<int> numbers = {1, 4, 2, 8, 5};
+        std::for_each(numbers.begin(), numbers.end(), [](int num) {
+            std::cout << num << " ";
+        });  // Output: 1 4 2 8 5
+    }
+
+
+**2. Modifying Elements:**
+
+.. code-block:: c++
+
+    std::vector<std::string> names = {"John", "Jane", "Bob"};
+    std::for_each(names.begin(), names.end(), [](std::string& name) {
+        name += " Doe";  // Append " Doe" to each name
+    });  // names now contains {"John Doe", "Jane Doe", "Bob Doe"}
+
+
+**3. Applying a Function Object:**
+
+.. code-block:: c++
+
+    struct Square {
+        void operator()(int& num) const {
+            num *= num;
+        }
+    };
+
+std::vector<int> numbers = {2, 3, 4};
+std::for_each(numbers.begin(), numbers.end(), Square());  // Squares each number
+
+
+**4. Using Range-Based for_each (C++20):**
+
+.. code-block:: c++
+
+    std::vector<double> values = {1.5, 3.2, -0.8};
+    std::ranges::for_each(values, [](double value) {
+        if (value < 0) std::cout << value << " is negative\n";
+    });
+
+
+**5. Filtering and Collecting Results:**
+
+.. code-block:: c++
+
+    std::vector<int> numbers = {1, 4, -2, 6, -5};
+    std::vector<int> positiveNumbers;
+    std::for_each(numbers.begin(), numbers.end(), [&positiveNumbers](int num) {
+        if (num > 0) positiveNumbers.push_back(num);
+    });
+
+
+**Key Points:**
+
+* **Concise Looping:** `std::for_each` offers a succinct way to iterate over elements and apply actions.
+* **Flexibility:** Works with various containers and ranges.
+* **Custom Actions:** Accepts lambda expressions or function objects for versatile operations.
+* **No Return Value:** Focuses on performing actions, not producing a result.
+* **Range-Based Version:** `std::ranges::for_each` in C++20 simplifies syntax and integrates with range views.
+
+
+---------------------------------------------------------------
+
+**std::variant and std::visit**
+---------------------------------------------------------------
+
+In C++17 and later, `std::visit` is a powerful generic function that allows you to apply a visitor function to an object of type `std::variant`. Essentially, it acts as a switch statement on steroids, enabling flexible, type-safe handling of different possibilities within a `variant`.
+
+**Here's a breakdown of how it works:**
+
+1. **`std::variant`:** This container holds values of different types, allowing you to store various possibilities under one variable.
+2. **Visitor Function:** You define a function with overloaded implementations for each type you want to handle within the `variant`.
+3. **`std::visit` takes two arguments:**
+    - The `variant` object containing the actual value.
+    - The visitor function object with its overloaded implementations.
+4. **Runtime Type Checking:** `std::visit` inspects the actual type stored in the `variant` at runtime.
+5. **Matching and Invocation:** It then calls the corresponding overloaded implementation of the visitor function that matches the specific type within the `variant`.
+
+**Benefits of using `std::visit`:**
+
+* **Type Safety:** Eliminates the need for manual type checks and casts, reducing bugs and improving code clarity.
+* **Readability:** Promotes concise and expressive handling of different types within a `variant`.
+* **Flexibility:** Enables dynamic branching based on actual types without complex conditionals.
+* **Performance:** Can be optimized for common usage patterns compared to traditional switch statements.
+
+**Here's an example to illustrate:**
+
+.. code-block:: c++
+
+    #include <variant>
+    #include <iostream>
+
+    struct Point {
+      int x, y;
+    };
+
+    struct Circle {
+      Point center;
+      double radius;
+    };
+
+    void printInfo(std::variant<Point, Circle> data) {
+      std::visit([](const Point& p) {
+        std::cout << "Point: (" << p.x << ", " << p.y << ")" << std::endl;
+      }, [](const Circle& c) {
+        std::cout << "Circle: center (" << c.center.x << ", " << c.center.y << "), radius " << c.radius << std::endl;
+      }, data);
+    }
+
+    int main() {
+      std::variant<Point, Circle> variant1 = Point{1, 2};
+      printInfo(variant1); // Outputs: Point: (1, 2)
+
+      std::variant<Point, Circle> variant2 = Circle{Point{3, 4}, 5.0};
+      printInfo(variant2); // Outputs: Circle: center (3, 4), radius 5
+      return 0;
+    }
+
+**In summary, `std::visit` offers a powerful and flexible way to handle different possibilities within a `std::variant`. It significantly improves type safety, readability, and flexibility compared to traditional type checking and branching solutions.**
+
+
+
+---------------------------------------------------------------
+
+**std::forward**
+---------------------------------------------------------------
+
+**Here's a comprehensive explanation of `std::forward` in C++:**
+
+**Purpose:**
+
+* **Perfect Forwarding:** Preserves the value category (lvalue, rvalue, or xvalue) of arguments when forwarding them to other functions or constructors.
+* **Essential for Perfect Forwarding:** Used in conjunction with universal references (`T&&`) to enable perfect forwarding, a powerful technique for maintaining value categories and maximizing efficiency in template-based code.
+
+**Syntax:**
+
+.. code-block:: c++
+
+    template <typename T>
+    T&& forward(remove_reference_t<T>& t) {  // For lvalues
+        return static_cast<T&&>(t);
+    }
+
+    template <typename T>
+    T&& forward(remove_reference_t<T>&& t) {  // For rvalues
+        static_cast<T&&>(t);
+    }
+
+**How It Works:**
+
+1. **Template Argument Deduction:** The compiler deduces the type `T` based on the argument being forwarded.
+2. **Overload Selection:** The appropriate `forward` overload is selected based on the argument's value category.
+3. **Type Adjustment:** The `remove_reference_t` removes any reference qualifiers, preparing for casting.
+4. **Static Cast:** The `static_cast<T&&>` casts the argument to an rvalue reference of the deduced type `T`, preserving its value category.
+5. **Forwarding:** The forwarded argument maintains its original value category in subsequent calls or constructions.
+
+**Common Use Cases:**
+
+* **Forwarding Arguments to Functions:**
+
+.. code-block:: c++
+
+    template <typename T>
+    void process(T&& arg) {
+        someFunction(std::forward<T>(arg));  // Forward to another function
+    }
+
+* **Forwarding Arguments to Constructors:**
+
+.. code-block:: c++
+
+    template <typename T>
+    void create(T&& arg) {
+        MyClass obj(std::forward<T>(arg));  // Forward to constructor
+    }
+
+**Key Benefits:**
+
+* **Preserves Value Categories:** Ensures optimal move semantics and efficient resource management.
+* **Enables Generic Code:** Allows writing template functions and classes that work seamlessly with different argument types and value categories.
+* **Enhances Code Flexibility and Reusability:** Improves the adaptability of template-based code.
+
+**Remember:** `std::forward` is a cornerstone of modern C++ template metaprogramming, enabling efficient and adaptable code design through perfect forwarding.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

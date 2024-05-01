@@ -1,0 +1,31 @@
+05-BootAndPartitions - Project Treble 
+===========================================
+The problem with 7.0 Nougat and older version of Android, is that there’s no separation between the vendor’s low level hardware code and the Android Framework that Google maintains. In Android 7.x and earlier, no formal vendor interfaces existed, so the device manufacturers had to update large portions of the Android code for each updates. This includes waiting on hardware vendors, such as SoC manufacturers, to provide their BSP (Board Support Packages) to hook hardware into the new OS.
+
+Android code base is not decoupled, or did not have much in the way of plug-and-play compatibility with low level hardware; code had to be heavily tailored. This takes a considerable amount of time, testing, and cost on the part of silicon vendors and OEMs. Project Treble solves this problem by separating the Android OS Framework from the vendor hardware code implementations, therefore allowing Google and OEMs to update the OS without having to reconfigure all the the lower level hardware parts.
+
+To solve the hardware abstraction layer issue, Android 8.0 Oreo and later versions formalized the division between hardwares abstraction layer, and their clients on the software side. These new formal divisions specify the interface between a HAL and its users. There are now around 60 formal interfaces for various hardware components, known as HIDLs.
+
+The goal of a HIDL is to allow the framework to be replaced without having to rebuild HALs. HALs will be built by vendors or SoC makers and put in a /vendor partition on the device, enabling the framework, in its own partition, to be replaced with an over-the-air update (OTA) without recompiling the HALs. To update devices running earlier versions of Android to Android O, developers can wrap both conventional and legacy HALs in a new HIDL interface too.
+
+The switch to Project Treble requires a little bit of work on the hardware vendor side too, as the way the vendor implementation is programmed to expose the hardware to Android is different to previous OS versions. Once this revised vendor implementation is on the device though, manufacturers can choose to deliver a new Android release to consumers by just updating the Android OS framework, without any reworking required from the silicon manufacturers.
+
+Before Treble
+---------------
+Below Diagram describe how tightly coupled Android Framework was with Hardware before Project Treble.
+
+.. figure:: beforetreble.png
+   :scale: 100 %
+
+After Treble
+---------------
+Below Diagram describe how Android Framework is decoupled from Hardware Layers.
+
+.. figure:: aftertreble.png
+   :scale: 100 %
+
+
+
+ 
+
+ 

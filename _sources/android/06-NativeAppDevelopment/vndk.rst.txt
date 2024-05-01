@@ -1,0 +1,89 @@
+06-NativeAppDevelopment - Vendor Native Development Kit (VNDK)
+=================================================================
+The Vendor Native Development Kit (VNDK) is a set of libraries exclusively for vendors to implement their HALs. The VNDK ships in system.img and is dynamically linked to vendor code at runtime.
+
+Purpose of VNDK
+---------------------
+Android 8.0 and higher enables framework-only updates in which the system partition can be upgraded to the latest version while vendor partitions are left unchanged. This implies that binaries built at different times must be able to work with each other; VNDK covers API/ABI changes across Android releases.
+
+Framework-only updates include the following challenges:
+- Dependency between framework modules and vendor modules. Before Android 8.0, modules from both sides could link with modules from the other side. However, dependencies from vendor modules imposed undesired restrictions to framework modules development.
+- Extensions to AOSP libraries. Android 8.0 and higher requires all Android devices to pass CTS when the system partition is replaced with a standard Generic System Image (GSI). However, as vendors extend AOSP libraries to boost performance or to add extra functionalities for their HIDL implementations, flashing the system partition with a standard GSI might break a vendor's HIDL implementation. (For guidelines on preventing such breakages, see VNDK extensions.)
+
+To address these challenges, Android 8.0 introduces several techniques such as VNDK, HIDL, hwbinder, device tree overlay, and sepolicy overlay.
+
+VNDK concepts
+---------------------
+In an ideal Android 8.0 and higher world, framework processes do not load vendor shared libraries, all vendor processes load only vendor shared libraries (and a portion of framework shared libraries), and communications between framework processes and vendor processes are governed by HIDL and hardware binder.
+
+Such a world includes the possibility that stable, public APIs from framework shared libraries might not be sufficient for vendor module developers (although APIs can change between Android releases), requiring that some portion of framework shared libraries be accessible to vendor processes. In addition, as performance requirements can lead to compromises, some response-time-critical HALs must be treated differently.
+
+**Framework shared libraries for vendor**
+
+There are two approaches to support vendor modules across multiple Android releases:
+
+- Stabilize the ABIs/APIs of the framework shared libraries. New framework modules and old vendor modules can use the same shared library to reduce memory footprint and storage size. A unique shared library also avoids several double-loading issues. However, the development cost to maintain stable ABIs/APIs is high and it is unrealistic to stabilize all ABIs/APIs exported by every framework shared library.
+- Copy old framework shared libraries. Comes with the strong restriction against side channels, defined as all mechanisms to communicate among framework modules and vendor modules, including (but not limited to) binder, socket, pipe, shared memory, shared file, and system properties. There must be no communication unless the communication protocol is frozen and stable (e.g. HIDL through hwbinder). Double-loading shared libraries might cause problems as well; for example, if an object created by the new library is passed into the functions from the old library, an error may occur as these libraries may interpret the object differently.
+
+.. figure:: vndkfw.png
+   :scale: 100 %
+
+Framework shared libraries are classified into three sub-categories:
+
+**LL-NDK Libraries**
+
+LL-NDK Libraries are Framework Shared Libraries that are known to be stable. Their developers are committed to maintain their API/ABI stabilities. LL-NDK includes the following libraries: libEGL.so, libGLESv1_CM.so, libGLESv2.so, libGLESv3.so, libandroid_net.so, libc.so, libdl.so, liblog.so, libm.so, libnativewindow.so, libneuralnetworks.so, libsync.so, libvndksupport.so, and libvulkan.so,
+
+**Eligible VNDK Libraries**
+
+Eligible VNDK Libraries (VNDK) are Framework Shared Libraries that are safe to be copied twice. Framework Modules and Vendor Modules can link with their own copies. A framework shared library can become an eligible VNDK library only if it satisfies the following criteria:
+- It does not send/receive IPCs to/from the framework.
+- It is not related to ART virtual machine.
+- It does not read/write files/partitions with unstable file formats.
+- It does not have special software license which requires legal reviews.
+- Its code owner does not have objections to vendor usages.
+
+**Framework-Only Libraries**
+
+Framework-Only Libraries (FWK-ONLY) are Framework Shared Libraries that do not belong to the categories mentioned above. These libraries are considered framework internal implementation details and must not be accessed by vendor modules. These Libraries have unstable ABIs/APIs and no API/ABI compatibility guarantees.
+
+**Same-Process HAL (SP-HAL)**
+
+Same-Process HAL (SP-HAL) is a set of predetermined HALs implemented as Vendor Shared Libraries and loaded into Framework Processes. SP-HALs are isolated by a linker namespace (controls the libraries and symbols that are visible to the shared libraries). SP-HALs must depend only on LL-NDK and VNDK-SP.
+
+.. figure:: vndksphal.png
+   :scale: 100 %
+
+VNDK-SP is a predefined subset of eligible VNDK libraries. VNDK-SP libraries are carefully reviewed to ensure double-loading VNDK-SP libraries into framework processes does not cause problems. Both SP-HALs and VNDK-SPs are defined by Google.
+
+The following libraries are approved SP-HALs:
+- ``libGLESv1_CM_${driver}.so``
+- ``libGLESv2_${driver}.so``
+- ``libGLESv3_${driver}.so``
+- ``libEGL_${driver}.so``
+- ``vulkan.${driver}.so``
+- ``android.hardware.renderscript@1.0-impl.so``
+- ``android.hardware.graphics.mapper@2.0-impl.so``
+
+VNDK-SP libraries specify vndk: ``{ support_system_process: true }`` in their ``Android.bp`` files. 
+If ``vendor_available: false`` is also specified, then these libraries are called VNDK-SP-Private and they are invisible to SP-HALS.
+
+The following are framework-only libraries with RS exceptions (FWK-ONLY-RS):
+libft2.so (Renderscript)
+libmediandk.so (Renderscript)
+
+VNDK versioning
+------------------
+In Android 9, VNDK shared libraries are versioned:
+
+The ``ro.vndk.version`` system property is automatically added to ``/vendor/default.prop``.
+VNDK shared libraries are installed to ``/system/lib[64]/vndk-${ro.vndk.version}``.
+VNDK-SP shared libraries are installed to ``/system/lib[64]/vndk-sp-${ro.vndk.version}``.
+The dynamic linker configuration file is installed to ``/system/etc/ld.config.${ro.vndk.version}.txt``.
+
+Reference:
+-------------
+[1]: ``https://source.android.com/devices/architecture/vndk``
+
+
+

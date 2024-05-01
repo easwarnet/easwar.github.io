@@ -1,0 +1,76 @@
+06-NativeAppDevelopment - VHAL - Vehicle HAL
+================================================
+Native Applications in Android are the application that are coded primarily in C/C++. This is done for creating abstraction layers for few interfaces in Kernel or Hardware. One such instances is Android Auto, where many signal from Vehicles are wrapped under C/C++ based native application. The signals from other vehicle units or ECUs(Electonic control unit) are read and passed through Android Framework by the native applications.
+
+Implementation steps
+-----------------------
+**1. Define Vehicle Property in Vehicle HAL**
+
+.. code-block:: c++
+
+    enum VehicleProperty: android.hardware.automotive.vehicle@2.0::VehicleProperty {
+
+        SOME_VEHICLE_PROP = (
+        0x00EE
+        | VehiclePropertyGroup:VENDOR
+        | VehiclePropertyType:INT32
+        | VehicleArea:GLOBAL)
+        //,
+        //...
+
+    }
+
+**2. Define Vehicle Property Source Code**
+
+.. code-block:: java
+
+    vhal20::VehiclePropConfig propconfig_somevehicleprop() {
+        auto someVehicleProp = vhal20::VehicleProperty::SOME_VEHICLE_PROP;
+        vhal20::VehiclePropConfig config;
+        config.prop = vhal20::toInt(someVehicleProp);
+        config.changeMode = vhal20::VehiclePropertyChangeMode::ON_CHANGE;
+        config.access = vhal20::VehiclePropertyAccess::READ_WRITE;
+        config.areaConfigs.resize(1);
+        config.areaConfigs[0].areaId = 0;
+        config.areaConfigs[0].minInt32Value = 0;
+        config.areaConfigs[0].maxInt32Value = 7;
+        return config;
+    }
+
+Interfaces
+-------------
+
+The VHAL uses the following interfaces:
+
+**getAllPropConfigs() generates (vec<VehiclePropConfig>propConfigs)**
+List the configuration of all properties supported by the VHAL. CarService uses supported properties only.
+
+**getPropConfigs(vec<int32_t> props) generates (StatusCode status,vec<VehiclePropConfig> propConfigs);**
+Return the configuration of selected properties.
+
+**set(VehiclePropValue propValue) generates (StatusCodestatus);**
+Write a value to property. Result of write is defined per property.
+
+**subscribe(IVehicleCallback callback, vec<SubscribeOptions> options) generates (StatusCode status);**
+Start monitoring a property value change. For zoned property, unsubscribe(IVehicleCallback callback, int32_t propId) generates (StatusCode status);
+
+Callbacks
+------------
+
+**oneway onPropertyEvent(vec<VehiclePropValue>propValues);**
+Notifies vehicle property's value change. Should be done only for subscribed properties.
+
+**oneway onPropertySetError(StatusCode errorCode,int32_t propId,int32_tareaId);**
+Return global VHAL level error or error per property. Global error causes the HAL to restart, which can lead to restarting other components (including applications).
+
+APP to ECU Communication through VHAL
+------------------------------------------------
+
+.. figure:: vhal.png
+   :scale: 100 %
+
+
+
+
+
+
