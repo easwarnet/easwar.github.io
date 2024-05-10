@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AndroidIPC &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="AppCoreComponents" href="../08-AppCoreComponents/AppCoreComponents.html" />
+    <link rel="prev" title="NativeAppDevelopment" href="../06-NativeAppDevelopment/NativeAppDevelopment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/AndroidBuildSystem.html">AndroidBuildSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/AndroidTools.html">AndroidTools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/SoftwareUpdate.html">Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/BootAndPartitions.html">BootAndPartitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/NativeAppDevelopment.html">NativeAppDevelopment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AndroidIPC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#binder"><strong>Binder</strong></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dev-binder">dev/binder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dev-vndbinder">dev/vndbinder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dev-hwbinder">dev/hwbinder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#binder-communication">Binder Communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binder-communication-flow">Binder Communication Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#brief">Brief</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#binder-tokens">Binder Tokens</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-counting">Reference Counting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#link-to-death-or-death-recipient">Link-To-Death or Death Recipient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#servicemanager">ServiceManager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reference">Reference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aidl-android-interface-definition-language"><strong>AIDL - Android Interface Definition Language</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#defining-an-aidl-interface">Defining an AIDL interface:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calling-an-ipc-method">Calling an IPC method:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Reference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hidl-hal-interface-descriptive-language"><strong>HIDL - HAL Interface Descriptive Language</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-steps">Implementation steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hal-file">1. HAL file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-hidl">2. Generate HIDL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hidl-server">3. HIDL Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hidl-client">4. HIDL Client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build">5. Build</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/AppCoreComponents.html">AppCoreComponents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/TestFramework.html">TestFramework</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>AndroidIPC</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="androidipc">
+<h1>AndroidIPC<a class="headerlink" href="#androidipc" title="Permalink to this heading"></a></h1>
+<section id="binder">
+<h2><strong>Binder</strong><a class="headerlink" href="#binder" title="Permalink to this heading"></a></h2>
+<p>There are several techniques to achieve Inter-process communication like sockets, signals, pipes, message queues, semaphores, shared memory, etc. IPC communication can be acheived in Android using Binder Framework through AIDL and HIDL. Binder is an Android-specific IPC mechanism, which enables an RPC (remote procedure call) mechanism between the client and server processes. Client process can execute remote methods in the server process as if they were executed locally.</p>
+<p>Android supports 3 IPC domains</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>/dev/binder</p></td>
+<td><p>IPC between framework/app processes with AIDL interfaces.</p></td>
+</tr>
+<tr class="row-even"><td><p>/dev/hwbinder</p></td>
+<td><div class="line-block">
+<div class="line">IPC between framework/vendor processes with HIDL interfaces.</div>
+<div class="line">IPC between vendor processes with AIDL/HIDL interfaces</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>/dev/vndbinder</p></td>
+<td><p>IPC between framework/app processes with AIDL interfaces.</p></td>
+</tr>
+</tbody>
+</table>
+<p>From Android 8, the “/dev/binder” device node is designated as exclusive node of the framework process, which means that the vendor process can no longer access this node. Vendor processes can access “/dev/hwbinder” and use HIDL. However from Android 10, AIDL is being recommended instead of HIDL, since HIDL is soon to be deprecated.</p>
+<section id="dev-binder">
+<h3>dev/binder<a class="headerlink" href="#dev-binder" title="Permalink to this heading"></a></h3>
+<p>This is the most common binder that is widely used. This acts as communication interface between App/Framework Processes or Services. On the implementation of Binder, Java inherits Binder Class and C++ inherits Bbbinder class.</p>
+</section>
+<section id="dev-vndbinder">
+<h3>dev/vndbinder<a class="headerlink" href="#dev-vndbinder" title="Permalink to this heading"></a></h3>
+<p>This binder is used as communication interface between vendor processes. Just like binder implementation, Java inherits Binder and C++ inherits Bbbinder. vndbinder is registered through the vndservicemanager process, and then the anonymous Binder object is passed through the Binder interface that has been created After getting BinderProxy or BpBinder.</p>
+</section>
+<section id="dev-hwbinder">
+<h3>dev/hwbinder<a class="headerlink" href="#dev-hwbinder" title="Permalink to this heading"></a></h3>
+<p>This binder is used as communication interface between vendor processes with Frameworks. Usually the Vendor BSP consists of hardware driver which needs to be interfaced with Android Frameworks. This is done through hwbinder.</p>
+</section>
+</section>
+<section id="binder-communication">
+<h2>Binder Communication<a class="headerlink" href="#binder-communication" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/binder.png"><img alt="../../_images/binder.png" src="../../_images/binder.png" style="width: 770.0px; height: 500.0px;" /></a>
+</figure>
+</section>
+<section id="binder-communication-flow">
+<h2>Binder Communication Flow<a class="headerlink" href="#binder-communication-flow" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/bindercall.png"><img alt="../../_images/bindercall.png" src="../../_images/bindercall.png" style="width: 536.0px; height: 529.0px;" /></a>
+</figure>
+</section>
+<section id="brief">
+<h2>Brief<a class="headerlink" href="#brief" title="Permalink to this heading"></a></h2>
+<p>A process cannot access another process’s memory, however kernel has control over all processes and therefore can expose an interface that enables IPC. Binder interface /dev/binder device, is implemented by the Binder kernel driver. All the IPC calls go through Binder kernel driver.</p>
+<p>The Binder driver manages part of the address space of each process. The Binder driver-managed chunk of memory is read-only to the process, and all writing is performed by the kernel module. When a process sends a message to another process, the kernel allocates some space in the destination process’s memory and copies the message data directly from the sending process. It then queues a short message to the receiving process telling it where the received message is. The recipient can then access that message directly (because it is in its own memory space).</p>
+<p>Higher-level IPC abstractions in Android such as Intents and ContentProviders are some of the components that are built on top of Binder. Service interfaces that need to be exposed to other processes can be defined using the Android Interface Definition Language (AIDL), which enables clients to call remote services as if they were local Java objects.</p>
+<section id="binder-tokens">
+<h3>Binder Tokens<a class="headerlink" href="#binder-tokens" title="Permalink to this heading"></a></h3>
+<p>Binder object instance maintains a unique identity across all processes in the system. Binder kernel driver allocates unique ID for each instance, making Binders unique. The application framework uses Binder tokens extensively in order to ensure secure interaction between cooperating processes. A client can create a Binder object to use as a token that can be shared with a server process, and the server can use it to validate the client’s requests without there being any way for others to sniff the communication exchange.</p>
+</section>
+<section id="reference-counting">
+<h3>Reference Counting<a class="headerlink" href="#reference-counting" title="Permalink to this heading"></a></h3>
+<p>Reference counting guarantees that Binder objects are automatically freed when no one references them. The binder kernel driver remembers a new object reference whenever a transaction happens. When a transaction occurs the reference count to that particular binder object is incremented. When a process dies, the reference count is automatically decremented. When a reference is no longer needed, its owner is notified and that binder object is released and removed from binder mapping.</p>
+</section>
+<section id="link-to-death-or-death-recipient">
+<h3>Link-To-Death or Death Recipient<a class="headerlink" href="#link-to-death-or-death-recipient" title="Permalink to this heading"></a></h3>
+<p>Binder’s “link-to-death” facility, allows a process to get a callback when another process hosting a binder object is freed or killed. The client can receive a callback when a Service dies. The callback is usually used to execute cleanup codes when death notification is received.</p>
+</section>
+<section id="servicemanager">
+<h3>ServiceManager<a class="headerlink" href="#servicemanager" title="Permalink to this heading"></a></h3>
+<p>The ServiceManager is the main process, which manages all the services of the system. It provides the functionality to register and find the corresponding services. ServiceManager works directly with the binder driver for required IPC.</p>
+</section>
+</section>
+<section id="reference">
+<h2>Reference:<a class="headerlink" href="#reference" title="Permalink to this heading"></a></h2>
+<p>[1]: <code class="docutils literal notranslate"><span class="pre">https://mymusing.co/what-is-binder-in-android/</span></code></p>
+<p>[2]: <code class="docutils literal notranslate"><span class="pre">https://developpaper.com/a-simple-example-of-binder/</span></code></p>
+<p>[3]: <code class="docutils literal notranslate"><span class="pre">https://medium.com/android-news/android-binder-framework-8a28fb38699a</span></code></p>
+<p>[4]: <code class="docutils literal notranslate"><span class="pre">https://www.androiddesignpatterns.com/2013/07/binders-window-tokens.html</span></code></p>
+<p>[5]: <code class="docutils literal notranslate"><span class="pre">https://proandroiddev.com/binders-in-android-part-ii-reference-counting-death-recipients-19d55c8356c3</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="aidl-android-interface-definition-language">
+<h2><strong>AIDL - Android Interface Definition Language</strong><a class="headerlink" href="#aidl-android-interface-definition-language" title="Permalink to this heading"></a></h2>
+<p>The Android Interface Definition Language (AIDL) is Interface Descriptive Language that allows you to define the programming interface that both the client and service using interprocess communication (IPC). RPC is used to call the remote methods. AIDL interfaceuses direct function calls.</p>
+<ul class="simple">
+<li><p>Calls made from the local process are executed in the same thread that is making the call. If this is your main UI thread, that thread continues to execute in the AIDL interface. If it is another thread, that is the one that executes your code in the service. Thus, if only local threads are accessing the service, you can completely control which threads are executing in it (but if that is the case, then you shouldn’t be using AIDL at all, but should instead create the interface by implementing a Binder).</p></li>
+<li><p>Calls from a remote process are dispatched from a thread pool the platform maintains inside of your own process. You must be prepared for incoming calls from unknown threads, with multiple calls happening at the same time. In other words, an implementation of an AIDL interface must be completely thread-safe. Calls made from one thread on the same remote object arrive in order on the receiver end.</p></li>
+<li><p>The oneway keyword modifies the behavior of remote calls. When used, a remote call does not block; it simply sends the transaction data and immediately returns. The implementation of the interface eventually receives this as a regular call from the Binder thread pool as a normal remote call. If oneway is used with a local call, there is no impact and the call is still synchronous.</p></li>
+</ul>
+</section>
+<section id="defining-an-aidl-interface">
+<h2>Defining an AIDL interface:<a class="headerlink" href="#defining-an-aidl-interface" title="Permalink to this heading"></a></h2>
+<p>You must define your AIDL interface in an .aidl file using the Java programming language syntax, then save it in the source code (in the src/ directory) of both the application hosting the service and any other application that binds to the service.</p>
+<p>To create a bounded service using AIDL, follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Aidl file</p></li>
+</ol>
+<p>Example AIDL File</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// IRemoteService.aidl</span>
+<span class="kn">package</span> <span class="nn">com.example.android</span><span class="o">;</span>
+
+<span class="c1">// Declare any non-default types here with import statements</span>
+
+<span class="cm">/** Example service interface */</span>
+<span class="kd">interface</span> <span class="nc">IRemoteService</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="nf">message</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Simply save your .aidl file in your project’s src/ directory and when you build your application, the SDK tools generate the IBinder interface file in your project’s gen/ directory. The generated file name matches the .aidl file name, but with a .java extension (for example, IRemoteService.aidl results in IRemoteService.java).</p>
+<ol class="arabic simple" start="2">
+<li><p>Implement Interface</p></li>
+</ol>
+<p>The Android SDK tools generate an interface in the Java programming language, based on your .aidl file. This interface has an inner abstract class named Stub that extends Binder and implements methods from your AIDL interface. You must extend the Stub class and implement the methods.</p>
+<p>When you build your application, the Android SDK tools generate a .java interface file named after your .aidl file. The generated interface includes a subclass named Stub that is an abstract implementation of its parent interface (for example, YourInterface.Stub) and declares all the methods from the .aidl file.</p>
+<p>To implement the interface generated from the .aidl, extend the generated Binder interface (for example, YourInterface.Stub) and implement the methods inherited from the .aidl file. Implement a Service and override onBind() to return your implementation of the Stub class. Once you’ve implemented the interface for your service, you need to expose it to clients so they can bind to it. To expose the interface for your service, extend Service and implement onBind() to return an instance of your class that implements the generated Stub (as discussed in the previous section). Here’s an example service that implement an interface called IRemoteService and exposes the IRemoteService example interface to clients.</p>
+<p>Here is an example (defined by the IRemoteService.aidl example, above) using an anonymous instance:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AidlRemoteServiceStub</span> <span class="kd">extends</span> <span class="n">Service</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TAG</span> <span class="o">=</span> <span class="s">&quot;AidlRemoteServiceStub&quot;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">className</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getSimpleName</span><span class="o">();</span>
+
+    <span class="kd">public</span> <span class="nf">AidlRemoteServiceStub</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; Constructor&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">IBinder</span> <span class="nf">onBind</span><span class="o">(</span><span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; onBind&quot;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">IRemoteService</span><span class="o">.</span><span class="na">asBinder</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">();</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; onCreate&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onDestroy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onDestroy</span><span class="o">();</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="n">className</span><span class="o">+</span><span class="s">&quot; onDestroy&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="n">IRemoteService</span><span class="o">.</span><span class="na">Stub</span> <span class="n">iRemoteService</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IRemoteService</span><span class="o">.</span><span class="na">Stub</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">message</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">&quot;Message from AIDL Stub&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Now the binder is an instance of the Stub class (a Binder), which defines the RPC interface for the service. In the next step, this instance is exposed to clients so they can interact with the service.</p>
+<ol class="arabic simple" start="3">
+<li><p>Client Implementation</p></li>
+</ol>
+<p>Now, when a client (such as an activity) calls bindService() to connect to this service, the client’s onServiceConnected() callback receives the binder instance returned by the service’s onBind() method.</p>
+<p>The client must also have access to the interface class, so if the client and service are in separate applications, then the client’s application must have a copy of the .aidl file in its src/ directory (which generates the android.os.Binder interface—providing the client access to the AIDL methods).</p>
+<p>When the client receives the IBinder in the onServiceConnected() callback, it must call YourServiceInterface.Stub.asInterface(service) to cast the returned parameter to YourServiceInterface type. For example:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AIDLDemo</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TAG</span> <span class="o">=</span> <span class="s">&quot;AIDLDemo&quot;</span><span class="o">;</span>
+    <span class="n">IRemoteService</span> <span class="n">service</span><span class="o">;</span>
+    <span class="n">RemoteServiceConnection</span> <span class="n">connection</span><span class="o">;</span>
+    <span class="n">String</span> <span class="n">message</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">    * This class represents the actual service connection. It casts the bound</span>
+<span class="cm">    * stub implementation of the service to the AIDL interface.</span>
+<span class="cm">    */</span>
+    <span class="kd">class</span> <span class="nc">RemoteServiceConnection</span> <span class="kd">implements</span> <span class="n">ServiceConnection</span> <span class="o">{</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onServiceConnected</span><span class="o">(</span><span class="n">ComponentName</span> <span class="n">name</span><span class="o">,</span> <span class="n">IBinder</span> <span class="n">boundService</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">service</span> <span class="o">=</span> <span class="n">IRemoteService</span><span class="o">.</span><span class="na">Stub</span><span class="o">.</span><span class="na">asInterface</span><span class="o">((</span><span class="n">IBinder</span><span class="o">)</span> <span class="n">boundService</span><span class="o">);</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;onServiceConnected() connected&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onServiceDisconnected</span><span class="o">(</span><span class="n">ComponentName</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">service</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;onServiceDisconnected() disconnected&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Binds this activity to the service. */</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RemoteServiceConnection</span><span class="o">();</span>
+        <span class="n">Intent</span> <span class="n">i</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">();</span>
+        <span class="kt">boolean</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">bindService</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">connection</span><span class="o">,</span> <span class="n">Context</span><span class="o">.</span><span class="na">BIND_AUTO_CREATE</span><span class="o">);</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;initService() bound with &quot;</span> <span class="o">+</span> <span class="n">ret</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Unbinds this activity from the service. */</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">releaseService</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">unbindService</span><span class="o">(</span><span class="n">connection</span><span class="o">);</span>
+        <span class="n">connection</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;releaseService() unbound.&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Called when the activity is first created. */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">main</span><span class="o">);</span>
+
+        <span class="n">initService</span><span class="o">();</span>
+
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="na">message</span><span class="o">();</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;Message received: &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RemoteException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;Service Request failed with: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/** Called when the activity is about to be destroyed. */</span>
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onDestroy</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">releaseService</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="calling-an-ipc-method">
+<h2>Calling an IPC method:<a class="headerlink" href="#calling-an-ipc-method" title="Permalink to this heading"></a></h2>
+<p>Here are the steps a calling class must take to call a remote interface defined with AIDL:</p>
+<ul class="simple">
+<li><p>Include the .aidl file in the project src/ directory.</p></li>
+<li><p>Declare an instance of the IBinder interface (generated based on the AIDL).</p></li>
+<li><p>Implement ServiceConnection.</p></li>
+<li><p>Call Context.bindService(), passing in your ServiceConnection implementation.</p></li>
+<li><p>In your implementation of onServiceConnected(), you will receive an IBinder instance (called service). Call YourInterfaceName.Stub.asInterface((IBinder)service) to cast the returned parameter to YourInterface type.</p></li>
+<li><p>Call the methods that you defined on your interface. You should always trap DeadObjectException exceptions, which are thrown when the connection has broken. You should also trap SecurityException exceptions, which are thrown when the two processes involved in the IPC method call have conflicting AIDL definitions.</p></li>
+<li><p>To disconnect, call Context.unbindService() with the instance of your interface.</p></li>
+</ul>
+<p>A few comments on calling an IPC service:
+- Objects are reference counted across processes.
+- You can send anonymous objects as method arguments.</p>
+<p>For more information about binding to a service, read the Bound Services document.</p>
+</section>
+<section id="id1">
+<h2>Reference:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p>[1]: <code class="docutils literal notranslate"><span class="pre">https://developer.android.com/guide/components/aidl</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="hidl-hal-interface-descriptive-language">
+<h2><strong>HIDL - HAL Interface Descriptive Language</strong><a class="headerlink" href="#hidl-hal-interface-descriptive-language" title="Permalink to this heading"></a></h2>
+<p>Native Applications in Android are the application that are coded primarily in C/C++. This is done for creating abstraction layers for few interfaces in Kernel or Hardware. One such instances is creating HAL for Sensors and other devices. HAL is usually implemented using HIDL. HAL interface definition language or HIDL is an interface description language (IDL) to specify the interface between a HAL and its users. It allows specifying types and method calls, collected into interfaces and packages.</p>
+</section>
+<section id="implementation-steps">
+<h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading"></a></h2>
+<section id="hal-file">
+<h3>1. HAL file<a class="headerlink" href="#hal-file" title="Permalink to this heading"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ mkdir -p &lt;AOSP&gt;/vendor/vendorname/hardware/interfaces/testhidl/1.0/
+$ vi &lt;AOSP&gt;/vendor/vendorname/hardware/interfaces/testhidl/1.0/ITestHidl.hal
+</pre></div>
+</div>
+<p>Sample HAL Content</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">vendor</span><span class="o">.</span><span class="n">vendorname</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">testhidl</span><span class="nd">@1</span><span class="o">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">ITestHidl</span>
+<span class="p">{</span>
+    <span class="n">ClientRequest</span><span class="p">(</span><span class="n">uint32_t</span> <span class="n">request</span><span class="p">)</span> <span class="n">generates</span> <span class="p">(</span><span class="nb">bool</span> <span class="n">status</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="generate-hidl">
+<h3>2. Generate HIDL<a class="headerlink" href="#generate-hidl" title="Permalink to this heading"></a></h3>
+<p>Use the hidl-gen command to automatically generate related files:</p>
+<p>Before we need to load the hidl-gen tool which is located at ./out/soong/host/linux-x86/bin/hidl-gen :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">source</span> build/envsetup
+$ make hidl-gen
+$ hidl-gen -Landroidbp -r android.vendor:vendor vendor.vendorname.hardware.testhidl@1.0
+$ <span class="nv">PACKAGE</span><span class="o">=</span>vendor.vendorname.hardware.testhidl@1.0
+$ <span class="nv">LOC</span><span class="o">=</span>android root directory vendor/vendorname/hardware/testhidl/1.0/default/
+$ hidl-gen -o <span class="nv">$LOC</span> -Lc++-impl -r android.vendor:vendor -r android.hidl:system/libhidl/transport <span class="nv">$PACKAGE</span>
+$ hidl-gen -o <span class="nv">$LOC</span> -Landroidbp-impl -r android.vendor:vendor -r android.hidl:system/libhidl/transport <span class="nv">$PACKAGE</span>
+$ ./hardware/interfaces/update-makefiles.sh
+</pre></div>
+</div>
+</section>
+<section id="hidl-server">
+<h3>3. HIDL Server<a class="headerlink" href="#hidl-server" title="Permalink to this heading"></a></h3>
+<p><strong>Sample Source Code</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;hidl/HidlTransportSupport.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;log/log.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vendor/vendorname/hardware/testhidl/1.0/ITestHidl.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#undef LOG_TAG</span>
+<span class="cp">#define LOG_TAG &quot;ITestHidlServer&quot;</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">vendor</span><span class="o">::</span><span class="n">vendorname</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">testhidl</span><span class="o">::</span><span class="n">V1_0</span><span class="o">::</span><span class="n">implementation</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">TestHidl</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ITestHidl</span> <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+    <span class="n">TestHidl</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+    <span class="o">~</span><span class="n">TestHidl</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+    <span class="n">Return</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">ClientRequest</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">requestid</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">retval</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">ALOGI</span><span class="p">(</span><span class="s">&quot;Client Request&quot;</span><span class="p">);</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="n">requestid</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+            <span class="cm">/*Do Something*/</span><span class="p">;</span>
+        <span class="n">retval</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+            <span class="cm">/*Do Something*/</span><span class="p">;</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">default</span><span class="o">:</span>
+            <span class="n">retval</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">retval</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">configureRpcThreadpool</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">true</span> <span class="cm">/* callerWillJoin */</span><span class="p">);</span>
+    <span class="n">android</span><span class="o">::</span><span class="n">sp</span><span class="o">&lt;</span><span class="n">ITestHidl</span><span class="o">&gt;</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TestHidl</span><span class="p">();</span>
+
+    <span class="n">android</span><span class="o">::</span><span class="n">status_t</span> <span class="n">status</span> <span class="o">=</span> <span class="n">service</span><span class="o">-&gt;</span><span class="n">registerAsService</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">!=</span> <span class="n">android</span><span class="o">::</span><span class="n">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ALOGE</span><span class="p">(</span><span class="s">&quot;Failed to register service: %d&quot;</span><span class="p">,</span> <span class="n">status</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">service</span><span class="o">-&gt;</span><span class="n">Init</span><span class="p">();</span>
+
+    <span class="n">ALOGI</span><span class="p">(</span><span class="s">&quot;Registering as service done.&quot;</span><span class="p">);</span>
+
+    <span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">joinRpcThreadpool</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Makefile</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cc_binary</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;testhidlserver&quot;</span><span class="p">,</span>
+    <span class="n">proprietary</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+    <span class="n">init_rc</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;init/testhidl.rc&quot;</span><span class="p">],</span>
+
+    <span class="n">srcs</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;src/*.cpp&quot;</span>
+    <span class="p">],</span>
+
+    <span class="n">local_include_dirs</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;src&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+
+    <span class="n">shared_libs</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;libbase&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;libhidlbase&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;libhidltransport&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;liblog&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;libutils&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;libcutils&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;libhwbinder&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;vendor.vendorname.hardware.testhidl@1.0&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Rc File</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">on</span> <span class="n">boot</span>
+    <span class="n">start</span> <span class="n">testhidlserver</span>
+
+<span class="n">service</span> <span class="n">testhidlserver</span> <span class="o">/</span><span class="n">vendor</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">testhidlserver</span>
+    <span class="n">user</span> <span class="n">vendor_testhidl</span>
+    <span class="n">group</span> <span class="n">vendor_testhidl</span>
+    <span class="n">oneshot</span>
+    <span class="n">seclabel</span> <span class="n">u</span><span class="p">:</span><span class="n">r</span><span class="p">:</span><span class="n">testhidlserver</span><span class="p">:</span><span class="n">s0</span>
+</pre></div>
+</div>
+<p><strong>selinux</strong>
+Create Selinux file which provides permissions for your HIDL Service.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">testhidlserver</span><span class="p">,</span> <span class="n">domain</span><span class="p">;</span>
+<span class="nb">type</span> <span class="n">testhidlserver_exec</span><span class="p">,</span> <span class="n">exec_type</span><span class="p">,</span> <span class="n">file_type</span><span class="p">,</span> <span class="n">vendor_file_type</span><span class="p">;</span>
+
+<span class="n">init_daemon_domain</span><span class="p">(</span><span class="n">testhidlserver</span><span class="p">)</span>
+
+<span class="n">hwbinder_use</span><span class="p">(</span><span class="n">testhidlserver</span><span class="p">)</span>
+
+<span class="n">hal_server_domain</span><span class="p">(</span><span class="n">testhidlserver</span><span class="p">,</span> <span class="n">hal_testhidlclient</span><span class="p">)</span>
+
+<span class="n">allow</span> <span class="n">testhidlserver</span> <span class="n">hwservicemanager_prop</span><span class="p">:</span><span class="n">file</span> <span class="p">{</span> <span class="nb">open</span> <span class="n">read</span> <span class="nb">getattr</span> <span class="nb">map</span> <span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>filecontext</strong>
+Add your service in filecontext file “file_contexts” located under devices directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vendor</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">testhidlserver</span> <span class="n">u</span><span class="p">:</span><span class="n">object_r</span><span class="p">:</span><span class="n">testhidlserver</span><span class="p">:</span><span class="n">s0</span>
+</pre></div>
+</div>
+</section>
+<section id="hidl-client">
+<h3>4. HIDL Client<a class="headerlink" href="#hidl-client" title="Permalink to this heading"></a></h3>
+<p><strong>Sample Client Listener Source Code</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;android/log.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;binder/IPCThreadState.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;binder/ProcessState.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;hidl/HidlTransportSupport.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;hidl/Status.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vendor/vendorname/hardware/testhidl/1.0/ITestHidl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+
+<span class="cp">#undef LOG_TAG</span>
+<span class="cp">#define LOG_TAG &quot;ITestHidlClient&quot;</span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">vendor</span><span class="o">::</span><span class="n">vendorname</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">testhidl</span><span class="o">::</span><span class="n">V1_0</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ALOGI</span><span class="p">(</span><span class="s">&quot;Starting Client&quot;</span><span class="p">);</span>
+    <span class="n">android</span><span class="o">::</span><span class="n">sp</span><span class="o">&lt;</span><span class="n">ITestHidl</span><span class="o">&gt;</span> <span class="n">testHidlServer</span><span class="p">;</span>
+    <span class="kt">uint32_t</span> <span class="n">request_1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">auto</span> <span class="n">clientreq</span> <span class="o">=</span> <span class="n">testHidlServer</span><span class="o">-&gt;</span><span class="n">ClientRequest</span><span class="p">(</span><span class="n">request_1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">clientreq</span><span class="p">.</span><span class="n">isOk</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">clientreq</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">ALOGI</span><span class="p">(</span><span class="n">LOG_TAG</span><span class="p">,</span> <span class="s">&quot;Request from Client Processed by Server&quot;</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">ALOGI</span><span class="p">(</span><span class="n">LOG_TAG</span><span class="p">,</span> <span class="s">&quot;Request from Client could not be Processed by Server&quot;</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">ALOGE</span><span class="p">(</span><span class="s">&quot;Binder call not OK&quot;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Makefile</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cc_binary</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;testhidlclient&quot;</span><span class="p">,</span>
+    <span class="n">proprietary</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+
+    <span class="n">srcs</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;*.cpp&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+
+    <span class="n">local_include_dirs</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">],</span>
+
+    <span class="n">shared_libs</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;libhidlbase&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;libbinder&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;libhidltransport&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;liblog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;libutils&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vendor.vendorname.hardware.testhidl@1.0&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="build">
+<h3>5. Build<a class="headerlink" href="#build" title="Permalink to this heading"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">### Below line w ill load the application to out/target/product/generic_x86_64/vendor/bin/hw/testhidl</span>
+$ mmm hardware/interfaces/testhidl/1.0
+
+<span class="c1">### Build the entire sources and run the emulator</span>
+$ m
+$ emulator
+
+<span class="c1">### Test the application</span>
+<span class="c1"># will list the echo service</span>
+$ lshal <span class="p">|</span> grep <span class="nb">echo</span>
+<span class="c1"># will show the service is up and running</span>
+$ ps -A <span class="p">|</span> grep ITestHidlServer
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../06-NativeAppDevelopment/NativeAppDevelopment.html" class="btn btn-neutral float-left" title="NativeAppDevelopment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../08-AppCoreComponents/AppCoreComponents.html" class="btn btn-neutral float-right" title="AppCoreComponents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

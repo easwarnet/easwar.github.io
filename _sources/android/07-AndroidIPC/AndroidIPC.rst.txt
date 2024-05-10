@@ -1,0 +1,551 @@
+AndroidIPC
+=========================================================================
+
+**Binder**
+----------------------------------------------------------
+
+There are several techniques to achieve Inter-process communication like sockets, signals, pipes, message queues, semaphores, shared memory, etc. IPC communication can be acheived in Android using Binder Framework through AIDL and HIDL. Binder is an Android-specific IPC mechanism, which enables an RPC (remote procedure call) mechanism between the client and server processes. Client process can execute remote methods in the server process as if they were executed locally.
+
+Android supports 3 IPC domains
+
++----------------+--------------------------------------------------------------------------------+
+| /dev/binder    | IPC between framework/app processes with AIDL interfaces.                      |
++----------------+--------------------------------------------------------------------------------+
+| /dev/hwbinder  | | IPC between framework/vendor processes with HIDL interfaces.                 |
+|                | | IPC between vendor processes with AIDL/HIDL interfaces                       |
++----------------+--------------------------------------------------------------------------------+
+| /dev/vndbinder | IPC between framework/app processes with AIDL interfaces.                      |
++----------------+--------------------------------------------------------------------------------+
+
+From Android 8, the "/dev/binder" device node is designated as exclusive node of the framework process, which means that the vendor process can no longer access this node. Vendor processes can access "/dev/hwbinder" and use HIDL. However from Android 10, AIDL is being recommended instead of HIDL, since HIDL is soon to be deprecated.
+
+dev/binder
+~~~~~~~~~~~~~~~
+This is the most common binder that is widely used. This acts as communication interface between App/Framework Processes or Services. On the implementation of Binder, Java inherits Binder Class and C++ inherits Bbbinder class.
+
+dev/vndbinder
+~~~~~~~~~~~~~~~
+This binder is used as communication interface between vendor processes. Just like binder implementation, Java inherits Binder and C++ inherits Bbbinder. vndbinder is registered through the vndservicemanager process, and then the anonymous Binder object is passed through the Binder interface that has been created After getting BinderProxy or BpBinder.
+
+dev/hwbinder
+~~~~~~~~~~~~~~~
+This binder is used as communication interface between vendor processes with Frameworks. Usually the Vendor BSP consists of hardware driver which needs to be interfaced with Android Frameworks. This is done through hwbinder.
+
+Binder Communication
+-----------------------
+
+.. figure:: binder.png
+   :scale: 100 %
+
+Binder Communication Flow
+---------------------------
+
+.. figure:: bindercall.png
+   :scale: 100 %
+
+Brief
+--------
+A process cannot access another process’s memory, however kernel has control over all processes and therefore can expose an interface that enables IPC. Binder interface /dev/binder device, is implemented by the Binder kernel driver. All the IPC calls go through Binder kernel driver.
+
+The Binder driver manages part of the address space of each process. The Binder driver-managed chunk of memory is read-only to the process, and all writing is performed by the kernel module. When a process sends a message to another process, the kernel allocates some space in the destination process’s memory and copies the message data directly from the sending process. It then queues a short message to the receiving process telling it where the received message is. The recipient can then access that message directly (because it is in its own memory space).
+
+Higher-level IPC abstractions in Android such as Intents and ContentProviders are some of the components that are built on top of Binder. Service interfaces that need to be exposed to other processes can be defined using the Android Interface Definition Language (AIDL), which enables clients to call remote services as if they were local Java objects.
+
+Binder Tokens
+~~~~~~~~~~~~~~~
+Binder object instance maintains a unique identity across all processes in the system. Binder kernel driver allocates unique ID for each instance, making Binders unique. The application framework uses Binder tokens extensively in order to ensure secure interaction between cooperating processes. A client can create a Binder object to use as a token that can be shared with a server process, and the server can use it to validate the client’s requests without there being any way for others to sniff the communication exchange.
+
+Reference Counting
+~~~~~~~~~~~~~~~~~~~~
+Reference counting guarantees that Binder objects are automatically freed when no one references them. The binder kernel driver remembers a new object reference whenever a transaction happens. When a transaction occurs the reference count to that particular binder object is incremented. When a process dies, the reference count is automatically decremented. When a reference is no longer needed, its owner is notified and that binder object is released and removed from binder mapping.
+
+Link-To-Death or Death Recipient
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Binder’s “link-to-death” facility, allows a process to get a callback when another process hosting a binder object is freed or killed. The client can receive a callback when a Service dies. The callback is usually used to execute cleanup codes when death notification is received.
+
+ServiceManager
+~~~~~~~~~~~~~~~~~
+The ServiceManager is the main process, which manages all the services of the system. It provides the functionality to register and find the corresponding services. ServiceManager works directly with the binder driver for required IPC.
+
+Reference:
+------------
+[1]: ``https://mymusing.co/what-is-binder-in-android/``
+
+[2]: ``https://developpaper.com/a-simple-example-of-binder/``
+
+[3]: ``https://medium.com/android-news/android-binder-framework-8a28fb38699a``
+
+[4]: ``https://www.androiddesignpatterns.com/2013/07/binders-window-tokens.html``
+
+[5]: ``https://proandroiddev.com/binders-in-android-part-ii-reference-counting-death-recipients-19d55c8356c3``
+
+----------------------------------------------------------
+
+**AIDL - Android Interface Definition Language**
+----------------------------------------------------------
+
+The Android Interface Definition Language (AIDL) is Interface Descriptive Language that allows you to define the programming interface that both the client and service using interprocess communication (IPC). RPC is used to call the remote methods. AIDL interfaceuses direct function calls.
+
+- Calls made from the local process are executed in the same thread that is making the call. If this is your main UI thread, that thread continues to execute in the AIDL interface. If it is another thread, that is the one that executes your code in the service. Thus, if only local threads are accessing the service, you can completely control which threads are executing in it (but if that is the case, then you shouldn't be using AIDL at all, but should instead create the interface by implementing a Binder).
+- Calls from a remote process are dispatched from a thread pool the platform maintains inside of your own process. You must be prepared for incoming calls from unknown threads, with multiple calls happening at the same time. In other words, an implementation of an AIDL interface must be completely thread-safe. Calls made from one thread on the same remote object arrive in order on the receiver end.
+- The oneway keyword modifies the behavior of remote calls. When used, a remote call does not block; it simply sends the transaction data and immediately returns. The implementation of the interface eventually receives this as a regular call from the Binder thread pool as a normal remote call. If oneway is used with a local call, there is no impact and the call is still synchronous.
+
+Defining an AIDL interface:
+-----------------------------
+You must define your AIDL interface in an .aidl file using the Java programming language syntax, then save it in the source code (in the src/ directory) of both the application hosting the service and any other application that binds to the service.
+
+To create a bounded service using AIDL, follow these steps:
+
+1. Aidl file
+
+Example AIDL File
+
+.. code-block:: java
+
+    // IRemoteService.aidl
+    package com.example.android;
+
+    // Declare any non-default types here with import statements
+
+    /** Example service interface */
+    interface IRemoteService {
+        String message();
+    }
+
+Simply save your .aidl file in your project's src/ directory and when you build your application, the SDK tools generate the IBinder interface file in your project's gen/ directory. The generated file name matches the .aidl file name, but with a .java extension (for example, IRemoteService.aidl results in IRemoteService.java).
+
+2. Implement Interface
+
+The Android SDK tools generate an interface in the Java programming language, based on your .aidl file. This interface has an inner abstract class named Stub that extends Binder and implements methods from your AIDL interface. You must extend the Stub class and implement the methods.
+
+When you build your application, the Android SDK tools generate a .java interface file named after your .aidl file. The generated interface includes a subclass named Stub that is an abstract implementation of its parent interface (for example, YourInterface.Stub) and declares all the methods from the .aidl file.
+
+To implement the interface generated from the .aidl, extend the generated Binder interface (for example, YourInterface.Stub) and implement the methods inherited from the .aidl file. Implement a Service and override onBind() to return your implementation of the Stub class. Once you've implemented the interface for your service, you need to expose it to clients so they can bind to it. To expose the interface for your service, extend Service and implement onBind() to return an instance of your class that implements the generated Stub (as discussed in the previous section). Here's an example service that implement an interface called IRemoteService and exposes the IRemoteService example interface to clients.
+
+Here is an example (defined by the IRemoteService.aidl example, above) using an anonymous instance:
+ 
+.. code-block:: java
+
+    public class AidlRemoteServiceStub extends Service {
+
+        private static final String TAG = "AidlRemoteServiceStub";
+        private static final String className = this.getClass().getSimpleName();
+
+        public AidlRemoteServiceStub() {
+            Log.i(TAG, className+" Constructor");
+        }
+
+        @Override
+        public IBinder onBind(Intent intent) {
+            Log.i(TAG, className+" onBind");
+            return IRemoteService.asBinder();
+        }
+
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            Log.i(TAG, className+" onCreate");
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            Log.i(TAG, className+" onDestroy");
+        }
+
+        IRemoteService.Stub iRemoteService = new IRemoteService.Stub() {
+            @Override
+            public int message() throws RemoteException {
+                return "Message from AIDL Stub";
+            }
+        };
+    }
+
+Now the binder is an instance of the Stub class (a Binder), which defines the RPC interface for the service. In the next step, this instance is exposed to clients so they can interact with the service.
+
+3. Client Implementation
+
+Now, when a client (such as an activity) calls bindService() to connect to this service, the client's onServiceConnected() callback receives the binder instance returned by the service's onBind() method.
+
+The client must also have access to the interface class, so if the client and service are in separate applications, then the client's application must have a copy of the .aidl file in its src/ directory (which generates the android.os.Binder interface—providing the client access to the AIDL methods).
+
+When the client receives the IBinder in the onServiceConnected() callback, it must call YourServiceInterface.Stub.asInterface(service) to cast the returned parameter to YourServiceInterface type. For example:
+
+.. code-block:: java
+
+    public class AIDLDemo extends Activity {
+        private static final String TAG = "AIDLDemo";
+        IRemoteService service;
+        RemoteServiceConnection connection;
+        String message;
+
+        /**
+        * This class represents the actual service connection. It casts the bound
+        * stub implementation of the service to the AIDL interface.
+        */
+        class RemoteServiceConnection implements ServiceConnection {
+
+            public void onServiceConnected(ComponentName name, IBinder boundService) {
+                service = IRemoteService.Stub.asInterface((IBinder) boundService);
+                Log.d(TAG, "onServiceConnected() connected");
+            }
+
+            public void onServiceDisconnected(ComponentName name) {
+                service = null;
+                Log.d(TAG, "onServiceDisconnected() disconnected");
+            }
+        }
+
+        /** Binds this activity to the service. */
+        private void initService() {
+            connection = new RemoteServiceConnection();
+            Intent i = new Intent();
+            boolean ret = bindService(i, connection, Context.BIND_AUTO_CREATE);
+            Log.d(TAG, "initService() bound with " + ret);
+        }
+
+        /** Unbinds this activity from the service. */
+        private void releaseService() {
+            unbindService(connection);
+            connection = null;
+            Log.d(TAG, "releaseService() unbound.");
+        }
+
+        /** Called when the activity is first created. */
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.main);
+
+            initService();
+
+            try {
+                message = service.message();
+                Log.d(TAG, "Message received: " + message);
+            } catch (RemoteException e) {
+                Log.d(TAG, "Service Request failed with: " + e);
+                e.printStackTrace();
+            }
+        }
+
+        /** Called when the activity is about to be destroyed. */
+        @Override
+        protected void onDestroy() {
+            releaseService();
+        }
+    }
+    
+Calling an IPC method:
+------------------------
+Here are the steps a calling class must take to call a remote interface defined with AIDL:
+
+- Include the .aidl file in the project src/ directory.
+- Declare an instance of the IBinder interface (generated based on the AIDL).
+- Implement ServiceConnection.
+- Call Context.bindService(), passing in your ServiceConnection implementation.
+- In your implementation of onServiceConnected(), you will receive an IBinder instance (called service). Call YourInterfaceName.Stub.asInterface((IBinder)service) to cast the returned parameter to YourInterface type.
+- Call the methods that you defined on your interface. You should always trap DeadObjectException exceptions, which are thrown when the connection has broken. You should also trap SecurityException exceptions, which are thrown when the two processes involved in the IPC method call have conflicting AIDL definitions.
+- To disconnect, call Context.unbindService() with the instance of your interface.
+
+A few comments on calling an IPC service:
+- Objects are reference counted across processes.
+- You can send anonymous objects as method arguments.
+
+For more information about binding to a service, read the Bound Services document.
+
+Reference:
+-----------
+[1]: ``https://developer.android.com/guide/components/aidl``
+
+
+----------------------------------------------------------
+
+**HIDL - HAL Interface Descriptive Language**
+----------------------------------------------------------
+
+Native Applications in Android are the application that are coded primarily in C/C++. This is done for creating abstraction layers for few interfaces in Kernel or Hardware. One such instances is creating HAL for Sensors and other devices. HAL is usually implemented using HIDL. HAL interface definition language or HIDL is an interface description language (IDL) to specify the interface between a HAL and its users. It allows specifying types and method calls, collected into interfaces and packages.
+
+Implementation steps
+----------------------
+
+1. HAL file
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: shell
+
+    $ mkdir -p <AOSP>/vendor/vendorname/hardware/interfaces/testhidl/1.0/
+    $ vi <AOSP>/vendor/vendorname/hardware/interfaces/testhidl/1.0/ITestHidl.hal
+
+Sample HAL Content
+
+.. code-block::
+
+    package vendor.vendorname.hardware.testhidl@1.0;
+
+    interface ITestHidl
+    {
+        ClientRequest(uint32_t request) generates (bool status);
+    };
+
+2. Generate HIDL
+~~~~~~~~~~~~~~~~~~~~
+Use the hidl-gen command to automatically generate related files:
+
+Before we need to load the hidl-gen tool which is located at ./out/soong/host/linux-x86/bin/hidl-gen :
+
+.. code-block:: shell
+
+    $ source build/envsetup
+    $ make hidl-gen
+    $ hidl-gen -Landroidbp -r android.vendor:vendor vendor.vendorname.hardware.testhidl@1.0
+    $ PACKAGE=vendor.vendorname.hardware.testhidl@1.0
+    $ LOC=android root directory vendor/vendorname/hardware/testhidl/1.0/default/
+    $ hidl-gen -o $LOC -Lc++-impl -r android.vendor:vendor -r android.hidl:system/libhidl/transport $PACKAGE
+    $ hidl-gen -o $LOC -Landroidbp-impl -r android.vendor:vendor -r android.hidl:system/libhidl/transport $PACKAGE
+    $ ./hardware/interfaces/update-makefiles.sh
+
+3. HIDL Server
+~~~~~~~~~~~~~~~~~~~~
+**Sample Source Code**
+
+.. code-block:: c++
+
+    #include <hidl/HidlTransportSupport.h>
+    #include <log/log.h>
+    #include <chrono>
+    #include <iostream>
+    #include <thread>
+    #include <vendor/vendorname/hardware/testhidl/1.0/ITestHidl.h>
+
+    #undef LOG_TAG
+    #define LOG_TAG "ITestHidlServer"
+
+    using namespace vendor::vendorname::hardware::testhidl::V1_0::implementation;
+
+    class TestHidl : public ITestHidl {
+        public:
+        TestHidl() = default;
+        ~TestHidl() = default;
+
+        Return<bool> ClientRequest(uint32_t requestid) {
+            bool retval = false;
+            ALOGI("Client Request");
+
+            switch (requestid) {
+                case 1:
+                /*Do Something*/;
+            retval = true;
+                break;
+
+                case 2:
+                /*Do Something*/;
+                retval = true;
+                break;
+
+                default:
+                retval = false;
+                break;
+            }
+
+        return retval;
+        }
+    }
+
+    int main() {
+        android::hardware::configureRpcThreadpool(1, true /* callerWillJoin */);
+        android::sp<ITestHidl> service = new TestHidl();
+
+        android::status_t status = service->registerAsService();
+        if (status != android::OK) {
+            ALOGE("Failed to register service: %d", status);
+            return EXIT_FAILURE;
+        }
+
+        service->Init();
+
+        ALOGI("Registering as service done.");
+
+        android::hardware::joinRpcThreadpool();
+
+        return EXIT_SUCCESS;
+    }
+
+**Makefile**
+
+.. code-block::
+
+    cc_binary {
+        name: "testhidlserver",
+        proprietary: true,
+        init_rc: ["init/testhidl.rc"],
+
+        srcs: [
+            "src/*.cpp"
+        ],
+
+        local_include_dirs: [
+            "src",
+        ],
+
+        shared_libs: [
+            "libbase",
+            "libhidlbase",
+            "libhidltransport",
+            "liblog",
+            "libutils",
+            "libcutils",
+            "libhwbinder",
+            "vendor.vendorname.hardware.testhidl@1.0",
+        ],
+
+    }
+    
+**Rc File**
+
+.. code-block::
+
+    on boot
+        start testhidlserver
+
+    service testhidlserver /vendor/bin/testhidlserver
+        user vendor_testhidl
+        group vendor_testhidl
+        oneshot
+        seclabel u:r:testhidlserver:s0
+
+
+**selinux**
+Create Selinux file which provides permissions for your HIDL Service.
+
+.. code-block::
+
+    type testhidlserver, domain;
+    type testhidlserver_exec, exec_type, file_type, vendor_file_type;
+
+    init_daemon_domain(testhidlserver)
+
+    hwbinder_use(testhidlserver)
+
+    hal_server_domain(testhidlserver, hal_testhidlclient)
+
+    allow testhidlserver hwservicemanager_prop:file { open read getattr map };
+
+
+**filecontext**
+Add your service in filecontext file "file_contexts" located under devices directory.
+
+.. code-block::
+
+    /vendor/bin/testhidlserver u:object_r:testhidlserver:s0
+ 
+4. HIDL Client
+~~~~~~~~~~~~~~~~~~~~
+**Sample Client Listener Source Code**
+
+.. code-block:: c++
+
+    #include <android/log.h>
+    #include <binder/IPCThreadState.h>
+    #include <binder/ProcessState.h>
+    #include <hidl/HidlTransportSupport.h>
+    #include <hidl/Status.h>
+    #include <vendor/vendorname/hardware/testhidl/1.0/ITestHidl.h>
+    #include <iostream>
+    #include <thread>
+
+    #undef LOG_TAG
+    #define LOG_TAG "ITestHidlClient"
+
+    using namespace vendor::vendorname::hardware::testhidl::V1_0;
+
+    int main(int argc, char** argv) {
+        ALOGI("Starting Client");
+        android::sp<ITestHidl> testHidlServer;
+        uint32_t request_1 = 1;
+
+        auto clientreq = testHidlServer->ClientRequest(request_1);
+        if (clientreq.isOk()) {
+            if (clientreq) {
+                ALOGI(LOG_TAG, "Request from Client Processed by Server");
+            } else {
+                ALOGI(LOG_TAG, "Request from Client could not be Processed by Server");
+                return EXIT_FAILURE;
+            }
+        } else {
+            ALOGE("Binder call not OK");
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    }
+
+**Makefile**
+
+.. code-block::
+
+    cc_binary {
+        name: "testhidlclient",
+        proprietary: true,
+
+        srcs: [
+        "*.cpp",
+        ],
+
+        local_include_dirs: [
+        ],
+
+        shared_libs: [
+        "libhidlbase",
+        "libbinder",
+        "libhidltransport",
+        "liblog",
+        "libutils",
+        "vendor.vendorname.hardware.testhidl@1.0",
+        ],
+
+    }
+
+5. Build
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: shell
+
+    ### Below line w ill load the application to out/target/product/generic_x86_64/vendor/bin/hw/testhidl
+    $ mmm hardware/interfaces/testhidl/1.0
+
+    ### Build the entire sources and run the emulator
+    $ m
+    $ emulator
+
+    ### Test the application
+    # will list the echo service
+    $ lshal | grep echo
+    # will show the service is up and running
+    $ ps -A | grep ITestHidlServer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

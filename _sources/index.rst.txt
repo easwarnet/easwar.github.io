@@ -28,44 +28,17 @@ Handy notes for Embedded Software Development in Embedded Android and Embedded L
 
 .. toctree::
    :maxdepth: 1
-   :caption: AOSP
+   :caption: AOSP Tutorial
 
-   android/01-Introduction/androidarchitecture.rst
-   android/01-Introduction/features.rst
-   android/01-Introduction/hardwarecompatibility.rst
-   android/01-Introduction/characteristics.rst
-   android/02-AndroidBuildSystem/aospoverview.rst
-   android/02-AndroidBuildSystem/downloadaosp.rst
-   android/02-AndroidBuildSystem/androidbuildsystem.rst
-   android/02-AndroidBuildSystem/buildingandroid.rst
-   android/03-AndroidTools/adb.rst
-   android/03-AndroidTools/fastboot.rst
-   android/03-AndroidTools/othertools.rst
-   android/04-SoftwareUpdate/flashingandroid.rst
-   android/04-SoftwareUpdate/ota.rst
-   android/05-BootAndPartitions/bootsequence.rst
-   android/05-BootAndPartitions/partitions.rst
-   android/05-BootAndPartitions/secureboot.rst
-   android/05-BootAndPartitions/treble.rst
-   android/06-NativeAppDevelopment/initrc.rst
-   android/06-NativeAppDevelopment/selinux.rst
-   android/06-NativeAppDevelopment/nativeapplications.rst
-   android/06-NativeAppDevelopment/ndk.rst
-   android/06-NativeAppDevelopment/systemservices.rst
-   android/06-NativeAppDevelopment/systemproperties.rst
-   android/06-NativeAppDevelopment/hal.rst
-   android/06-NativeAppDevelopment/vhal.rst
-   android/06-NativeAppDevelopment/vndk.rst
-   android/06-NativeAppDevelopment/loggingdebugging.rst
-   android/07-AndroidIPC/binder.rst
-   android/07-AndroidIPC/hidl.rst
-   android/07-AndroidIPC/aidl.rst
-   android/08-AppCoreComponents/activities.rst
-   android/08-AppCoreComponents/services.rst
-   android/08-AppCoreComponents/broadcast.rst
-   android/08-AppCoreComponents/contentproviders.rst
-   android/09-TestFramework/cts.rst
-   android/09-TestFramework/vts.rst
+   android/01-Introduction/Introduction.rst
+   android/02-AndroidBuildSystem/AndroidBuildSystem.rst
+   android/03-AndroidTools/AndroidTools.rst
+   android/04-SoftwareUpdate/SoftwareUpdate.rst
+   android/05-BootAndPartitions/BootAndPartitions.rst
+   android/06-NativeAppDevelopment/NativeAppDevelopment.rst
+   android/07-AndroidIPC/AndroidIPC.rst
+   android/08-AppCoreComponents/AppCoreComponents.rst
+   android/09-TestFramework/TestFramework.rst
 
 .. toctree::
    :maxdepth: 1

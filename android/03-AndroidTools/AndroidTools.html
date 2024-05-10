@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AndroidTools &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Flashing Android" href="../04-SoftwareUpdate/SoftwareUpdate.html" />
+    <link rel="prev" title="AndroidBuildSystem" href="../02-AndroidBuildSystem/AndroidBuildSystem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/AndroidBuildSystem.html">AndroidBuildSystem</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AndroidTools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adb"><strong>ADB</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enable-developers-options-on-device">Enable Developers Options on Device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#enable-debugging">Enable Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-adb">Install ADB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adb-components">ADB Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#roles-of-adb">Roles of ADB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#useful-adb-commands">Useful ADB Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fastboot"><strong>Fastboot</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#useful-commands-for-flashing-android">Useful Commands for Flashing Android</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-tools"><strong>Other Tools</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aosp-android-emulator">AOSP - Android Emulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scrcpy">Scrcpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#android-studio">Android Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uiautomator">uiautomator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/SoftwareUpdate.html">Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/BootAndPartitions.html">BootAndPartitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/NativeAppDevelopment.html">NativeAppDevelopment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/AndroidIPC.html">AndroidIPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/AppCoreComponents.html">AppCoreComponents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/TestFramework.html">TestFramework</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>AndroidTools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="androidtools">
+<h1>AndroidTools<a class="headerlink" href="#androidtools" title="Permalink to this heading"></a></h1>
+<section id="adb">
+<h2><strong>ADB</strong><a class="headerlink" href="#adb" title="Permalink to this heading"></a></h2>
+<p>ADB or Android Debug Bridge is a command line tool used to communicate with the Target Device. ADB operates on the Client-Server model. ADB can be used for various device actions including pushing Android Services from AOSP to Device.</p>
+<p>To enable ADB Communication with the device, following actions are required</p>
+</section>
+<section id="enable-developers-options-on-device">
+<h2>Enable Developers Options on Device<a class="headerlink" href="#enable-developers-options-on-device" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>To enable Developers Options on device, Build number which is found under “Settings &gt; About Phone &gt; Build Number” needs to be tapped 7 consecutive times.</p></li>
+</ul>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/developer.gif"><img alt="../../_images/developer.gif" src="../../_images/developer.gif" style="width: 600.0px; height: 1032.0px;" /></a>
+</figure>
+</section>
+<section id="enable-debugging">
+<h2>Enable Debugging<a class="headerlink" href="#enable-debugging" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Device debugging can be done across multiple interfaces such as USB and Wireless. The most commonly used debugging interface is USB. To enable USB Debugging on the target device, USB Debugging needs to be enabled. It can be found under “Settings &gt; System &gt; Advanced &gt; Developer Options &gt; USB debugging”.</p></li>
+</ul>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/usbdebugging.jpg"><img alt="../../_images/usbdebugging.jpg" src="../../_images/usbdebugging.jpg" style="width: 1079.0px; height: 2100.0px;" /></a>
+</figure>
+</section>
+<section id="install-adb">
+<h2>Install ADB<a class="headerlink" href="#install-adb" title="Permalink to this heading"></a></h2>
+<p>The ADB tool is part of the AOSP project. It can be accessed, once the Environment setup (source build/envsetup.sh) is done. ADB is also part of Android SDK Platform Tools. It can be installed using Android Studio.
+To install this package goto menu “Tools -&gt; SDK Manager” and select Android SDK Platform Tools and click Ok or Apply. The selected package will be installed. After which the ADB can be accessed from the Command Line.</p>
+<ul class="simple">
+<li><p>Step 1</p></li>
+</ul>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdkmenu.png"><img alt="../../_images/sdkmenu.png" src="../../_images/sdkmenu.png" style="width: 812.0px; height: 663.0px;" /></a>
+</figure>
+<ul class="simple">
+<li><p>Step 2</p></li>
+</ul>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdkdialog.png"><img alt="../../_images/sdkdialog.png" src="../../_images/sdkdialog.png" style="width: 1025.0px; height: 732.0px;" /></a>
+</figure>
+</section>
+<section id="adb-components">
+<h2>ADB Components<a class="headerlink" href="#adb-components" title="Permalink to this heading"></a></h2>
+<p>ADB consists of 3 components</p>
+<ol class="arabic simple">
+<li><p>ADB Clients</p></li>
+</ol>
+<p>A client runs on your development machine. There can be multiple clients running under the same development machine. Each time an ADB session is invoked a new client is created. Client accepts and sends commands.</p>
+<ol class="arabic simple" start="2">
+<li><p>ADB Server</p></li>
+</ol>
+<p>A server also runs on your development machine. It acts as an interface and manages communication between ADB Clients running on the Development Machine and ADB Daemon running on the target device.</p>
+<ol class="arabic simple" start="3">
+<li><p>ADB Daemon</p></li>
+</ol>
+<p>ADB daemon is a process that runs on Target devices. This accepts ADB commands, executes them on the Target device.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/adbcore.png"><img alt="../../_images/adbcore.png" src="../../_images/adbcore.png" style="width: 1080.0px; height: 524.0px;" /></a>
+</figure>
+</section>
+<section id="roles-of-adb">
+<h2>Roles of ADB<a class="headerlink" href="#roles-of-adb" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Facilitating Communication between Host and Target</p></li>
+<li><p>Execution of commands on Target Devices</p></li>
+</ul>
+</section>
+<section id="useful-adb-commands">
+<h2>Useful ADB Commands<a class="headerlink" href="#useful-adb-commands" title="Permalink to this heading"></a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>// Runs ADB in root privilege
+$ adb root
+
+// List devices interfaces with the development machine
+$ adb devices
+
+// Enables <span class="nb">command</span> line utility on Development machine to execute commands on Target Machine
+$ adb shell
+
+// Used to push Apps, Services, Native Applications and binaries to target device from host machine
+$ adb push
+
+// Used to pull Apps, Services, Native Applications and binaries from target device to host machine
+$ adb pull
+
+// Used to reboot target device in normal mode. Typically run this <span class="nb">command</span> after the device is flashed
+// or binaries are pushed and needs to reboot
+$ adb reboot
+
+// Used to remount the entire system of the target device, to put the “/system” partition into writable
+// mode. This <span class="nb">command</span> can be run before pushing any files to this partition. Note that it’s only possible
+// to remount the system on a rooted Android device.
+$ adb remount
+
+// Dumps logs of system messages, that includes stack traces and messages logged by applications with the <span class="s2">&quot;Log&quot;</span> class
+$ adb logcat
+
+// Installs new APK package to the Target device with specified serial number
+$ adb -s &lt;device-serial-number&gt; install -t &lt;path-to-APK&gt;
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="fastboot">
+<h2><strong>Fastboot</strong><a class="headerlink" href="#fastboot" title="Permalink to this heading"></a></h2>
+<p>Fastboot is a protocol and a tool of the same name. It is included with the Android SDK package used primarily to modify the flash filesystem via a USB connection from a host computer. It requires that the device be started in Fastboot mode. If the mode is enabled, it will accept a specific set of commands sent to it via USB using a command line. Fastboot allows to boot from a custom recovery image. Fastboot does not require USB debugging to be enabled on the device. Not all Android devices have fastboot enabled. To use fastboot, a specific combination of keys must be held during boot.</p>
+</section>
+<section id="useful-commands-for-flashing-android">
+<h2>Useful Commands for Flashing Android<a class="headerlink" href="#useful-commands-for-flashing-android" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Check List of Connected Devices:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb devices
+</pre></div>
+</div>
+<p>2. Boot into bootloader mode:
+This step will enable the device boot into fastboot mode.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ adb reboot bootloader
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Check connected devices in Fastboot mode:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot devices
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Flashing All Partitions:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot flashall
+</pre></div>
+</div>
+<p>5. Erase or Format Partition:
+Format Userdata Partition</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot format:ext4 userdata
+</pre></div>
+</div>
+<p>6. Flashing All Partitions from Zip File
+This steps is used for flashing a custom ROM that is available in the form of a ZIP file containing all the image files:</p>
+<p>format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ fastboot update &lt;zip_containing_all_androidimages&gt;.zip
+----------------------------------------------
+Bootloader Version...: BootloaderVersion
+Baseband Version.....: BasebandVersion
+Serial Number........:
+----------------------------------------------
+Checking &#39;product&#39;
+OKAY [ 0.000s ] Setting current slot to &#39;a&#39;
+OKAY [ 0.0115] Sending &#39;boot_a&#39; (32768 KB)
+OKAY [ 1.2965] Writing &#39;boot_a&#39;
+OKAY [ 0.157s] Sending &#39;dtbo_a&#39; (8192 KB)
+OKAY [ 0.3075] Writing &#39;dtbo_a&#39;
+OKAY [ 0.042s] Sending &#39;vbmeta_a&#39; (4 KB)
+OKAY [ 0.0095] Writing &#39;vbmeta_a&#39;
+OKAY [ 0.001s] Sending sparse &#39;system_a&#39; 1/3 (524284 KB)
+OKAY [ 12.7025] Writing &#39;system_a&#39;
+OKAY [ 0.000s] Sending sparse &#39;system_a&#39; 2/3 (524284 KB)
+OKAY [ 14.8465] Writing &#39;system_a&#39;
+OKAY [ 0.001s] Sending sparse &#39;system_a&#39; 3/3 (42204 KB)
+OKAY [ 3.47751 Writing &#39;system_a&#39;
+OKAY [ 0.000s] Sending system_b&#39; (82736 KB)
+OKAY [ 1.9635] Writing &#39;system_b&#39;
+OKAY [ 0.001s] Sending &#39;vendor_a&#39; (357093 KB)
+OKAY [ 8.465s ] Writing &#39;vendor_a&#39;
+OKAY [ 0.001s] Erasing &#39;userdata&#39;
+OKAY [ 0.7235] mke2fs 1.45.4 (23-Sep-2019) Creating filesystem with 13933563 4k blocks and 3489792 inodes Filesystem UUID: 4ala13e4-990a-11ea-809b-9b806a091fe2 Superblock backups stored on blocks:
+32768, 98384, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 4096000, 7962624, 11239424
+Allocating group tables: done Writing inode tables: done Creating journal (65536 blocks): done Writing superblocks and filesystem accounting information: done
+Sending &#39;userdata&#39; (316 KB) Writing &#39;userdata&#39; Rebooting Finished. Total time: 103.4905 PS C:\&gt;
+OKAY [ 0.0115] OKAY [ 0.001s] OKAY [ 0.0005]
+</pre></div>
+</div>
+<p>7. Erase or Format Partition:
+Format Userdata Partition</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot format:ext4 userdata
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Boot into ROM:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot reboot
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Boot into recovery:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ fastboot reboot recovery
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Flash Specific Image:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Flashing Boot Image</span>
+$ fastboot flash boot boot.img
+<span class="c1"># Flashing System Image</span>
+$ fastboot flash system system.img
+<span class="c1"># Flashing Recovery Image</span>
+$ fastboot flash recovery recovery.img
+<span class="c1"># Flashing Cache</span>
+$ fastboot flash cache cache.img
+<span class="c1"># Flashing Modem</span>
+$ fastboot flash modem NON-HLOS.bin
+<span class="c1"># Flashing Trustzone</span>
+$ fastboot flash tz tz.mbn
+<span class="c1"># Flashing Logo</span>
+$ fastboot flash LOGO logo.bin
+<span class="c1"># Flashing Other Partitions</span>
+$ fastboot flash sbl1 sbl1.mbn
+$ fastboot flash dbi sdi.mbn
+$ fastboot flash aboot emmc_appsboot.mbn
+$ fastboot flash rpm rpm.mbn
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Unlocking Partition:</p></li>
+</ol>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check OEM Specific Boot Partition Lock Status</span>
+$ fastboot oem device-info
+<span class="c1"># Unlock OEM Specific Boot Partition</span>
+$ fastboot oem unlock
+<span class="c1"># Unlocking all partitions</span>
+$ fastboot flashing unlock
+<span class="c1"># Unlock Boot Partition</span>
+$ fastboot flashing unlock_critical
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="other-tools">
+<h2><strong>Other Tools</strong><a class="headerlink" href="#other-tools" title="Permalink to this heading"></a></h2>
+</section>
+<section id="aosp-android-emulator">
+<h2>AOSP - Android Emulator<a class="headerlink" href="#aosp-android-emulator" title="Permalink to this heading"></a></h2>
+<p>AOSP has an inbuilt emulator which can be used to emulate Android onto the desktop that you are currently working with.</p>
+<p>Before you begin, you can extend cache memory</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">USE_CCACHE</span><span class="o">=</span><span class="m">1</span>
+$ ccache -M 10G
+</pre></div>
+</div>
+<p>To use the emulator Android needs to be built first</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ $ . build/envsetup.sh
+$ lunch full-eng
+$ make -j4
+</pre></div>
+</div>
+<p>Run the emulator</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$ emulator
+</pre></div>
+</div>
+</section>
+<section id="scrcpy">
+<h2>Scrcpy<a class="headerlink" href="#scrcpy" title="Permalink to this heading"></a></h2>
+<p>scrcpy is an open source application that mirrors screen from Hardware that runs Android onto the Desktop it is connected to. It uses ADB connection for displaying and controlling your Android device.
+Download and Follow instuction from its github page <code class="docutils literal notranslate"><span class="pre">https://github.com/Genymobile/scrcpy</span></code>.</p>
+</section>
+<section id="android-studio">
+<h2>Android Studio<a class="headerlink" href="#android-studio" title="Permalink to this heading"></a></h2>
+<p>Android Studio is the official integrated development environment for Google’s Android operating system, built on JetBrains’ IntelliJ IDEA software and designed specifically for Android development. It is available for download on Windows, macOS and Linux based operating systems. Android Studio has lots of inbuilt tools and utilities like Android Emulator, Profiler, SDK Manager and so on.</p>
+</section>
+<section id="uiautomator">
+<h2>uiautomator<a class="headerlink" href="#uiautomator" title="Permalink to this heading"></a></h2>
+<p>The uiautomator testing framework lets you test your user interface (UI) efficiently by creating automated functional UI testcases that can be run against your app on one or more devices.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>adb_shell$ uiautomator runtest &lt;jar&gt; -c &lt;test_class_or_method&gt; <span class="o">[</span>options<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../02-AndroidBuildSystem/AndroidBuildSystem.html" class="btn btn-neutral float-left" title="AndroidBuildSystem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../04-SoftwareUpdate/SoftwareUpdate.html" class="btn btn-neutral float-right" title="Flashing Android" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

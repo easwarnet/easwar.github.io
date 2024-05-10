@@ -1,0 +1,264 @@
+AndroidBuildSystem
+=======================================
+
+**AOSP Overview**
+------------------------------
+
+AOSP or Android Open Source Project is a Code Project with Build System that is used to build the Android System for the target hardware.
+AOSP in Brief
+
+- Source Codes for Bootloader, Kernel, Native Applications, Libraries, HALs, Frameworks, Packages, Services and Standard Apps
+
+- Device Configurations to customize project to different target device
+
+- Test Suite for checking the Device compatibility
+
+- Tools to facilitate development
+
+- Tool chains to compile and build C, C++, Java codes to Images, File System, Binaries, Services.
+
+AOSP Directory Structures
+------------------------------
+
+1. art
+~~~~~~~~~~~~~~~~~
+Directory which consists of compilation of the latest android ART run time.
+
+2. bionic
+~~~~~~~~~~~~~~~~~
+Directory which consists of the C-runtime for Android. Android does not use glibc like most Linux distributions. Instead it uses c-library called bionic which is based mostly on BSD-derived sources. You will also find the source for the c-library, math and other core runtime libraries in this directory.
+
+3. bootable
+~~~~~~~~~~~~~~~~~
+Directory which consists of boot and startup related code. Fastboot, a protocol which is used by Android to update partitions, is also part of Bootable Directory.
+
+4. build
+~~~~~~~~~~~~~~~~~
+Directory which consists of build system implementations such as core make files, environment setup scripts and so on. The environment setup script "source build/envsetup.sh" is used for setting environment variables, build specific modules, checking necessary applications available in the local machine, setup the build information based out of "device" directory.
+
+5. cts
+~~~~~~~~~~~~~~~~~
+Directory which consists of files related to CTS. CTS or Compatibility Test Suite is a test suite that is part of AOSP. Intent of CTS is to test Device and reveal software incompatibilities on the target device. CTS runs on a Desktop Machine and execute test cases directly on attached devices. The test cases are written in Java as Junit test and are packaged under Android .apk files.
+
+6. development
+~~~~~~~~~~~~~~~~~
+Directory which consists of source cod of tools such SDK and NDK.
+
+7. devices
+~~~~~~~~~~~~~~~~~
+Directory which consists of product specific codes, build configuration files related to Different Target Devices. The sub directories under devices include common, generic and so on.
+
+8. external
+~~~~~~~~~~~~~~~~~
+This directory consists of source code for all external open source project like SQLite, v4l2_codecs, toybox, webkit, scrypt and so on
+
+9. framework
+~~~~~~~~~~~~~~~~~
+This directory consists of source code for Android Frameworks. Here you will find the implementation of key services such as the System Server with the Package- and Activity managers. A lot of the mapping between the java application APIs and the native libraries is also done here.
+
+10. hardware
+~~~~~~~~~~~~~~~~~
+This directory consists of Hardware Abstraction Layers, Radio Abstraction Layers, Radio interface layer to communicate with Radio Modem and Hardware related source codes.
+
+11. kernel
+~~~~~~~~~~~~~~~~~
+Android uses Linux Kernel. This directory consists of source code for complete Linux Kernel. The linux kernel will be configured to support Target Hardware when environment setup script is run.
+
+12. out
+~~~~~~~~~~~~~~~~~
+This directory consists of build output. Once the make is run, the output is generated under out/target/product. In the default build for the emulator the output will be placed in out/target/product/generic. This is where you will find the images used by the emulator to start or to be downloaded and flashed to a device if you are building for a hardware target.
+
+13. packages
+~~~~~~~~~~~~~~~~~
+This directory contains the source code of Standard Android application that are available as part of the AOSP — Camera, SMS, Dialer, Launcher, etc
+
+14. prebuilt
+~~~~~~~~~~~~~~~~~
+This directory contains files that are distributed in binary form for convenience. Examples include the cross compilations toolchains for different development machines
+
+15. system
+~~~~~~~~~~~~~~~~~
+This directory contains source code files for the core Android system. This includes the source code for the init process and the default init.rc script that provide the dynamic configuration of the platform.
+
+16. tools
+~~~~~~~~~~~~~~~~~
+This directory contains of various tools such as doc_generation, android studio, adt
+
+17. vendor
+~~~~~~~~~~~~~~~~~
+Thi directory consists of complete packages of vendor specific tools, vendor specific hardware related codes, app packages, vendor defined interfaces, vendor defined security rules and so on.
+
+--------------------------------------
+
+**Download AOSP**
+------------------------------
+repo tool is used for download and sync the AOSP Repository. Repo uses manifest files to aggregate Git projects into the Android superproject. First step involves downloading and setting up repo tool. 
+
+Download and setup repo tool
+------------------------------
+
+.. code-block:: shell
+
+    $ mkdir ~/bin
+    $ PATH=~/bin:$PATH
+    $ curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+    $ chmod a+x ~/bin/repo
+
+Download and Sync AOSP
+------------------------
+
+.. code-block:: shell
+
+    $ mkdir WORKING_DIRECTORY
+    $ cd WORKING_DIRECTORY
+    $ repo init -u https://android.googlesource.com/platform/manifest
+    $ repo sync
+
+
+Repo internally uses git tool. repo init creates ``.repo`` 
+directory under AOSP root directory. It starts with cloning of ``repo`` 
+git repository from the url ``https://android.googlesource.com/tools/repo`` 
+to ``<AOSP_ROOT_DIR>/.repo/repo``.
+
+The next step involves setting manifest. Manifest consists of all the 
+git repository configured for the target device. The repo pulls and 
+sets up the manifest under ``.repo`` directory and setups the pointer 
+or softlink to currently configured manifest. ``.repo/manifest.xml`` 
+will point to the specified file (-m option) in ``.repo/manifests``, 
+by default it points to ``.repo/manifests/default.xml``. 
+More information on repo tool and manifest can be found 
+under ``<AOSP>/.repo/repo/docs/manifest-format.txt``.
+
+--------------------------------------
+
+**Android Build System in Detail**
+-------------------------------------
+
+Android build system works on 3 different build tools such as soong, ninja and make. 
+
+.. figure:: AndroidBuildSystemE.png
+   :scale: 100 %
+
+Soong
+-----------
+In the soong build system, the rules of compiling is defined in ".bp" or Blueprint file which 
+is similar to JSON format.
+
+A module in an Android.bp file starts with a module type, followed by a set of properties 
+in name: value, format:
+
+.. code-block:: shell
+
+    cc_binary {
+        name: "test",
+        srcs: ["src/test/test.c"],
+        shared_libs: ["libz"],
+        stl: "none",
+    }
+
+Blueprint files are then processed by a tool called Blueprint which produces ".ninja" files 
+which consists of rules for compiling Android Software Modules. ".ninja" is used by Ninja 
+tool which compiles and generates output binaries.
+
+Make
+-----------
+Make is a tool that controls the build, while calculating dependancies, include files using 
+Makefile. It uses Makefile and ".mk" to control the build. It is one of the widely used build 
+system tool. Some of the packages such as kernel uses Make for its build.
+
+Example Makefile Format:
+
+.. code-block:: Makefile
+
+    LOCAL_PATH := $(call my-dir)
+    include $(CLEAR_VARS)
+
+    LOCAL_SRC_FILES = helloworld.c
+    LOCAL_MODULE = helloworld
+    LOCAL_MODULE_TAGS = optional
+
+    include $(BUILD_EXECUTABLE)
+
+Makefile had several shortcomings including low performance and was replaced by Soong Build System 
+in most of the modules.
+
+Kati tool converts all ".mk" files into ".ninja" files.
+
+Ninja
+-----------
+Ninja is a small build system with a focus on speed. It differs from other build systems in two 
+major respects: it is designed to have its input files generated by a higher-level build system, 
+and it is designed to run builds as fast as possible. While most of the build systems are high-level 
+languages Ninja aims to be an assembler. Ninja build files are human-readable but not especially 
+convenient to write by hand. Other build systems take time in building and calculating dependancies. 
+Ninja uses control files which uses minimum parsing to acheive maximum execution speed.
+
+--------------------------------------
+
+**Building Android**
+-------------------------------------
+
+Building Android involves 3 steps. 
+
+- Setting Environment for Build System
+- Select the Target Hardware through Lunch Command
+- Start Build
+
+The first step to build Android involves setting up the environment. 
+The script contains the necessary functions that will help you select 
+what kind of build you want to do. Command ``source build/envsetup.sh`` is 
+called on the root directory of AOSP.
+
+Next step is to select the target device for which build system builds 
+to. It is done using the command ``lunch``. It is returned with a prompt 
+of different products and variants with a serial number. Developer 
+usually selects the corresponding serial number. Once it is done, the 
+build system is ready with configurations for the selected product/hardware.
+
+The final step to build the complete AOSP is done using the command ``make`` 
+or ``make all``. The build system starts to build Android for the selected 
+Hardware. Build completion is directly dependent on the speed of the machine. 
+Build system can be run on parallel threads/cores using the 
+argument ``-j2/4/8/16/32``. It might increase the build speed, but might affect 
+other operations while the build is running. The final output of the build 
+is generated under directory ``out/target/product/..``
+
+To build CTS or Compatibility Test Suite, the ``make cts`` command is used.
+
+During the build the developer might see issues related to API. In such 
+cases ``make update-api`` is used. This updates the API level from what was 
+configured earlier.
+
+Once the build is done, developers can flash the device using tools such 
+as fastboot. After flashing is done it is not necessary to update the 
+complete device to test the changes in a particular module. Developers 
+can navigate to the root directory of the module, where Android bp files 
+exist and can invoke 'mm' command. This builds only that module. After 
+build is complete, the binary can be found under ``out/target/product/..``. 
+The changes can be pushed to device by command ``adb sync``.
+
+Useful Commands
+----------------
+
+Following were the commands that were discussed in the current topic: 
+
+.. code-block:: shell
+
+    $ source build/envsetup.sh
+    $ lunch
+    $ make
+    $ mm
+    $ adb sync
+    $ make cts
+    $ make update-api
+
+
+
+
+ 
+
+ 
+
+
+
+

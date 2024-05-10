@@ -189,16 +189,6 @@ It makes the function itself a **const member function**. This has a few key imp
 
 
 
-
-
-
-
-
-
-
-
-
-
 -----------------
 
 **Determining System Endianness**

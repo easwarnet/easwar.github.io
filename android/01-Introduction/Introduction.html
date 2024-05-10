@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="AndroidBuildSystem" href="../02-AndroidBuildSystem/AndroidBuildSystem.html" />
+    <link rel="prev" title="Os - General Concepts" href="../../os-general.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#android-architecture"><strong>Android Architecture</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features"><strong>Features</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#application-framework">Application framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#art-android-runtime">ART - Android RunTime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#integrated-browser">Integrated browser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optimized-graphics">Optimized graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sqlite">SQLite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#media-support">Media support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gsm-telephony-support">GSM telephony support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#camera-gps-compass-and-accelerometer">Camera, GPS, compass, and accelerometer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-compatibility"><strong>Hardware Compatibility</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#memory">Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance">Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#screen-resolution">Screen Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware">Hardware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multimedia">Multimedia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#characteristics"><strong>Characteristics</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#brief">Brief</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-environment">Development Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#app-ecosystem">App Ecosystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-libraries">API Libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-layer-decoupling">Multi Layer Decoupling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizable">Customizable</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/AndroidBuildSystem.html">AndroidBuildSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/AndroidTools.html">AndroidTools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/SoftwareUpdate.html">Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/BootAndPartitions.html">BootAndPartitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../06-NativeAppDevelopment/NativeAppDevelopment.html">NativeAppDevelopment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/AndroidIPC.html">AndroidIPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/AppCoreComponents.html">AppCoreComponents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/TestFramework.html">TestFramework</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<section id="android-architecture">
+<h2><strong>Android Architecture</strong><a class="headerlink" href="#android-architecture" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/architecture.png"><img alt="../../_images/architecture.png" src="../../_images/architecture.png" style="width: 988.0px; height: 773.0px;" /></a>
+</figure>
+</section>
+<section id="features">
+<h2><strong>Features</strong><a class="headerlink" href="#features" title="Permalink to this heading"></a></h2>
+</section>
+<section id="application-framework">
+<h2>Application framework<a class="headerlink" href="#application-framework" title="Permalink to this heading"></a></h2>
+<p>Android provides Framework that is used for both Java App development and
+C++ based Native Application Devlopment.</p>
+</section>
+<section id="art-android-runtime">
+<h2>ART - Android RunTime<a class="headerlink" href="#art-android-runtime" title="Permalink to this heading"></a></h2>
+<p>Android runtime (ART) is the managed runtime used by applications and system
+services on Android. ART are run runtimes that runs Dex bytecode. Features of
+ART includes Ahead-of-time (AOT) compilation, Garbage collection, Development
+and Debugging, Profiling Support for tracing application execution.</p>
+</section>
+<section id="integrated-browser">
+<h2>Integrated browser<a class="headerlink" href="#integrated-browser" title="Permalink to this heading"></a></h2>
+<p>Android provides WebKit based browser. WebView Class can be used for integrating
+WebKit engine in app development.</p>
+</section>
+<section id="optimized-graphics">
+<h2>Optimized graphics<a class="headerlink" href="#optimized-graphics" title="Permalink to this heading"></a></h2>
+<p>Android provides 2D and OpenGL based 3D graphics Libraries.</p>
+</section>
+<section id="sqlite">
+<h2>SQLite<a class="headerlink" href="#sqlite" title="Permalink to this heading"></a></h2>
+<p>SQLite is the Standard database used in Android. It can be used through the
+Application Framwork.</p>
+</section>
+<section id="media-support">
+<h2>Media support<a class="headerlink" href="#media-support" title="Permalink to this heading"></a></h2>
+<p>AndroidX Media is collection of libraries that supports wide range of media formats
+and media codecs.</p>
+</section>
+<section id="gsm-telephony-support">
+<h2>GSM telephony support<a class="headerlink" href="#gsm-telephony-support" title="Permalink to this heading"></a></h2>
+<p>Telephony support for 3G, Edge, Bluetooth and WiFi is largely dependant on Hardware
+chipsets. Android provides HAL (Hardware Abstraction Layer) support to interface
+with the respective hardware chipset. While the upper layers of Stack is handled
+by Android similair to Linux.</p>
+</section>
+<section id="camera-gps-compass-and-accelerometer">
+<h2>Camera, GPS, compass, and accelerometer<a class="headerlink" href="#camera-gps-compass-and-accelerometer" title="Permalink to this heading"></a></h2>
+<p>Hardware support for Camera, GPS, compass, and accelerometer is largely dependant
+on Hardware chipsets. Android provides HAL support to interface with the respective
+hardware chipset.</p>
+</section>
+<hr class="docutils" />
+<section id="hardware-compatibility">
+<h2><strong>Hardware Compatibility</strong><a class="headerlink" href="#hardware-compatibility" title="Permalink to this heading"></a></h2>
+<p>Android has specified few compatibility specifications. Some of the important compatibility
+specifications have been mentioned below in this chapter. More specifications can be referred
+to under the link provided in References. Here’s a quick summary:</p>
+</section>
+<section id="memory">
+<h2>Memory<a class="headerlink" href="#memory" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Must have at least 6 GB of physical memory.</p></li>
+<li><p>Must have at least 1 GB of RAM. On being less than 1 GB ActivityManager#isLowRamDevice
+must be set to true.</p></li>
+</ul>
+</section>
+<section id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Must support sequential write performance of at least 100 MB/s.</p></li>
+<li><p>Must support random write performance of at least 10 MB/s.</p></li>
+<li><p>Must support sequential read performance of at least 200 MB/s.</p></li>
+<li><p>Must support random read performance of at least 25 MB/s.</p></li>
+</ul>
+</section>
+<section id="screen-resolution">
+<h2>Screen Resolution<a class="headerlink" href="#screen-resolution" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Must support screen density of at least 400dpi pixel density</p></li>
+<li><p>Must Support 1080p resolution</p></li>
+<li><p>Must have a physical diagonal screen size of atleast 3.3 inches.</p></li>
+</ul>
+</section>
+<section id="hardware">
+<h2>Hardware<a class="headerlink" href="#hardware" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Rear camera must have a 12MP rear camera capable of 4K 30 FPS recording.</p></li>
+<li><p>Front camera must be at least 4MP and support 1080P 30fps recording.</p></li>
+</ul>
+</section>
+<section id="multimedia">
+<h2>Multimedia<a class="headerlink" href="#multimedia" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Must support audio encoding and decoding formats such as AMR-NB, AMR-WB,
+MPEG-4 AAC Profile (AAC LC), MPEG-4 HE AAC Profile (AAC+), AAC ELD (enhanced low delay AAC)</p></li>
+<li><p>Must support video encoding formats such as H.264 AVC, VP8.</p></li>
+<li><p>Must support video decoding formats such as H.264 AVC, H.265 HEVC, MPEG-4 SP, VP8, VP9.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References:<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<p>[1]. <code class="docutils literal notranslate"><span class="pre">https://source.android.com/compatibility/12/android-12-cdd</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="characteristics">
+<h2><strong>Characteristics</strong><a class="headerlink" href="#characteristics" title="Permalink to this heading"></a></h2>
+</section>
+<section id="brief">
+<h2>Brief<a class="headerlink" href="#brief" title="Permalink to this heading"></a></h2>
+<p>In addition to its basic feature set, the Android platform has a few characteristics that make it an especially interesting platform for embedded development. Here’s a quick summary:</p>
+</section>
+<section id="development-environment">
+<h2>Development Environment<a class="headerlink" href="#development-environment" title="Permalink to this heading"></a></h2>
+<p>Android provides Tools, IDEs and SDK to support development and maintenance of Project. Android provides Emulator, SDK, NDK, Android Studio which consists of tools for profiling, log monitorin for development. While tools for Maintenance and test includes CTS, VTS and so on.</p>
+</section>
+<section id="app-ecosystem">
+<h2>App Ecosystem<a class="headerlink" href="#app-ecosystem" title="Permalink to this heading"></a></h2>
+<p>Google provides Playstore for incremental release of Apps.</p>
+</section>
+<section id="api-libraries">
+<h2>API Libraries<a class="headerlink" href="#api-libraries" title="Permalink to this heading"></a></h2>
+<p>Android provides API Libraries along with usage tutorials.</p>
+</section>
+<section id="multi-layer-decoupling">
+<h2>Multi Layer Decoupling<a class="headerlink" href="#multi-layer-decoupling" title="Permalink to this heading"></a></h2>
+<p>Android is largely decoupled. Meaning that if a hardware, hal, library or a layer is meant to be replaced/improved, the upper layers or API calls still should not be impacted.</p>
+</section>
+<section id="customizable">
+<h2>Customizable<a class="headerlink" href="#customizable" title="Permalink to this heading"></a></h2>
+<p>Android provides options to create, customize Frameworks, Features and HAL.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../os-general.html" class="btn btn-neutral float-left" title="Os - General Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../02-AndroidBuildSystem/AndroidBuildSystem.html" class="btn btn-neutral float-right" title="AndroidBuildSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

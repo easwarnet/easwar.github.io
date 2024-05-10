@@ -1,0 +1,1423 @@
+NativeAppDevelopment 
+===================================
+
+**Init RC**
+--------------------
+
+Init.rc file plays key role in boot sequence. Android's init.rc is different from Linux. Init.rc is used to initialize Services, namespaces, permissions, create/access properties, etc.
+
+Init.Rc consists of 5 classes of statements
+- Actions
+- Commands
+- Services
+- Options
+- Triggers
+
+Actions
+---------
+Actions are sequence of commands. They have a trigger which shall determine on what actions needs to be executed.
+
+Template for Action:
+
+.. code-block::
+
+    On <trigger>
+        <command>
+        <command>
+        <command>
+
+For example:
+~~~~~~~~~~~~~~
+
+**1. General**
+
+In this case when the system is in boot stage, then the order of the commands will be executed
+
+.. code-block::
+
+    on boot
+      setprop test 1
+
+**2. With condition**
+
+In this case if the property test is true then the order of the commands will be executed
+
+.. code-block::
+
+    on boot && property:test=true
+          setprop testa 1
+          setprop testb 2
+
+Services
+---------
+Services are programs which init launches and (optionally) restart when it exists
+
+**Template for Action:**
+
+.. code-block::
+
+    service <name> <pathname> [ <argument> ]
+          <option>
+          <option>
+          . . .
+
+Options
+---------
+Options are modifiers to services. They affect how and when init runs the service.
+
+**namespace <pid|mnt>**
+
+Enter a new PID or mount namespace when forking the service.
+
+**oneshot**
+
+Do not restart the service when it exits.
+
+**onrestart**
+
+Execute a Command when service restarts.
+
+**override**
+
+Indicates that this service definition is meant to override a previous definition for a service with the same name. This is typically meant for services on /odm to override those defined on /vendor. The last service definition that init parses with this keyword is the service definition will use for this service. Pay close attention to the order in which init.rc files are parsed, since it has some peculiarities for backwards compatibility reasons. The ‘imports’ section of this file has more details on the order.
+
+**priority <priority>**
+
+Scheduling priority of the service process. This value has to be in range -20 to 19. Default priority is 0. Priority is set via setpriority().
+
+**disabled**
+
+This service will not automatically start with its class. It must be explicitly started by name or by interface name.
+
+**reboot_on_failure <target>**
+
+If this process cannot be started or if the process terminates with an exit code other than CLD_EXITED or an status other than ‘0’, reboot the system with the target specified in target. target takes the same format as the parameter to sys.powerctl. This is particularly intended to be used with the exec_start builtin for any must-have checks during boot.
+
+**restart_period <seconds>**
+
+If a non-oneshot service exits, it will be restarted at its start time plus this period. It defaults to 5s to rate limit crashing services. This can be increased for services that are meant to run periodically. For example, it may be set to 3600 to indicate that the service should run every hour or 86400 to indicate that the service should run every day.
+
+**rlimit <resource> <cur> <max>**
+
+This applies the given rlimit to the service. rlimits are inherited by child processes, so this effectively applies the given rlimit to the process tree started by this service. It is parsed similarly to the setrlimit command specified below.
+
+**seclabel <seclabel>**
+
+Change to ‘seclabel’ before exec'ing this service. Primarily for use by services run from the rootfs, e.g. ueventd, adbd. Services on the system partition can instead use policy-defined transitions based on their file security context. If not specified and no transition is defined in policy, defaults to the init context.
+
+**setenv <name> <value>**
+
+Set the environment variable name to value in the launched process.
+
+**shutdown <shutdown_behavior>**
+
+Set shutdown behavior of the service process. When this is not specified, the service is killed during shutdown process by using SIGTERM and SIGKILL. The service with shutdown_behavior of “critical” is not killed during shutdown until shutdown times out. When shutdown times out, even services tagged with “shutdown critical” will be killed. When the service tagged with “shutdown critical” is not running when shut down starts, it will be started.
+
+Triggers
+---------
+Triggers are strings which can be used to match certain kinds of events and used to cause an action to occur.
+
+Triggers are subdivided into
+
+- Event Triggers
+- Property Triggers.
+
+**Event Triggers**
+
+are strings triggered by the ‘trigger’ command or by the QueueEventTrigger() function within the init executable. These take the form of a simple string such as ‘boot’ or ‘late-init’.
+
+**Property Triggers**
+
+are strings triggered when a named property changes value to a given new value or when a named property changes value to any new value. These take the form of ‘property:=’ and ‘property:=*’ respectively. Property triggers are additionally evaluated and triggered accordingly during the initial boot phase of init.
+
+An Action can have multiple property triggers but may only have one event trigger.
+on boot && property:val1=val2
+
+The above line defines an action that is only executed when the ‘boot’ event trigger happens and the property val1 equals val2.
+on property:val1=val2 && property:val3=val4
+
+The above line defines an action that is executed at three times:
+
+During initial boot if property val1=val2 and property val3=val4.
+Any time that property val1 transitions to value val2, while property val3 already equals val4.
+Any time that property val3 transitions to value val4, while property a already equals val2.
+
+Trigger Sequence
+------------------
+Init uses the following sequence of triggers during early boot. These are the built-in triggers defined in init.cpp.
+
+**early-init**
+
+The first in the sequence, triggered after cgroups has been configured but before ueventd's coldboot is complete.
+
+**init**
+
+Triggered after coldboot is complete.
+
+**charger**
+
+Triggered if ro.bootmode == "charger"
+
+**late-init**
+
+Triggered if ro.bootmode != "charger", or via healthd triggering a boot from charging mode.
+Remaining triggers are configured in init.rc and are not built-in. The default sequence for these is specified under the “on late-init” event in init.rc. Actions internal to init.rc have been omitted.
+
+**early-fs**
+
+Start vold
+
+**fs**
+
+Vold is up. Mount partitions not marked as first-stage or latemounted.
+
+**post-fs**
+
+Configure anything dependent on early mounts.
+
+**late-fs**
+
+Mount partitions marked as latemounted.
+
+**post-fs-data**
+
+Mount and configure /data; set up encryption. /metadata is reformatted here if it couldn't mount in first-stage init.
+
+**zygote-start**
+
+Start the zygote.
+
+**early-boot**
+
+After zygote has started.
+
+**boot**
+
+After early-boot actions have completed.
+
+Commands
+------------------
+**bootchart [start|stop]**
+
+Start/stop bootcharting. These are present in the default init.rc files, but bootcharting is only active if the file /data/bootchart/enabled exists; otherwise bootchart start/stop are no-ops.
+
+**chmod <octal-mode> <path>**
+
+Change file access permissions.
+
+**chown <owner> <group> <path>**
+
+Change file owner and group.
+
+**class_start <serviceclass>**
+
+Start all services of the specified class if they are not already running. See the start entry for more information on starting services.
+
+**class_stop <serviceclass>**
+
+Stop and disable all services of the specified class if they are currently running.
+
+**class_reset <serviceclass>**
+
+Stop all services of the specified class if they are currently running, without disabling them. They can be restarted later using class_start.
+
+**class_restart [--only-enabled] <serviceclass>**
+
+Restarts all services of the specified class. If --only-enabled is specified, then disabled services are skipped.
+
+**copy <src> <dst>**
+
+Copies a file. Similar to write, but useful for binary/large amounts of data. Regarding to the src file, copying from symbolic link file and world-writable or group-writable files are not allowed. Regarding to the dst file, the default mode created is 0600 if it does not exist. And it will be truncated if dst file is a normal regular file and already exists.
+
+**copy_per_line <src> <dst>**
+
+Copies a file line by line. Similar to copy, but useful for dst is a sysfs node that doesn't handle multiple lines of data.
+
+**domainname <name>**
+
+Set the domain name.
+
+**enable <servicename>**
+
+Turns a disabled service into an enabled one as if the service did not specify disabled. If the service is supposed to be running, it will be started now. Typically used when the bootloader sets a variable that indicates a specific service should be started when needed. E.g.
+
+**on property:ro.boot.mytesthardware=1**
+
+enable mytesthardware_service
+
+**exec [ <seclabel> [ <user> [ <group>\ * ] ] ] -- <command> [ <argument>\* ]**
+
+Fork and execute command with the given arguments. The command starts after “--” so that an optional security context, user, and supplementary groups can be provided. No other commands will be run until this one finishes. seclabel can be a - to denote default. Properties are expanded within argument. Init halts executing commands until the forked process exits.
+
+**exec_background [ <seclabel> [ <user> [ <group>\* ] ] ] -- <command> [ <argument>\* ]**
+
+Fork and execute command with the given arguments. This is handled similarly to the exec command. The difference is that init does not halt executing commands until the process exits for exec_background.
+
+**exec_start <service>**
+
+Start a given service and halt the processing of additional init commands until it returns. The command functions similarly to the exec command, but uses an existing service definition in place of the exec argument vector.
+
+**export <name> <value>**
+
+Set the environment variable name equal to value in the global environment (which will be inherited by all processes started after this command is executed)
+
+**hostname <name>**
+
+Set the host name.
+
+**ifup <interface>**
+
+Bring the network interface interface online.
+
+**insmod [-f] <path> [<options>]**
+
+Install the module at path with the specified options. -f: force installation of the module even if the version of the running kernel and the version of the kernel for which the module was compiled do not match.
+
+**interface_start <name>**
+
+**interface_restart <name>**
+
+**interface_stop <name>**
+
+Find the service that provides the interface name if it exists and run the start, restart, or stop commands on it respectively. name may be either a fully qualified HIDL name, in which case it is specified as <interface>/<instance>, or an AIDL name, in which case it is specified as aidl/<interface> for example android.hardware.secure_element@1.1::ISecureElement/eSE1 or aidl/aidl_lazy_test_1.
+
+Note that these commands only act on interfaces specified by the interface service option, not on interfaces registered at runtime.
+
+Example usage of these commands:
+interface_start android.hardware.secure_element@1.1::ISecureElement/eSE1 will start the HIDL Service that provides the android.hardware.secure_element@1.1 and eSI1 instance.
+interface_start aidl/aidl_lazy_test_1 will start the AIDL service that provides the aidl_lazy_test_1 interface.
+
+**load_exports <path>**
+
+Open the file at path and export global environment variables declared there. Each line must be in the format export <name> <value>, as described above.
+
+**loglevel <level>**
+
+Sets init's log level to the integer level, from 7 (all logging) to 0 (fatal logging only). The numeric values correspond to the kernel log levels, but this command does not affect the kernel log level. Use the write command to write to /proc/sys/kernel/printk to change that. Properties are expanded within level.
+
+**restart [--only-if-running] <service>**
+
+Stops and restarts a running service, does nothing if the service is currently restarting, otherwise, it just starts the service. If “--only-if-running” is specified, the service is only restarted if it is already running.
+
+**rm <path>**
+
+Calls unlink(2) on the given path. You might want to use “exec -- rm ...” instead (provided the system partition is already mounted).
+
+**setprop <name> <value>**
+
+Set system property name to value. Properties are expanded within value.
+
+**setrlimit <resource> <cur> <max>**
+
+Set the rlimit for a resource. This applies to all processes launched after the limit is set. It is intended to be set early in init and applied globally. resource is best specified using its text representation (‘cpu’, ‘rtio’, etc or ‘RLIM_CPU’, ‘RLIM_RTIO’, etc). It also may be specified as the int value that the resource enum corresponds to. cur and max can be ‘unlimited’ or ‘-1’ to indicate an infinite rlimit.
+
+**start <service>**
+
+Start a service running if it is not already running. Note that this is not synchronous, and even if it were, there is no guarantee that the operating system‘s scheduler will execute the service sufficiently to guarantee anything about the service’s status. See the exec_start command for a synchronous version of start.
+
+This creates an important consequence that if the service offers functionality to other services, such as providing a communication channel, simply starting this service before those services is not sufficient to guarantee that the channel has been set up before those services ask for it. There must be a separate mechanism to make any such guarantees.
+
+**stop <service>**
+
+Stop a service from running if it is currently running.
+
+**trigger <event>**
+
+Trigger an event. Used to queue an action from another action.
+
+**umount <path>**
+
+Unmount the filesystem mounted at that path.
+
+**wait <path> [ <timeout> ]**
+
+Poll for the existence of the given file and return when found, or the timeout has been reached. If timeout is not specified it currently defaults to five seconds. The timeout value can be fractional seconds, specified in floating point notation.
+
+**wait_for_prop <name> <value>**
+
+Wait for system property name to be value. Properties are expanded within value. If property name is already set to value, continue immediately.
+
+**write <path> <content>**
+
+Open the file at path and write a string to it with write(2). If the file does not exist, it will be created. If it does exist, it will be truncated. Properties are expanded within content.
+
+Reference:
+--------------
+[1]: ``https://android.googlesource.com/platform/system/core/+/master/init/README.md``
+
+--------------------
+
+**SELinux**
+--------------------
+
+SELinux is set up to default-deny, which means that every single access for which it has a hook in the kernel must be explicitly allowed by policy. This means a policy file is comprised of a large amount of information regarding rules, types, classes, permissions, and more.
+
+Policy Format
+--------------
+.. code-block::
+
+    allow Source Target:Class Permission;
+
+This means “grant Permission to a process of domain (type) Source on objects of type Target and class Class”
+
+**Example**
+
+.. code-block::
+
+    allow testservice property_socket:sock_file { open write };
+
+In the above example Service "testservice" is granted open and write permission for "property_socket:sock_file"
+
+Policy Rules
+--------------
+Files that end with ``*.te`` are SELinux policy source files, which define domains and their labels. 
+You may need to create new policy files in ``/device/manufacturer/device-name/sepolicy``, but you should try to update existing files where possible.
+
+Your should define your domain and label.
+
+1. Define your dev_type (/device/manufacturer/device-name/sepolicy/<policy_name>.te):
+
+.. code-block::
+
+    type device, dev_type;
+
+2. Label file with your type (/device/manufacturer/device-name/sepolicy/file_contexts):
+
+.. code-block::
+
+    /vendor/bin/testservice u:object_r:testservice_exec:s0
+
+After editing or adding policy and context files, update your ``/device/manufacturer/device-name/BoardConfig.mk`` 
+makefile to reference the sepolicy subdirectory and each new policy file.
+
+.. code-block::
+
+    BOARD_SEPOLICY_DIRS += \
+    <root>/device/manufacturer
+
+    /device-name
+
+    /sepolicy
+
+    BOARD_SEPOLICY_UNION += \
+    genfs_contexts \
+    file_contexts \
+    sepolicy.te
+
+Reference:
+--------------
+[1]: ``https://source.android.com/docs/security/selinux``
+
+--------------------
+
+**Native Applications**
+--------------------------
+
+This chapter covers the steps to create a native application in AOSP and have it prebuilt.
+
+Steps
+----------
+1. mkdir <AOSP>/hardware/testservice
+2. cd <AOSP>/hardware/testservice
+3. vi testservice.cpp
+
+.. code-block:: c++
+
+    #include <cstdlib>
+    #include <string>
+    #include <log/log.h>
+
+    #undef LOG_TAG
+    #define LOG_TAG "testservice"
+
+    int main(int argc __unused, char **argv __unused) {
+        ALOGI("TestService");
+        return EXIT_SUCCESS;
+    }
+
+4. vi Android.mk and add following Lines
+
+.. code-block:: Makefile
+
+    LOCAL_PATH := $(call my-dir)
+    include $(CLEAR_VARS)
+    LOCAL_SRC_FILES := testservice.cpp
+    LOCAL_MODULE := testservice
+    LOCAL_MODULE_TAGS := debug
+    LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+    LOCAL_SHARED_LIBRARIES := libutils liblog
+    include $(BUILD_EXECUTABLE)
+    
+5. Append the following lines in init.rc or add this under service owned rc file
+
+.. code-block::
+
+    service exampleservice /system/bin/testservice
+        user testservice
+        group testservice
+        oneshot
+
+6. Append the following line in manufacturer/device-name/sepolicy/file_contexts:
+
+.. code-block::
+
+    /vendor/bin/testservice u:object_r:testservice_exec:s0
+
+--------------------
+
+**NDK**
+--------------------
+
+The NDK (Native Development Kit) is a Development tool that allows you to program in C/C++ for Android devices. Usually Native Applications are used only for performance-critical or time-critical portions of a project.
+
+For example Native applications are used in:
+- Developing Algorithms
+- Developing Hardware Abstraction Layer
+- Improving performance for critical portions
+- Reusing existing C/C++ libraries
+
+The NDK provides headers and libraries that allow the developer to build activities, handle user input, use hardware sensors, access application resources by accessing Netive Applications that run in C++/C. Java or Kotlin is used for Applications that run above Android Framework while C++/C is used for Application that run below framework. For communication between these two JNI or Java Native Interface is used.
+
+Some of the libs that can be accessed via Native Applications are
+- OpenCV
+- GLES
+- FFMPEG
+- Gstreamer
+- Vulkan
+
+Write an Android JNI program
+---------------------------------
+
+In this example, we shall create an activity, that calls a native method through JNI to obtain a string and displays the string on a TextView.
+
+**1. Download NDK**
+
+.. figure:: sdk-download-1.png
+   :scale: 100 %
+
+.. figure:: sdk-download-2.png
+   :scale: 100 %
+
+.. figure:: sdk-download-3.png
+   :scale: 100 %
+
+**2. Setup Project**
+
+.. figure:: sdk-setup-1.png
+   :scale: 100 %
+
+.. figure:: sdk-setup-2.png
+   :scale: 100 %
+
+.. figure:: sdk-setup-3.png
+   :scale: 100 %
+
+**3. Example Code**
+
+For any NDK, there are 4 different components that need attention
+
+.. figure:: sdk-components.png
+   :scale: 100 %
+
+- Java based Activity
+- C++ based Native Application
+- CMake file
+- Gradle File
+
+Java based Activity
+-----------------------
+This JNI program uses a static initializer to load a shared library ndkexample, where the native method called stringFromNativeApplication() is defined. Once the method is invoked, it returns a String and is displayed in TextView.
+
+.. code-block:: java
+
+    package com.tarjet.ndkexample;
+
+    import androidx.appcompat.app.AppCompatActivity;
+
+    import android.os.Bundle;
+    import android.widget.TextView;
+
+    import com.tarjet.ndkexample.databinding.ActivityMainBinding;
+
+    public class MainActivity extends AppCompatActivity {
+
+        // Used to load the 'ndkexample' library on application startup.
+        static {
+            System.loadLibrary("ndkexample");
+        }
+
+        private ActivityMainBinding binding;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            binding = ActivityMainBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+
+            // Example of a call to a native method
+            TextView tv = binding.sampleText;
+            tv.setText(stringFromNativeApplication());
+        }
+
+        /**
+        * A native method that is implemented by the 'ndkexample' native library,
+        * which is packaged with this application.
+        */
+        public native String stringFromNativeApplication();
+    }
+
+C++ based Native Application
+---------------------------------
+This simple C++ based Native application explains when a JNI call to API is invoked a string is returned.
+
+.. code-block:: c++
+
+    extern "C" JNIEXPORT jstring JNICALL
+    Java_com_somename_ndkexample_MainActivity_stringFromNativeApplication(
+    JNIEnv* env,
+    jobject /* this */) {
+        std::string hello = "Hello from C++";
+        return env->NewStringUTF(hello.c_str());
+    }
+
+Cmake
+--------
+C++ based native application uses CMake as make system.
+
+.. code-block:: cmake
+
+    cmake_minimum_required(VERSION 3.18.1)
+    # Name of Project
+    project("ndkexample")
+
+    add_library( # Sets the name of the library.
+    ndkexample
+
+    # Sets the library as a shared library.
+    SHARED
+
+    # Provides a relative path to your source file(s).
+    native-lib.cpp)
+
+    find_library( # Sets the name of the path variable.
+    log-lib
+
+    # Specifies the name of the NDK library that
+    # you want CMake to locate.
+    log)
+
+    target_link_libraries( # Specifies the target library.
+    ndkexample
+
+    # Links the target library to the log library
+    # included in the NDK.
+    ${log-lib})
+
+Gradle
+--------
+
+.. figure:: sdk-gradle.png
+   :scale: 100 %
+
+Build and Run
+----------------
+
+.. figure:: sdk-buildrun.png
+   :scale: 100 %
+
+
+--------------------
+
+**System Services**
+--------------------
+
+System services are derived from SystemService class. They reside in com.android.server package in AOSP tree. System Services are started by SystemServer hence they run as a System process which gives them additional privileges which normal Android Service will never get. System Service plays a key role in exposing functions to access or control hardware and Linux Kernel to Android Applications. SystemServices has a different Sepolicy and has fewer restrictions as Compared system_app or unknown_app.
+
+System services can be registered and obtained by the following methods:
+
+Implementation steps
+----------------------
+
+**1. Register**
+
+A service can be added using method ServiceManager.addService.
+
+.. code-block::
+
+    public static void addService(String name, IBinder service)
+
+    Parameter:
+
+    The method addService() has the following parameter:
+
+    String name - the name of the new service
+    IBinder service - the service object
+
+    Example:
+
+    ServiceManager.addService("TestSystemService", this);
+
+**2. Obtain**
+
+A service can be obtained using method ServiceManager.getService.
+
+.. code-block::
+
+    public static IBinder getService(String name)
+
+    Parameter
+
+    The method getService() has the following parameter:
+
+    String name - the name of the service to get
+
+
+    IBinder b = ServiceManager.getService("TestSystemService");
+
+**3. Registering under System Service**
+
+A system service needs to be registered under SystemService in ``SystemServiceRegistry.java`` and adding it into ``SystemServer.java``. 
+The Path is found under: ``frameworks/base/core/java/android/app/``:
+
+**SystemServiceRegistry.java**
+
+.. code-block:: java
+
+    registerService(Context.TESTSYSTEM_SERVICE, TestSystemServiceManager.class,
+        new CachedServiceFetcher<TestSystemServiceServiceManager>() {
+        @Override
+        public TestSystemServiceManager createService(ContextImpl ctx) throws ServiceNotFoundException {
+            IBinder binder;
+            if (true){//ctx.getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.O) {
+                binder = ServiceManager.getServiceOrThrow(Context.TESTSYSTEM_SERVICE);
+            } else {
+                binder = ServiceManager.getService(Context.TESTSYSTEM_SERVICE);
+            }
+            return new TestSystemServiceManager(ctx,ITestSystemServiceManagerAidlInterface.Stub.asInterface(binder));
+        }});
+
+**SystemServer.java**
+
+In SystemServer add your service inside startBootstrapServices(). You will find other default system services under 
+path ``/frameworks/base/services/java/com/android/server/SystemServer.java``
+
+.. code-block:: java
+
+    TestSystemService androidservice = null;
+    try{
+        traceBeginAndSlog("TestSystemService");
+        androidservice = new TestSystemService(mSystemContext);
+        ServiceManager.addService(Context.TESTSYSTEM_SERVICE,androidservice);
+    }catch(Throwable e){
+        Slog.e(TAG, "Starting TestSystemService failed!!! ", e);
+    }
+    traceEnd();
+
+**Context**
+
+Declare the context in Context.java under path /frameworks/base/core/java/android/content/Context.java
+
+.. code-block:: java
+
+    public static final String TESTSYSTEM_SERVICE = "TestSystemService";
+
+**Update Makefile**
+
+.. code-block::
+
+    make api-stubs-docs-update-current-api
+
+**Selinux**
+
+Add Selinux policy which provides permissions for your Service. The file can be found under ``system/sepolicy/private/service_contexts``
+
+.. code-block::
+
+    TestSystemService u:object_r:testsystem_service:s0
+
+
+--------------------
+
+**System Properties**
+-------------------------
+
+System properties are a way to share global data across OS. Each partition can use its own system properties internally. System properties start with a prefix, which can be ro for properties only set once, or persist for properties that should still exist after a reboot. The properties can be set read-only or writable, or the values can be rolled back.
+
+Some Examples of Android's System Property
+
+**ro.build.id**
+
+Gives the build number of the current Android Os running in device
+
+**ro.build.type**
+
+Gives the type of build the device has currently running such as Engineering Debug, Engineering Build, Release
+
+
+Command Line
+--------------
+A system property can be created, set and read using command line. However it is not persistent and needs to be set again after reboot, unless it is automatically created using init rc script.
+
+.. code-block:: shell
+
+    ### Create a property
+    adb_shell# setprop propertykey propertyvalue
+
+    ### Get a Property
+    adb_shell# getprop propertykey
+
+Run Time Access of System Property
+------------------------------------------
+A property can be accessed by a program during Android Runtime. Below is the Cpp example on how System Properties can be accessed during Runtime.
+
+.. code-block:: c++
+
+    String propertyvalue;
+    System.setProperty("propertykey", "propertyvalue");
+    myprop = System.getProperty("propertyvalue");
+    Log.i(TAG, "propertykey value: " + propertyvalue);
+
+Predefined
+--------------
+There are also ways to define a predefined system property when Android is being built.
+
+**Define System Properties under Proto File**
+
+Define system properties as APIs with Sysprop Description files (.sysprop), which use a TextFormat of protobuf, with the following schema:
+
+.. code-block:: c++
+
+    // File: sysprop.proto
+
+    syntax = "proto3";
+
+    package sysprop;
+
+    enum Access {
+        Readonly = 0;
+        Writeonce = 1;
+        ReadWrite = 2;
+    }
+
+    enum Owner {
+        Platform = 0;
+        Vendor = 1;
+        Odm = 2;
+    }
+
+    enum Scope {
+        Public = 0;
+        Internal = 2;
+    }
+
+    enum Type {
+        Boolean = 0;
+        Integer = 1;
+        Long = 2;
+        Double = 3;
+        String = 4;
+        Enum = 5;
+        UInt = 6;
+        ULong = 7;
+
+        BooleanList = 20;
+        IntegerList = 21;
+        LongList = 22;
+        DoubleList = 23;
+        StringList = 24;
+        EnumList = 25;
+        UIntList = 26;
+        ULongList = 27;
+    }
+
+    message Property {
+        string api_name = 1;
+        Type type = 2;
+        Access access = 3;
+        Scope scope = 4;
+        string prop_name = 5;
+        string enum_values = 6;
+        bool integer_as_bool = 7;
+        string legacy_prop_name = 8;
+    }
+
+    message Properties {
+        Owner owner = 1;
+        string module = 2;
+        repeated Property prop = 3;
+    }
+
+**Sysprop Description file**
+
+A Sysprop Description file contains a property message that describes a set of properties. The meaning of its fields are as follows.
+
++----------------+--------------------------------------------------------------------------------+
+| **Field**      | **Meaning**                                                                    |
++----------------+--------------------------------------------------------------------------------+
+| owner          | Set to the partition that owns the properties: Platform, Vendor, or Odm.       |
++----------------+--------------------------------------------------------------------------------+
+| module         | | Used to create a namespace (C++) or static final class (Java) in which       |
+|                | | generated APIs are placed. For example, com.android.sysprop.BuildProperties  |
+|                | | will be namespace com::android::sysprop::BuildProperties in C++, and the     |
+|                | | BuildProperties class in the package in com.android.sysprop in Java.         |
++----------------+--------------------------------------------------------------------------------+
+| prop           | List of properties.                                                            |
++----------------+--------------------------------------------------------------------------------+
+
+**Property**
+
+The meanings of the Property message fields are as follows.
+
++----------------+--------------------------------------------------------------------------------+
+| **Field**      | **Meaning**                                                                    |
++----------------+--------------------------------------------------------------------------------+
+| api_name       | The name of the generated API.                                                 |
++----------------+--------------------------------------------------------------------------------+
+| type           | The type of this property.                                                     |
++----------------+--------------------------------------------------------------------------------+
+| access         | | Readonly: Generates getter API only                                          |
+|                | | Writeonce, ReadWrite: Generates getter and setter APIs                       |
++----------------+--------------------------------------------------------------------------------+
+| scope          | | Internal: Only the owner can access.                                         |
+|                | | Public: Everyone can access, except for NDK modules.                         |
++----------------+--------------------------------------------------------------------------------+
+| prop_name      | The name of the underlying system property, for example ro.build.date.         |
++----------------+--------------------------------------------------------------------------------+
+| enum_values    | | (Enum, EnumList only) A bar(|)-separated string that consists of possible    |
+|                | | enum values. For example, value1|value2.                                     |
++----------------+--------------------------------------------------------------------------------+
+
+**Sysprop Description file**
+
+Here's an example of a Sysprop Description file defining three properties:
+
+.. code-block::
+
+    # File: android/sysprop/PlatformProperties.sysprop
+
+    owner: Platform
+    module: "android.sysprop.PlatformProperties"
+    prop {
+        api_name: "build_date"
+        type: String
+        prop_name: "ro.build.date"
+        scope: Public
+        access: Readonly
+    }
+    prop {
+        api_name: "date_utc"
+        type: Integer
+        prop_name: "ro.build.date_utc"
+        scope: Internal
+        access: Readonly
+    }
+    prop {
+        api_name: "device_status"
+        type: Enum
+        enum_values: "on|off|unknown"
+        prop_name: "device.status"
+        scope: Public
+        access: ReadWrite
+    }
+
+
+**Defining system properties libraries**
+
+You can now define sysprop_library modules with Sysprop Description files. sysprop_library serves as an API for both C++ and Java. The build system internally generates one java_library and one cc_library for each instance of sysprop_library.
+
+.. code-block::
+
+    // File: Android.bp
+    sysprop_library {
+        name: "PlatformProperties",
+        srcs: ["android/sysprop/PlatformProperties.sysprop"],
+        property_owner: "Platform",
+        vendor_available: true,
+    }
+
+You must include API lists files in the source for API checks. To do this, create API files and an api directory. Put the api directory in the same directory as Android.bp. 
+The API filenames are ``<module_name>-current.txt``, ``<module_name>-latest.txt``. ``<module_name>-current.txt`` holds the API signatures of current source codes, 
+and ``<module_name>-latest.txt`` holds the latest frozen API signatures. The build system checks whether the APIs are changed by comparing these API files with 
+generated API files at build time and emits an error message and instructions to update ``current.txt`` file if current.txt doesn't match with the source codes. 
+Here's an example directory and file organization:
+
+.. code-block::
+
+    ├── api
+    │ ├── PlatformProperties-current.txt
+    │ └── PlatformProperties-latest.txt
+    └── Android.bp
+
+
+**Makefile**
+
+Both Java and C++ client modules can link against sysprop_library to use generated APIs. The build system creates links from clients to generated C++ and Java libraries, thus giving clients access to generated APIs.
+
+.. code-block::
+
+    java_library {
+        name: "JavaClient",
+        srcs: ["java_access.java"],
+        libs: ["PlatformProperties"],
+    }
+
+    cc_binary {
+        name: "cc_client",
+        srcs: ["cpp_access.cpp"],
+        shared_libs: ["PlatformProperties"],
+    }
+
+
+**Java Example**
+
+.. code-block:: java
+
+    import android.sysprop.PlatformProperties;
+    //…
+    static void java_access() {
+        //…
+        // read "ro.build.date_utc". default value is -1
+        Integer dateUtc = PlatformProperties.date_utc().orElse(-1);
+
+        // set "device.status" to "unknown" if "ro.build.date" is not set
+        if (!PlatformProperties.build_date().isPresent()) {
+            PlatformProperties.device_status(PlatformProperties.device_status_values.UNKNOWN);
+        }
+        //…
+    }
+    //…
+
+**CPP Example**
+
+.. code-block:: c++
+
+    #include <android/sysprop/PlatformProperties.sysprop.h>
+    using namespace android::sysprop;
+
+    //…
+
+    void cpp_access() {
+        //…
+        // read "ro.build.date". default value is "(unknown)"
+        std::string build_date = PlatformProperties::build_date().value_or("(unknown)");
+
+        // set "device.status" to "on" if it's "unknown" or not set
+        using PlatformProperties::device_status_values;
+        auto status = PlatformProperties::device_status();
+        if (!status.has_value() || status.value() == device_status_values::UNKNOWN) {
+            PlatformProperties::device_status(device_status_values::ON);
+        }
+        //…
+    }
+
+Reference:
+-------------
+[1]: ``https://source.android.com/docs/core/architecture/sysprops-apis``
+
+[2]: ``https://source.android.com/docs/core/architecture/configuration/add-system-properties``
+
+
+--------------------
+
+**Hardware Abstraction Layer**
+-----------------------------------
+
+A HAL allows the Android application/framework to communicate with the hardware specific device drivers. Android HAL defines a standard interface for hardware vendors to implement, which enables Android to be agnostic about lower-level driver implementations. Using a HAL allows you to implement functionality without affecting or modifying the higher level system. HAL implementations are packaged into modules and loaded by the Android system at the appropriate time.
+
+In Android 8.0 and higher, the lower-level layers are re-written to adopt a new, more modular architecture. Devices running Android 8.0 and higher must support HALs written in HIDL, with a few exceptions listed below.
+
+These HALs can be binderized or passthrough. In Android 11, HALs written in AIDL are also supported. All AIDL HALs are binderized.
+
+Binderized HALs
+-----------------
+
+HALs expressed in HAL interface definition language (HIDL) or Android interface definition language (AIDL). These HALs replace both conventional and legacy HALs used in earlier versions of Android. In a Binderized HAL, the Android framework and HALs communicate with each other using binder inter-process communication (IPC) calls. All devices launching with Android 8.0 or later must support binderized HALs only.
+
+Android requires the following HALS to to be binderized on all Android devices regardless of whether they are launch devices or upgrade devices:
+
+- ``android.hardware.biometrics.fingerprint@2.1.`` Replaces fingerprintd which is no longer in Android 8.0.
+- ``android.hardware.configstore@1.0.`` New in Android 8.0.
+- ``android.hardware.dumpstate@1.0.`` The original interface provided by this HAL could not be shimmed and was changed. Because of this, dumpstate_board must be re-implemented on a given device (this is an optional HAL).
+- ``android.hardware.graphics.allocator@2.0.`` Required to be binderized in Android 8.0 so file descriptors don't have to be shared between trusted and untrusted processes.
+- ``android.hardware.radio@1.0.`` Replaces the interface provided by rild which lives in its own process.
+- ``android.hardware.usb@1.0.`` New in Android 8.0.
+- ``android.hardware.wifi@1.0.`` New in Android 8.0, replaces the legacy Wi-Fi HAL library that was loaded into system_server.
+- ``android.hardware.wifi.supplicant@1.0.`` A HIDL interface over the existing wpa_supplicant process.
+
+Passthrough HALs
+------------------
+
+A HIDL-wrapped conventional or legacy HAL. These HALs wrap existing HALs and can serve the HAL in binderized and same-process (passthrough) modes. Devices upgrading to Android 8.0 can use passthrough HALs. This usually implies that only one client can link to it or the service must be implemented in a way that it does not need exclusive access to hardware. The upside is that you save the communication overhead of using Binder.
+
+Android requires the following HALs to be in passthrough mode on all Android devices regardless of whether they are launch devices or upgrade devices:
+
+- ``android.hardware.graphics.mapper@1.0.`` Maps memory into the process it lives in.
+- ``android.hardware.renderscript@1.0.`` Passes items in the same process (equivalent to openGL).
+
+Same-Process HALs
+-------------------
+
+Same-Process HALs (SP-HALs) always open in the same process in which they are used. They include all HALs not expressed in HIDL as well as some that are not binderized. Membership in the SP-HAL set is controlled only by Google, with no exceptions.
+
+SP-HALs include the following:
+
+- ``openGL``
+- ``Vulkan``
+- ``android.hidl.memory@1.0 (provided by the Android system, always passthrough)``
+- ``android.hardware.graphics.mapper@1.0.``
+- ``android.hardware.renderscript@1.0``
+
+Conventional & legacy HALs
+-----------------------------
+Conventional HALs (deprecated in Android 8.0) are interfaces that conform to a specific named and versioned application binary interface (ABI). The bulk of Android system interfaces (camera, audio, sensors, etc.) are in the form of conventional HALs, which are defined under hardware/libhardware/include/hardware.
+
+Legacy HALs (also deprecated in Android 8.0) are interfaces that predate conventional HALs. A few important subsystems (Wi-Fi, Radio Interface Layer, and Bluetooth) are legacy HALs. While there's no uniform or standardized way to describe a legacy HAL, anything predating Android 8.0 that is not a conventional HAL is a legacy HAL. Parts of some legacy HALs are contained in libhardware_legacy, while other parts are interspersed throughout the codebase.
+
+``Refer Topic: Binder and Chapter: HIDL on how to create a sample HAL interface using HIDL``
+
+
+--------------------
+
+**VHAL - Vehicle HAL**
+---------------------------
+Native Applications in Android are the application that are coded primarily in C/C++. This is done for creating abstraction layers for few interfaces in Kernel or Hardware. One such instances is Android Auto, where many signal from Vehicles are wrapped under C/C++ based native application. The signals from other vehicle units or ECUs(Electonic control unit) are read and passed through Android Framework by the native applications.
+
+Implementation steps
+-----------------------
+**1. Define Vehicle Property in Vehicle HAL**
+
+.. code-block::
+
+    enum VehicleProperty: android.hardware.automotive.vehicle@2.0::VehicleProperty {
+
+        SOME_VEHICLE_PROP = (
+        0x00EE
+        | VehiclePropertyGroup:VENDOR
+        | VehiclePropertyType:INT32
+        | VehicleArea:GLOBAL)
+        //,
+        //...
+
+    }
+
+**2. Define Vehicle Property Source Code**
+
+.. code-block:: java
+
+    vhal20::VehiclePropConfig propconfig_somevehicleprop() {
+        auto someVehicleProp = vhal20::VehicleProperty::SOME_VEHICLE_PROP;
+        vhal20::VehiclePropConfig config;
+        config.prop = vhal20::toInt(someVehicleProp);
+        config.changeMode = vhal20::VehiclePropertyChangeMode::ON_CHANGE;
+        config.access = vhal20::VehiclePropertyAccess::READ_WRITE;
+        config.areaConfigs.resize(1);
+        config.areaConfigs[0].areaId = 0;
+        config.areaConfigs[0].minInt32Value = 0;
+        config.areaConfigs[0].maxInt32Value = 7;
+        return config;
+    }
+
+Interfaces
+-------------
+
+The VHAL uses the following interfaces:
+
+**getAllPropConfigs() generates (vec<VehiclePropConfig>propConfigs)**
+List the configuration of all properties supported by the VHAL. CarService uses supported properties only.
+
+**getPropConfigs(vec<int32_t> props) generates (StatusCode status,vec<VehiclePropConfig> propConfigs);**
+Return the configuration of selected properties.
+
+**set(VehiclePropValue propValue) generates (StatusCodestatus);**
+Write a value to property. Result of write is defined per property.
+
+**subscribe(IVehicleCallback callback, vec<SubscribeOptions> options) generates (StatusCode status);**
+Start monitoring a property value change. For zoned property, unsubscribe(IVehicleCallback callback, int32_t propId) generates (StatusCode status);
+
+Callbacks
+------------
+
+**oneway onPropertyEvent(vec<VehiclePropValue>propValues);**
+Notifies vehicle property's value change. Should be done only for subscribed properties.
+
+**oneway onPropertySetError(StatusCode errorCode,int32_t propId,int32_tareaId);**
+Return global VHAL level error or error per property. Global error causes the HAL to restart, which can lead to restarting other components (including applications).
+
+APP to ECU Communication through VHAL
+------------------------------------------------
+
+.. figure:: vhal.png
+   :scale: 100 %
+
+------------------------------------------------
+
+**Vendor Native Development Kit (VNDK)**
+------------------------------------------------
+
+The Vendor Native Development Kit (VNDK) is a set of libraries exclusively for vendors to implement their HALs. The VNDK ships in system.img and is dynamically linked to vendor code at runtime.
+
+Purpose of VNDK
+---------------------
+Android 8.0 and higher enables framework-only updates in which the system partition can be upgraded to the latest version while vendor partitions are left unchanged. This implies that binaries built at different times must be able to work with each other; VNDK covers API/ABI changes across Android releases.
+
+Framework-only updates include the following challenges:
+- Dependency between framework modules and vendor modules. Before Android 8.0, modules from both sides could link with modules from the other side. However, dependencies from vendor modules imposed undesired restrictions to framework modules development.
+- Extensions to AOSP libraries. Android 8.0 and higher requires all Android devices to pass CTS when the system partition is replaced with a standard Generic System Image (GSI). However, as vendors extend AOSP libraries to boost performance or to add extra functionalities for their HIDL implementations, flashing the system partition with a standard GSI might break a vendor's HIDL implementation. (For guidelines on preventing such breakages, see VNDK extensions.)
+
+To address these challenges, Android 8.0 introduces several techniques such as VNDK, HIDL, hwbinder, device tree overlay, and sepolicy overlay.
+
+VNDK concepts
+---------------------
+In an ideal Android 8.0 and higher world, framework processes do not load vendor shared libraries, all vendor processes load only vendor shared libraries (and a portion of framework shared libraries), and communications between framework processes and vendor processes are governed by HIDL and hardware binder.
+
+Such a world includes the possibility that stable, public APIs from framework shared libraries might not be sufficient for vendor module developers (although APIs can change between Android releases), requiring that some portion of framework shared libraries be accessible to vendor processes. In addition, as performance requirements can lead to compromises, some response-time-critical HALs must be treated differently.
+
+**Framework shared libraries for vendor**
+
+There are two approaches to support vendor modules across multiple Android releases:
+
+- Stabilize the ABIs/APIs of the framework shared libraries. New framework modules and old vendor modules can use the same shared library to reduce memory footprint and storage size. A unique shared library also avoids several double-loading issues. However, the development cost to maintain stable ABIs/APIs is high and it is unrealistic to stabilize all ABIs/APIs exported by every framework shared library.
+- Copy old framework shared libraries. Comes with the strong restriction against side channels, defined as all mechanisms to communicate among framework modules and vendor modules, including (but not limited to) binder, socket, pipe, shared memory, shared file, and system properties. There must be no communication unless the communication protocol is frozen and stable (e.g. HIDL through hwbinder). Double-loading shared libraries might cause problems as well; for example, if an object created by the new library is passed into the functions from the old library, an error may occur as these libraries may interpret the object differently.
+
+.. figure:: vndkfw.png
+   :scale: 100 %
+
+Framework shared libraries are classified into three sub-categories:
+
+**LL-NDK Libraries**
+
+LL-NDK Libraries are Framework Shared Libraries that are known to be stable. Their developers are committed to maintain their API/ABI stabilities. LL-NDK includes the following libraries: libEGL.so, libGLESv1_CM.so, libGLESv2.so, libGLESv3.so, libandroid_net.so, libc.so, libdl.so, liblog.so, libm.so, libnativewindow.so, libneuralnetworks.so, libsync.so, libvndksupport.so, and libvulkan.so,
+
+**Eligible VNDK Libraries**
+
+Eligible VNDK Libraries (VNDK) are Framework Shared Libraries that are safe to be copied twice. Framework Modules and Vendor Modules can link with their own copies. A framework shared library can become an eligible VNDK library only if it satisfies the following criteria:
+- It does not send/receive IPCs to/from the framework.
+- It is not related to ART virtual machine.
+- It does not read/write files/partitions with unstable file formats.
+- It does not have special software license which requires legal reviews.
+- Its code owner does not have objections to vendor usages.
+
+**Framework-Only Libraries**
+
+Framework-Only Libraries (FWK-ONLY) are Framework Shared Libraries that do not belong to the categories mentioned above. These libraries are considered framework internal implementation details and must not be accessed by vendor modules. These Libraries have unstable ABIs/APIs and no API/ABI compatibility guarantees.
+
+**Same-Process HAL (SP-HAL)**
+
+Same-Process HAL (SP-HAL) is a set of predetermined HALs implemented as Vendor Shared Libraries and loaded into Framework Processes. SP-HALs are isolated by a linker namespace (controls the libraries and symbols that are visible to the shared libraries). SP-HALs must depend only on LL-NDK and VNDK-SP.
+
+.. figure:: vndksphal.png
+   :scale: 100 %
+
+VNDK-SP is a predefined subset of eligible VNDK libraries. VNDK-SP libraries are carefully reviewed to ensure double-loading VNDK-SP libraries into framework processes does not cause problems. Both SP-HALs and VNDK-SPs are defined by Google.
+
+The following libraries are approved SP-HALs:
+- ``libGLESv1_CM_${driver}.so``
+- ``libGLESv2_${driver}.so``
+- ``libGLESv3_${driver}.so``
+- ``libEGL_${driver}.so``
+- ``vulkan.${driver}.so``
+- ``android.hardware.renderscript@1.0-impl.so``
+- ``android.hardware.graphics.mapper@2.0-impl.so``
+
+VNDK-SP libraries specify vndk: ``{ support_system_process: true }`` in their ``Android.bp`` files. 
+If ``vendor_available: false`` is also specified, then these libraries are called VNDK-SP-Private and they are invisible to SP-HALS.
+
+The following are framework-only libraries with RS exceptions (FWK-ONLY-RS):
+libft2.so (Renderscript)
+libmediandk.so (Renderscript)
+
+VNDK versioning
+------------------
+In Android 9, VNDK shared libraries are versioned:
+
+The ``ro.vndk.version`` system property is automatically added to ``/vendor/default.prop``.
+VNDK shared libraries are installed to ``/system/lib[64]/vndk-${ro.vndk.version}``.
+VNDK-SP shared libraries are installed to ``/system/lib[64]/vndk-sp-${ro.vndk.version}``.
+The dynamic linker configuration file is installed to ``/system/etc/ld.config.${ro.vndk.version}.txt``.
+
+Reference:
+-------------
+[1]: ``https://source.android.com/devices/architecture/vndk``
+
+
+------------------------------------------------
+
+**Logging and Debugging**
+------------------------------------------------
+
+This topic covers the way to Logging, Log Analysis and Debugging netive applications in Android.
+
+Logging
+----------
+Android uses Logcat tool to display Logs on ADB Console or Logcat window of Android studio. Android Logging in general displays the system messages, garbage collection as and when it occur. The logs are displayed in realtime and also keeps the history.
+
+Logging Message Types
+~~~~~~~~~~~~~~~~~~~~~~~~
+Following are the Logging Message types display from the highest to lowest priority.
+
+**C++:**
+
+.. code-block:: c++
+
+    ALOGE("%s",message); //Error Message
+    ALOGW("%s",message); //Warning Message
+    ALOGI("%s",message); //Information Message
+    ALOGD("%s",message); //Debug Message
+    ALOGV("%s",message); //Verbose Message
+
+**Java:**
+
+.. code-block:: c++
+
+    Log.e(String, String); //Error Message
+    Log.w(String, String); //Warning Message
+    Log.i(String, String); //Information Message
+    Log.d(String, String); //Debug Message
+    Log.v(String, String); //Verbose Message
+
+Logcat Command Line Tool
+------------------------------
+**Options**
+
+The following table describes the command line options of logcat.
+
+Option and Description
+
+.. code-block::
+
+    -b <buffer>
+    Loads an alternate log buffer for viewing, such as event or radio. The main buffer is used by default. See Viewing Alternative Log Buffers.
+
+    -c
+    Clears (flushes) the entire log and exits.
+
+    -d
+    Dumps the log to the screen and exits.
+
+    -f <filename>
+    Writes log message output to <filename>. The default is stdout.
+
+    -g
+    Prints the size of the specified log buffer and exits.
+
+    -n <count>
+    Sets the maximum number of rotated logs to <count>. The default value is 4. Requires the -r option.
+
+    -r <kbytes>
+    Rotates the log file every <kbytes> of output. The default value is 16. Requires the -f option.
+
+    -s
+    Sets the default filter spec to silent.
+
+    -v <format>
+    Sets the output format for log messages. The default is brief format. For a list of supported formats, see Controlling Log Output Format.
+
+**Logcat - Useful Command**
+
+Logcat commands can be used in adb console. Following are some useful commands used to debug or display Log messages
+
+.. code-block:: shell
+
+    adb_shell$ logcat -b <service>
+    View the buffer that contains specified service related messages. eg gnss, sensor, radio
+
+    adb_shell$ logcat -b event
+    View the buffer containing events-related messages.
+
+    adb_shell$ logcat -b main
+    default
+
+    adb_shell$ logcat -c
+    Clears the entire log and exits.
+
+    adb_shell$ logcat -d
+    Dumps the log to the screen and exits.
+
+    adb_shell$ logcat -f logs.text
+    Writes log message output to logs.text
+
+    adb_shell$ logcat -g
+    Prints the size of the specified log buffer and exits.
+
+    adb_shell$ logcat -n <count>
+    Sets the maximum number of rotated logs to <count>.
+
+    adb_shell$ logcat -r <kbytes>
+    Rotates the log file every <kbytes> of output. The default value is 16. Requires the -f option.
+
+    adb_shell$ logcat -v brief
+    Display priority/tag and PID of the process issuing the message (default format).
+
+    adb_shell$ logcat -v process
+    Display PID only.
+
+    adb_shell$ logcat -v tag
+    Display the priority/tag only.
+
+    adb_shell$ logcat -v raw
+    Display the raw log message, with no other metadata fields.
+
+    adb_shell$ logcat -v time
+    Display the date, invocation time, priority/tag, and PID of the process issuing the message.
+
+    adb_shell$ logcat -v threadtime
+    Display the date, invocation time, priority, tag, and the PID and TID of the thread issuing the message.
+
+    adb_shell$ logcat -v long
+    Display all metadata fields and separate messages with blank lines.
+
+Debugging
+-------------
+GDB can be used to debug a native application.
+
+**Set GDB Server on Device:**
+
+.. code-block:: shell
+
+    Set SeLinux to permissive mode
+    # su -c setenforce 0
+
+    Push the gdbserver to the device
+    # adb push ~/android-sdk-linux/ndk-bundle/prebuilt/android-<arch>/gdbserver/gdbserver /data/local/tmp
+
+    Change permissions of gdbserver to Executable
+    adb_shell$ chmod 777 /data/local/tmp/gdbserver
+
+    Initiate the forwarding of a TCP port on which GDB
+    adb forward tcp:5555 tcp:5555
+
+    Run the Application with GDB
+    adb_shell$ ./data/local/tmp/gdbserver :5555 ./<path>/testapplication
+
+    If above case doesnot work, fetch the pid of the process by using command
+    adb_shell$ ps | grep testapplication
+    adb_shell$ ./data/local/tmp/gdbserver :5555 <PID of testapplication>
+
+    The application will wait for the client to connect
+
+**Set GDB Client on Host PC:**
+
+.. code-block:: shell
+
+    hostpc$ aarch64-linux-android-gdb
+    hostpc$ set sysroot
+    hostpc$ target remote <device-ip-address>:<5555>
+    hostpc$ continue
+
+Following this you will be able to debug the application that runs on target device from HostPC.
+
+Crash dumps and tombstones
+----------------------------
+When a service crashes, a crash dump is written to logcat and a more detailed tombstone file is generated in path /data/tombstones/. The tombstone contains stack traces for all the threads in the crashing process, a full memory map, and a list of all open file descriptors.
+
+
+
+
+
+
+
+
+
+
+ 

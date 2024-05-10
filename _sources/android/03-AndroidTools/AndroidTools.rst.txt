@@ -1,0 +1,292 @@
+AndroidTools
+==============================
+
+**ADB**
+-----------
+
+ADB or Android Debug Bridge is a command line tool used to communicate with the Target Device. ADB operates on the Client-Server model. ADB can be used for various device actions including pushing Android Services from AOSP to Device.
+
+To enable ADB Communication with the device, following actions are required
+
+Enable Developers Options on Device
+--------------------------------------
+- To enable Developers Options on device, Build number which is found under "Settings > About Phone > Build Number" needs to be tapped 7 consecutive times.
+
+.. figure:: developer.gif
+   :scale: 100 %
+
+Enable Debugging
+---------------------
+- Device debugging can be done across multiple interfaces such as USB and Wireless. The most commonly used debugging interface is USB. To enable USB Debugging on the target device, USB Debugging needs to be enabled. It can be found under "Settings > System > Advanced > Developer Options > USB debugging".
+
+.. figure:: usbdebugging.jpg
+   :scale: 100 %
+
+Install ADB
+--------------
+The ADB tool is part of the AOSP project. It can be accessed, once the Environment setup (source build/envsetup.sh) is done. ADB is also part of Android SDK Platform Tools. It can be installed using Android Studio.
+To install this package goto menu "Tools -> SDK Manager" and select Android SDK Platform Tools and click Ok or Apply. The selected package will be installed. After which the ADB can be accessed from the Command Line.
+
+- Step 1
+
+.. figure:: sdkmenu.png
+   :scale: 100 %
+
+- Step 2
+
+.. figure:: sdkdialog.png
+   :scale: 100 %
+
+ADB Components
+----------------
+
+ADB consists of 3 components
+
+1. ADB Clients
+
+A client runs on your development machine. There can be multiple clients running under the same development machine. Each time an ADB session is invoked a new client is created. Client accepts and sends commands.
+
+2. ADB Server
+
+A server also runs on your development machine. It acts as an interface and manages communication between ADB Clients running on the Development Machine and ADB Daemon running on the target device.
+
+3. ADB Daemon
+
+ADB daemon is a process that runs on Target devices. This accepts ADB commands, executes them on the Target device.
+
+.. figure:: adbcore.png
+   :scale: 100 %
+
+
+Roles of ADB
+--------------
+- Facilitating Communication between Host and Target
+- Execution of commands on Target Devices
+
+Useful ADB Commands
+----------------------
+
+.. code-block:: shell
+
+    // Runs ADB in root privilege
+    $ adb root
+
+    // List devices interfaces with the development machine
+    $ adb devices
+
+    // Enables command line utility on Development machine to execute commands on Target Machine
+    $ adb shell
+
+    // Used to push Apps, Services, Native Applications and binaries to target device from host machine
+    $ adb push
+
+    // Used to pull Apps, Services, Native Applications and binaries from target device to host machine
+    $ adb pull
+
+    // Used to reboot target device in normal mode. Typically run this command after the device is flashed 
+    // or binaries are pushed and needs to reboot
+    $ adb reboot
+
+    // Used to remount the entire system of the target device, to put the “/system” partition into writable 
+    // mode. This command can be run before pushing any files to this partition. Note that it’s only possible 
+    // to remount the system on a rooted Android device.
+    $ adb remount
+
+    // Dumps logs of system messages, that includes stack traces and messages logged by applications with the "Log" class
+    $ adb logcat
+
+    // Installs new APK package to the Target device with specified serial number
+    $ adb -s <device-serial-number> install -t <path-to-APK>
+
+--------------------------------------
+
+**Fastboot**
+--------------------------------------
+
+Fastboot is a protocol and a tool of the same name. It is included with the Android SDK package used primarily to modify the flash filesystem via a USB connection from a host computer. It requires that the device be started in Fastboot mode. If the mode is enabled, it will accept a specific set of commands sent to it via USB using a command line. Fastboot allows to boot from a custom recovery image. Fastboot does not require USB debugging to be enabled on the device. Not all Android devices have fastboot enabled. To use fastboot, a specific combination of keys must be held during boot.
+
+Useful Commands for Flashing Android
+--------------------------------------
+1. Check List of Connected Devices:
+
+.. code-block:: shell
+    
+    $ adb devices
+
+2. Boot into bootloader mode:
+This step will enable the device boot into fastboot mode.
+
+.. code-block:: shell
+
+    $ adb reboot bootloader
+
+3. Check connected devices in Fastboot mode:
+
+.. code-block:: shell
+
+    $ fastboot devices
+
+4. Flashing All Partitions:
+
+.. code-block:: shell
+
+    $ fastboot flashall
+
+5. Erase or Format Partition:
+Format Userdata Partition
+
+.. code-block:: shell
+
+    $ fastboot format:ext4 userdata
+
+6. Flashing All Partitions from Zip File
+This steps is used for flashing a custom ROM that is available in the form of a ZIP file containing all the image files:
+
+format::
+
+    $ fastboot update <zip_containing_all_androidimages>.zip
+    ----------------------------------------------
+    Bootloader Version...: BootloaderVersion
+    Baseband Version.....: BasebandVersion
+    Serial Number........:
+    ----------------------------------------------
+    Checking 'product'
+    OKAY [ 0.000s ] Setting current slot to 'a'
+    OKAY [ 0.0115] Sending 'boot_a' (32768 KB)
+    OKAY [ 1.2965] Writing 'boot_a'
+    OKAY [ 0.157s] Sending 'dtbo_a' (8192 KB)
+    OKAY [ 0.3075] Writing 'dtbo_a'
+    OKAY [ 0.042s] Sending 'vbmeta_a' (4 KB)
+    OKAY [ 0.0095] Writing 'vbmeta_a'
+    OKAY [ 0.001s] Sending sparse 'system_a' 1/3 (524284 KB)
+    OKAY [ 12.7025] Writing 'system_a'
+    OKAY [ 0.000s] Sending sparse 'system_a' 2/3 (524284 KB)
+    OKAY [ 14.8465] Writing 'system_a'
+    OKAY [ 0.001s] Sending sparse 'system_a' 3/3 (42204 KB)
+    OKAY [ 3.47751 Writing 'system_a'
+    OKAY [ 0.000s] Sending system_b' (82736 KB)
+    OKAY [ 1.9635] Writing 'system_b'
+    OKAY [ 0.001s] Sending 'vendor_a' (357093 KB)
+    OKAY [ 8.465s ] Writing 'vendor_a'
+    OKAY [ 0.001s] Erasing 'userdata'
+    OKAY [ 0.7235] mke2fs 1.45.4 (23-Sep-2019) Creating filesystem with 13933563 4k blocks and 3489792 inodes Filesystem UUID: 4ala13e4-990a-11ea-809b-9b806a091fe2 Superblock backups stored on blocks:
+    32768, 98384, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 4096000, 7962624, 11239424
+    Allocating group tables: done Writing inode tables: done Creating journal (65536 blocks): done Writing superblocks and filesystem accounting information: done
+    Sending 'userdata' (316 KB) Writing 'userdata' Rebooting Finished. Total time: 103.4905 PS C:\>
+    OKAY [ 0.0115] OKAY [ 0.001s] OKAY [ 0.0005]
+
+7. Erase or Format Partition:
+Format Userdata Partition
+
+.. code-block:: shell
+
+    $ fastboot format:ext4 userdata
+
+8. Boot into ROM:
+
+.. code-block:: shell
+
+    $ fastboot reboot
+
+9. Boot into recovery:
+
+.. code-block:: shell
+
+    $ fastboot reboot recovery
+
+10. Flash Specific Image:
+
+.. code-block:: shell
+
+    # Flashing Boot Image
+    $ fastboot flash boot boot.img
+    # Flashing System Image
+    $ fastboot flash system system.img
+    # Flashing Recovery Image
+    $ fastboot flash recovery recovery.img
+    # Flashing Cache
+    $ fastboot flash cache cache.img
+    # Flashing Modem
+    $ fastboot flash modem NON-HLOS.bin
+    # Flashing Trustzone
+    $ fastboot flash tz tz.mbn
+    # Flashing Logo
+    $ fastboot flash LOGO logo.bin
+    # Flashing Other Partitions
+    $ fastboot flash sbl1 sbl1.mbn
+    $ fastboot flash dbi sdi.mbn
+    $ fastboot flash aboot emmc_appsboot.mbn
+    $ fastboot flash rpm rpm.mbn
+
+11. Unlocking Partition:
+
+.. code-block:: shell
+
+    # Check OEM Specific Boot Partition Lock Status
+    $ fastboot oem device-info
+    # Unlock OEM Specific Boot Partition
+    $ fastboot oem unlock
+    # Unlocking all partitions
+    $ fastboot flashing unlock
+    # Unlock Boot Partition
+    $ fastboot flashing unlock_critical
+
+
+--------------------------------------
+
+**Other Tools**
+--------------------------------------
+
+AOSP - Android Emulator
+--------------------------
+AOSP has an inbuilt emulator which can be used to emulate Android onto the desktop that you are currently working with. 
+
+Before you begin, you can extend cache memory
+
+.. code-block:: shell
+    
+    $ export USE_CCACHE=1
+    $ ccache -M 10G
+
+To use the emulator Android needs to be built first
+
+.. code-block:: shell
+
+    $ $ . build/envsetup.sh
+    $ lunch full-eng
+    $ make -j4
+
+Run the emulator
+
+.. code-block:: shell
+
+    $ emulator
+
+Scrcpy
+--------
+scrcpy is an open source application that mirrors screen from Hardware that runs Android onto the Desktop it is connected to. It uses ADB connection for displaying and controlling your Android device.
+Download and Follow instuction from its github page ``https://github.com/Genymobile/scrcpy``.
+
+Android Studio
+----------------
+Android Studio is the official integrated development environment for Google's Android operating system, built on JetBrains' IntelliJ IDEA software and designed specifically for Android development. It is available for download on Windows, macOS and Linux based operating systems. Android Studio has lots of inbuilt tools and utilities like Android Emulator, Profiler, SDK Manager and so on.
+
+uiautomator
+----------------
+The uiautomator testing framework lets you test your user interface (UI) efficiently by creating automated functional UI testcases that can be run against your app on one or more devices.
+
+.. code-block:: shell
+
+    adb_shell$ uiautomator runtest <jar> -c <test_class_or_method> [options]
+
+
+
+
+
+ 
+
+
+ 
+
+
+ 

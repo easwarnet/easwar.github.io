@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NativeAppDevelopment &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="AndroidIPC" href="../07-AndroidIPC/AndroidIPC.html" />
+    <link rel="prev" title="BootAndPartitions" href="../05-BootAndPartitions/BootAndPartitions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01-Introduction/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02-AndroidBuildSystem/AndroidBuildSystem.html">AndroidBuildSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03-AndroidTools/AndroidTools.html">AndroidTools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04-SoftwareUpdate/SoftwareUpdate.html">Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../05-BootAndPartitions/BootAndPartitions.html">BootAndPartitions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NativeAppDevelopment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#init-rc"><strong>Init RC</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#actions">Actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#for-example">For example:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#options">Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#triggers">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trigger-sequence">Trigger Sequence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference">Reference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#selinux"><strong>SELinux</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#policy-format">Policy Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#policy-rules">Policy Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Reference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#native-applications"><strong>Native Applications</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#steps">Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ndk"><strong>NDK</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-an-android-jni-program">Write an Android JNI program</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#java-based-activity">Java based Activity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c-based-native-application">C++ based Native Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cmake">Cmake</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gradle">Gradle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-and-run">Build and Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-services"><strong>System Services</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implementation-steps">Implementation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-properties"><strong>System Properties</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line">Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-time-access-of-system-property">Run Time Access of System Property</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#predefined">Predefined</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Reference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-abstraction-layer"><strong>Hardware Abstraction Layer</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binderized-hals">Binderized HALs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#passthrough-hals">Passthrough HALs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#same-process-hals">Same-Process HALs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conventional-legacy-hals">Conventional &amp; legacy HALs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vhal-vehicle-hal"><strong>VHAL - Vehicle HAL</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Implementation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interfaces">Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#callbacks">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#app-to-ecu-communication-through-vhal">APP to ECU Communication through VHAL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vendor-native-development-kit-vndk"><strong>Vendor Native Development Kit (VNDK)</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#purpose-of-vndk">Purpose of VNDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vndk-concepts">VNDK concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vndk-versioning">VNDK versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Reference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logging-and-debugging"><strong>Logging and Debugging</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logging">Logging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#logging-message-types">Logging Message Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#logcat-command-line-tool">Logcat Command Line Tool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#debugging">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crash-dumps-and-tombstones">Crash dumps and tombstones</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../07-AndroidIPC/AndroidIPC.html">AndroidIPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../08-AppCoreComponents/AppCoreComponents.html">AppCoreComponents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../09-TestFramework/TestFramework.html">TestFramework</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../profile.html"><strong>About</strong></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>NativeAppDevelopment</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nativeappdevelopment">
+<h1>NativeAppDevelopment<a class="headerlink" href="#nativeappdevelopment" title="Permalink to this heading"></a></h1>
+<section id="init-rc">
+<h2><strong>Init RC</strong><a class="headerlink" href="#init-rc" title="Permalink to this heading"></a></h2>
+<p>Init.rc file plays key role in boot sequence. Android’s init.rc is different from Linux. Init.rc is used to initialize Services, namespaces, permissions, create/access properties, etc.</p>
+<p>Init.Rc consists of 5 classes of statements
+- Actions
+- Commands
+- Services
+- Options
+- Triggers</p>
+</section>
+<section id="actions">
+<h2>Actions<a class="headerlink" href="#actions" title="Permalink to this heading"></a></h2>
+<p>Actions are sequence of commands. They have a trigger which shall determine on what actions needs to be executed.</p>
+<p>Template for Action:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">On</span> <span class="o">&lt;</span><span class="n">trigger</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<section id="for-example">
+<h3>For example:<a class="headerlink" href="#for-example" title="Permalink to this heading"></a></h3>
+<p><strong>1. General</strong></p>
+<p>In this case when the system is in boot stage, then the order of the commands will be executed</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">on</span> <span class="n">boot</span>
+  <span class="n">setprop</span> <span class="n">test</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p><strong>2. With condition</strong></p>
+<p>In this case if the property test is true then the order of the commands will be executed</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">on</span> <span class="n">boot</span> <span class="o">&amp;&amp;</span> <span class="nb">property</span><span class="p">:</span><span class="n">test</span><span class="o">=</span><span class="n">true</span>
+      <span class="n">setprop</span> <span class="n">testa</span> <span class="mi">1</span>
+      <span class="n">setprop</span> <span class="n">testb</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this heading"></a></h2>
+<p>Services are programs which init launches and (optionally) restart when it exists</p>
+<p><strong>Template for Action:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">pathname</span><span class="o">&gt;</span> <span class="p">[</span> <span class="o">&lt;</span><span class="n">argument</span><span class="o">&gt;</span> <span class="p">]</span>
+      <span class="o">&lt;</span><span class="n">option</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">option</span><span class="o">&gt;</span>
+      <span class="o">.</span> <span class="o">.</span> <span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="options">
+<h2>Options<a class="headerlink" href="#options" title="Permalink to this heading"></a></h2>
+<p>Options are modifiers to services. They affect how and when init runs the service.</p>
+<p><strong>namespace &lt;pid|mnt&gt;</strong></p>
+<p>Enter a new PID or mount namespace when forking the service.</p>
+<p><strong>oneshot</strong></p>
+<p>Do not restart the service when it exits.</p>
+<p><strong>onrestart</strong></p>
+<p>Execute a Command when service restarts.</p>
+<p><strong>override</strong></p>
+<p>Indicates that this service definition is meant to override a previous definition for a service with the same name. This is typically meant for services on /odm to override those defined on /vendor. The last service definition that init parses with this keyword is the service definition will use for this service. Pay close attention to the order in which init.rc files are parsed, since it has some peculiarities for backwards compatibility reasons. The ‘imports’ section of this file has more details on the order.</p>
+<p><strong>priority &lt;priority&gt;</strong></p>
+<p>Scheduling priority of the service process. This value has to be in range -20 to 19. Default priority is 0. Priority is set via setpriority().</p>
+<p><strong>disabled</strong></p>
+<p>This service will not automatically start with its class. It must be explicitly started by name or by interface name.</p>
+<p><strong>reboot_on_failure &lt;target&gt;</strong></p>
+<p>If this process cannot be started or if the process terminates with an exit code other than CLD_EXITED or an status other than ‘0’, reboot the system with the target specified in target. target takes the same format as the parameter to sys.powerctl. This is particularly intended to be used with the exec_start builtin for any must-have checks during boot.</p>
+<p><strong>restart_period &lt;seconds&gt;</strong></p>
+<p>If a non-oneshot service exits, it will be restarted at its start time plus this period. It defaults to 5s to rate limit crashing services. This can be increased for services that are meant to run periodically. For example, it may be set to 3600 to indicate that the service should run every hour or 86400 to indicate that the service should run every day.</p>
+<p><strong>rlimit &lt;resource&gt; &lt;cur&gt; &lt;max&gt;</strong></p>
+<p>This applies the given rlimit to the service. rlimits are inherited by child processes, so this effectively applies the given rlimit to the process tree started by this service. It is parsed similarly to the setrlimit command specified below.</p>
+<p><strong>seclabel &lt;seclabel&gt;</strong></p>
+<p>Change to ‘seclabel’ before exec’ing this service. Primarily for use by services run from the rootfs, e.g. ueventd, adbd. Services on the system partition can instead use policy-defined transitions based on their file security context. If not specified and no transition is defined in policy, defaults to the init context.</p>
+<p><strong>setenv &lt;name&gt; &lt;value&gt;</strong></p>
+<p>Set the environment variable name to value in the launched process.</p>
+<p><strong>shutdown &lt;shutdown_behavior&gt;</strong></p>
+<p>Set shutdown behavior of the service process. When this is not specified, the service is killed during shutdown process by using SIGTERM and SIGKILL. The service with shutdown_behavior of “critical” is not killed during shutdown until shutdown times out. When shutdown times out, even services tagged with “shutdown critical” will be killed. When the service tagged with “shutdown critical” is not running when shut down starts, it will be started.</p>
+</section>
+<section id="triggers">
+<h2>Triggers<a class="headerlink" href="#triggers" title="Permalink to this heading"></a></h2>
+<p>Triggers are strings which can be used to match certain kinds of events and used to cause an action to occur.</p>
+<p>Triggers are subdivided into</p>
+<ul class="simple">
+<li><p>Event Triggers</p></li>
+<li><p>Property Triggers.</p></li>
+</ul>
+<p><strong>Event Triggers</strong></p>
+<p>are strings triggered by the ‘trigger’ command or by the QueueEventTrigger() function within the init executable. These take the form of a simple string such as ‘boot’ or ‘late-init’.</p>
+<p><strong>Property Triggers</strong></p>
+<p>are strings triggered when a named property changes value to a given new value or when a named property changes value to any new value. These take the form of ‘property:=’ and ‘property:=*’ respectively. Property triggers are additionally evaluated and triggered accordingly during the initial boot phase of init.</p>
+<p>An Action can have multiple property triggers but may only have one event trigger.
+on boot &amp;&amp; property:val1=val2</p>
+<p>The above line defines an action that is only executed when the ‘boot’ event trigger happens and the property val1 equals val2.
+on property:val1=val2 &amp;&amp; property:val3=val4</p>
+<p>The above line defines an action that is executed at three times:</p>
+<p>During initial boot if property val1=val2 and property val3=val4.
+Any time that property val1 transitions to value val2, while property val3 already equals val4.
+Any time that property val3 transitions to value val4, while property a already equals val2.</p>
+</section>
+<section id="trigger-sequence">
+<h2>Trigger Sequence<a class="headerlink" href="#trigger-sequence" title="Permalink to this heading"></a></h2>
+<p>Init uses the following sequence of triggers during early boot. These are the built-in triggers defined in init.cpp.</p>
+<p><strong>early-init</strong></p>
+<p>The first in the sequence, triggered after cgroups has been configured but before ueventd’s coldboot is complete.</p>
+<p><strong>init</strong></p>
+<p>Triggered after coldboot is complete.</p>
+<p><strong>charger</strong></p>
+<p>Triggered if ro.bootmode == “charger”</p>
+<p><strong>late-init</strong></p>
+<p>Triggered if ro.bootmode != “charger”, or via healthd triggering a boot from charging mode.
+Remaining triggers are configured in init.rc and are not built-in. The default sequence for these is specified under the “on late-init” event in init.rc. Actions internal to init.rc have been omitted.</p>
+<p><strong>early-fs</strong></p>
+<p>Start vold</p>
+<p><strong>fs</strong></p>
+<p>Vold is up. Mount partitions not marked as first-stage or latemounted.</p>
+<p><strong>post-fs</strong></p>
+<p>Configure anything dependent on early mounts.</p>
+<p><strong>late-fs</strong></p>
+<p>Mount partitions marked as latemounted.</p>
+<p><strong>post-fs-data</strong></p>
+<p>Mount and configure /data; set up encryption. /metadata is reformatted here if it couldn’t mount in first-stage init.</p>
+<p><strong>zygote-start</strong></p>
+<p>Start the zygote.</p>
+<p><strong>early-boot</strong></p>
+<p>After zygote has started.</p>
+<p><strong>boot</strong></p>
+<p>After early-boot actions have completed.</p>
+</section>
+<section id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Permalink to this heading"></a></h2>
+<p><strong>bootchart [start|stop]</strong></p>
+<p>Start/stop bootcharting. These are present in the default init.rc files, but bootcharting is only active if the file /data/bootchart/enabled exists; otherwise bootchart start/stop are no-ops.</p>
+<p><strong>chmod &lt;octal-mode&gt; &lt;path&gt;</strong></p>
+<p>Change file access permissions.</p>
+<p><strong>chown &lt;owner&gt; &lt;group&gt; &lt;path&gt;</strong></p>
+<p>Change file owner and group.</p>
+<p><strong>class_start &lt;serviceclass&gt;</strong></p>
+<p>Start all services of the specified class if they are not already running. See the start entry for more information on starting services.</p>
+<p><strong>class_stop &lt;serviceclass&gt;</strong></p>
+<p>Stop and disable all services of the specified class if they are currently running.</p>
+<p><strong>class_reset &lt;serviceclass&gt;</strong></p>
+<p>Stop all services of the specified class if they are currently running, without disabling them. They can be restarted later using class_start.</p>
+<p><strong>class_restart [–only-enabled] &lt;serviceclass&gt;</strong></p>
+<p>Restarts all services of the specified class. If –only-enabled is specified, then disabled services are skipped.</p>
+<p><strong>copy &lt;src&gt; &lt;dst&gt;</strong></p>
+<p>Copies a file. Similar to write, but useful for binary/large amounts of data. Regarding to the src file, copying from symbolic link file and world-writable or group-writable files are not allowed. Regarding to the dst file, the default mode created is 0600 if it does not exist. And it will be truncated if dst file is a normal regular file and already exists.</p>
+<p><strong>copy_per_line &lt;src&gt; &lt;dst&gt;</strong></p>
+<p>Copies a file line by line. Similar to copy, but useful for dst is a sysfs node that doesn’t handle multiple lines of data.</p>
+<p><strong>domainname &lt;name&gt;</strong></p>
+<p>Set the domain name.</p>
+<p><strong>enable &lt;servicename&gt;</strong></p>
+<p>Turns a disabled service into an enabled one as if the service did not specify disabled. If the service is supposed to be running, it will be started now. Typically used when the bootloader sets a variable that indicates a specific service should be started when needed. E.g.</p>
+<p><strong>on property:ro.boot.mytesthardware=1</strong></p>
+<p>enable mytesthardware_service</p>
+<p><strong>exec [ &lt;seclabel&gt; [ &lt;user&gt; [ &lt;group&gt;* ] ] ] – &lt;command&gt; [ &lt;argument&gt;* ]</strong></p>
+<p>Fork and execute command with the given arguments. The command starts after “–” so that an optional security context, user, and supplementary groups can be provided. No other commands will be run until this one finishes. seclabel can be a - to denote default. Properties are expanded within argument. Init halts executing commands until the forked process exits.</p>
+<p><strong>exec_background [ &lt;seclabel&gt; [ &lt;user&gt; [ &lt;group&gt;* ] ] ] – &lt;command&gt; [ &lt;argument&gt;* ]</strong></p>
+<p>Fork and execute command with the given arguments. This is handled similarly to the exec command. The difference is that init does not halt executing commands until the process exits for exec_background.</p>
+<p><strong>exec_start &lt;service&gt;</strong></p>
+<p>Start a given service and halt the processing of additional init commands until it returns. The command functions similarly to the exec command, but uses an existing service definition in place of the exec argument vector.</p>
+<p><strong>export &lt;name&gt; &lt;value&gt;</strong></p>
+<p>Set the environment variable name equal to value in the global environment (which will be inherited by all processes started after this command is executed)</p>
+<p><strong>hostname &lt;name&gt;</strong></p>
+<p>Set the host name.</p>
+<p><strong>ifup &lt;interface&gt;</strong></p>
+<p>Bring the network interface interface online.</p>
+<p><strong>insmod [-f] &lt;path&gt; [&lt;options&gt;]</strong></p>
+<p>Install the module at path with the specified options. -f: force installation of the module even if the version of the running kernel and the version of the kernel for which the module was compiled do not match.</p>
+<p><strong>interface_start &lt;name&gt;</strong></p>
+<p><strong>interface_restart &lt;name&gt;</strong></p>
+<p><strong>interface_stop &lt;name&gt;</strong></p>
+<p>Find the service that provides the interface name if it exists and run the start, restart, or stop commands on it respectively. name may be either a fully qualified HIDL name, in which case it is specified as &lt;interface&gt;/&lt;instance&gt;, or an AIDL name, in which case it is specified as aidl/&lt;interface&gt; for example <a class="reference external" href="mailto:android&#46;hardware&#46;secure_element&#37;&#52;&#48;1&#46;1">android<span>&#46;</span>hardware<span>&#46;</span>secure_element<span>&#64;</span>1<span>&#46;</span>1</a>::ISecureElement/eSE1 or aidl/aidl_lazy_test_1.</p>
+<p>Note that these commands only act on interfaces specified by the interface service option, not on interfaces registered at runtime.</p>
+<p>Example usage of these commands:
+interface_start <a class="reference external" href="mailto:android&#46;hardware&#46;secure_element&#37;&#52;&#48;1&#46;1">android<span>&#46;</span>hardware<span>&#46;</span>secure_element<span>&#64;</span>1<span>&#46;</span>1</a>::ISecureElement/eSE1 will start the HIDL Service that provides the <a class="reference external" href="mailto:android&#46;hardware&#46;secure_element&#37;&#52;&#48;1&#46;1">android<span>&#46;</span>hardware<span>&#46;</span>secure_element<span>&#64;</span>1<span>&#46;</span>1</a> and eSI1 instance.
+interface_start aidl/aidl_lazy_test_1 will start the AIDL service that provides the aidl_lazy_test_1 interface.</p>
+<p><strong>load_exports &lt;path&gt;</strong></p>
+<p>Open the file at path and export global environment variables declared there. Each line must be in the format export &lt;name&gt; &lt;value&gt;, as described above.</p>
+<p><strong>loglevel &lt;level&gt;</strong></p>
+<p>Sets init’s log level to the integer level, from 7 (all logging) to 0 (fatal logging only). The numeric values correspond to the kernel log levels, but this command does not affect the kernel log level. Use the write command to write to /proc/sys/kernel/printk to change that. Properties are expanded within level.</p>
+<p><strong>restart [–only-if-running] &lt;service&gt;</strong></p>
+<p>Stops and restarts a running service, does nothing if the service is currently restarting, otherwise, it just starts the service. If “–only-if-running” is specified, the service is only restarted if it is already running.</p>
+<p><strong>rm &lt;path&gt;</strong></p>
+<p>Calls unlink(2) on the given path. You might want to use “exec – rm …” instead (provided the system partition is already mounted).</p>
+<p><strong>setprop &lt;name&gt; &lt;value&gt;</strong></p>
+<p>Set system property name to value. Properties are expanded within value.</p>
+<p><strong>setrlimit &lt;resource&gt; &lt;cur&gt; &lt;max&gt;</strong></p>
+<p>Set the rlimit for a resource. This applies to all processes launched after the limit is set. It is intended to be set early in init and applied globally. resource is best specified using its text representation (‘cpu’, ‘rtio’, etc or ‘RLIM_CPU’, ‘RLIM_RTIO’, etc). It also may be specified as the int value that the resource enum corresponds to. cur and max can be ‘unlimited’ or ‘-1’ to indicate an infinite rlimit.</p>
+<p><strong>start &lt;service&gt;</strong></p>
+<p>Start a service running if it is not already running. Note that this is not synchronous, and even if it were, there is no guarantee that the operating system‘s scheduler will execute the service sufficiently to guarantee anything about the service’s status. See the exec_start command for a synchronous version of start.</p>
+<p>This creates an important consequence that if the service offers functionality to other services, such as providing a communication channel, simply starting this service before those services is not sufficient to guarantee that the channel has been set up before those services ask for it. There must be a separate mechanism to make any such guarantees.</p>
+<p><strong>stop &lt;service&gt;</strong></p>
+<p>Stop a service from running if it is currently running.</p>
+<p><strong>trigger &lt;event&gt;</strong></p>
+<p>Trigger an event. Used to queue an action from another action.</p>
+<p><strong>umount &lt;path&gt;</strong></p>
+<p>Unmount the filesystem mounted at that path.</p>
+<p><strong>wait &lt;path&gt; [ &lt;timeout&gt; ]</strong></p>
+<p>Poll for the existence of the given file and return when found, or the timeout has been reached. If timeout is not specified it currently defaults to five seconds. The timeout value can be fractional seconds, specified in floating point notation.</p>
+<p><strong>wait_for_prop &lt;name&gt; &lt;value&gt;</strong></p>
+<p>Wait for system property name to be value. Properties are expanded within value. If property name is already set to value, continue immediately.</p>
+<p><strong>write &lt;path&gt; &lt;content&gt;</strong></p>
+<p>Open the file at path and write a string to it with write(2). If the file does not exist, it will be created. If it does exist, it will be truncated. Properties are expanded within content.</p>
+</section>
+<section id="reference">
+<h2>Reference:<a class="headerlink" href="#reference" title="Permalink to this heading"></a></h2>
+<p>[1]: <code class="docutils literal notranslate"><span class="pre">https://android.googlesource.com/platform/system/core/+/master/init/README.md</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="selinux">
+<h2><strong>SELinux</strong><a class="headerlink" href="#selinux" title="Permalink to this heading"></a></h2>
+<p>SELinux is set up to default-deny, which means that every single access for which it has a hook in the kernel must be explicitly allowed by policy. This means a policy file is comprised of a large amount of information regarding rules, types, classes, permissions, and more.</p>
+</section>
+<section id="policy-format">
+<h2>Policy Format<a class="headerlink" href="#policy-format" title="Permalink to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allow</span> <span class="n">Source</span> <span class="n">Target</span><span class="p">:</span><span class="n">Class</span> <span class="n">Permission</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This means “grant Permission to a process of domain (type) Source on objects of type Target and class Class”</p>
+<p><strong>Example</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allow</span> <span class="n">testservice</span> <span class="n">property_socket</span><span class="p">:</span><span class="n">sock_file</span> <span class="p">{</span> <span class="nb">open</span> <span class="n">write</span> <span class="p">};</span>
+</pre></div>
+</div>
+<p>In the above example Service “testservice” is granted open and write permission for “property_socket:sock_file”</p>
+</section>
+<section id="policy-rules">
+<h2>Policy Rules<a class="headerlink" href="#policy-rules" title="Permalink to this heading"></a></h2>
+<p>Files that end with <code class="docutils literal notranslate"><span class="pre">*.te</span></code> are SELinux policy source files, which define domains and their labels.
+You may need to create new policy files in <code class="docutils literal notranslate"><span class="pre">/device/manufacturer/device-name/sepolicy</span></code>, but you should try to update existing files where possible.</p>
+<p>Your should define your domain and label.</p>
+<ol class="arabic simple">
+<li><p>Define your dev_type (/device/manufacturer/device-name/sepolicy/&lt;policy_name&gt;.te):</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">device</span><span class="p">,</span> <span class="n">dev_type</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Label file with your type (/device/manufacturer/device-name/sepolicy/file_contexts):</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vendor</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">testservice</span> <span class="n">u</span><span class="p">:</span><span class="n">object_r</span><span class="p">:</span><span class="n">testservice_exec</span><span class="p">:</span><span class="n">s0</span>
+</pre></div>
+</div>
+<p>After editing or adding policy and context files, update your <code class="docutils literal notranslate"><span class="pre">/device/manufacturer/device-name/BoardConfig.mk</span></code>
+makefile to reference the sepolicy subdirectory and each new policy file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BOARD_SEPOLICY_DIRS</span> <span class="o">+=</span> \
+<span class="o">&lt;</span><span class="n">root</span><span class="o">&gt;/</span><span class="n">device</span><span class="o">/</span><span class="n">manufacturer</span>
+
+<span class="o">/</span><span class="n">device</span><span class="o">-</span><span class="n">name</span>
+
+<span class="o">/</span><span class="n">sepolicy</span>
+
+<span class="n">BOARD_SEPOLICY_UNION</span> <span class="o">+=</span> \
+<span class="n">genfs_contexts</span> \
+<span class="n">file_contexts</span> \
+<span class="n">sepolicy</span><span class="o">.</span><span class="n">te</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2>Reference:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p>[1]: <code class="docutils literal notranslate"><span class="pre">https://source.android.com/docs/security/selinux</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="native-applications">
+<h2><strong>Native Applications</strong><a class="headerlink" href="#native-applications" title="Permalink to this heading"></a></h2>
+<p>This chapter covers the steps to create a native application in AOSP and have it prebuilt.</p>
+</section>
+<section id="steps">
+<h2>Steps<a class="headerlink" href="#steps" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>mkdir &lt;AOSP&gt;/hardware/testservice</p></li>
+<li><p>cd &lt;AOSP&gt;/hardware/testservice</p></li>
+<li><p>vi testservice.cpp</p></li>
+</ol>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cstdlib&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;log/log.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#undef LOG_TAG</span>
+<span class="cp">#define LOG_TAG &quot;testservice&quot;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span> <span class="n">__unused</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span> <span class="n">__unused</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ALOGI</span><span class="p">(</span><span class="s">&quot;TestService&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>vi Android.mk and add following Lines</p></li>
+</ol>
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nv">LOCAL_PATH</span> <span class="o">:=</span> <span class="k">$(</span>call my-dir<span class="k">)</span>
+<span class="cp">include $(CLEAR_VARS)</span>
+<span class="nv">LOCAL_SRC_FILES</span> <span class="o">:=</span> testservice.cpp
+<span class="nv">LOCAL_MODULE</span> <span class="o">:=</span> testservice
+<span class="nv">LOCAL_MODULE_TAGS</span> <span class="o">:=</span> debug
+<span class="nv">LOCAL_SYSTEM_SHARED_LIBRARIES</span> <span class="o">:=</span> libc
+<span class="nv">LOCAL_SHARED_LIBRARIES</span> <span class="o">:=</span> libutils liblog
+<span class="cp">include $(BUILD_EXECUTABLE)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Append the following lines in init.rc or add this under service owned rc file</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">service</span> <span class="n">exampleservice</span> <span class="o">/</span><span class="n">system</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">testservice</span>
+    <span class="n">user</span> <span class="n">testservice</span>
+    <span class="n">group</span> <span class="n">testservice</span>
+    <span class="n">oneshot</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Append the following line in manufacturer/device-name/sepolicy/file_contexts:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">vendor</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">testservice</span> <span class="n">u</span><span class="p">:</span><span class="n">object_r</span><span class="p">:</span><span class="n">testservice_exec</span><span class="p">:</span><span class="n">s0</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ndk">
+<h2><strong>NDK</strong><a class="headerlink" href="#ndk" title="Permalink to this heading"></a></h2>
+<p>The NDK (Native Development Kit) is a Development tool that allows you to program in C/C++ for Android devices. Usually Native Applications are used only for performance-critical or time-critical portions of a project.</p>
+<p>For example Native applications are used in:
+- Developing Algorithms
+- Developing Hardware Abstraction Layer
+- Improving performance for critical portions
+- Reusing existing C/C++ libraries</p>
+<p>The NDK provides headers and libraries that allow the developer to build activities, handle user input, use hardware sensors, access application resources by accessing Netive Applications that run in C++/C. Java or Kotlin is used for Applications that run above Android Framework while C++/C is used for Application that run below framework. For communication between these two JNI or Java Native Interface is used.</p>
+<p>Some of the libs that can be accessed via Native Applications are
+- OpenCV
+- GLES
+- FFMPEG
+- Gstreamer
+- Vulkan</p>
+</section>
+<section id="write-an-android-jni-program">
+<h2>Write an Android JNI program<a class="headerlink" href="#write-an-android-jni-program" title="Permalink to this heading"></a></h2>
+<p>In this example, we shall create an activity, that calls a native method through JNI to obtain a string and displays the string on a TextView.</p>
+<p><strong>1. Download NDK</strong></p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-download-1.png"><img alt="../../_images/sdk-download-1.png" src="../../_images/sdk-download-1.png" style="width: 280.0px; height: 487.0px;" /></a>
+</figure>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-download-2.png"><img alt="../../_images/sdk-download-2.png" src="../../_images/sdk-download-2.png" style="width: 1029.0px; height: 732.0px;" /></a>
+</figure>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-download-3.png"><img alt="../../_images/sdk-download-3.png" src="../../_images/sdk-download-3.png" style="width: 908.0px; height: 680.0px;" /></a>
+</figure>
+<p><strong>2. Setup Project</strong></p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-setup-1.png"><img alt="../../_images/sdk-setup-1.png" src="../../_images/sdk-setup-1.png" style="width: 916.0px; height: 688.0px;" /></a>
+</figure>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-setup-2.png"><img alt="../../_images/sdk-setup-2.png" src="../../_images/sdk-setup-2.png" style="width: 903.0px; height: 681.0px;" /></a>
+</figure>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-setup-3.png"><img alt="../../_images/sdk-setup-3.png" src="../../_images/sdk-setup-3.png" style="width: 904.0px; height: 682.0px;" /></a>
+</figure>
+<p><strong>3. Example Code</strong></p>
+<p>For any NDK, there are 4 different components that need attention</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-components.png"><img alt="../../_images/sdk-components.png" src="../../_images/sdk-components.png" style="width: 505.0px; height: 623.0px;" /></a>
+</figure>
+<ul class="simple">
+<li><p>Java based Activity</p></li>
+<li><p>C++ based Native Application</p></li>
+<li><p>CMake file</p></li>
+<li><p>Gradle File</p></li>
+</ul>
+</section>
+<section id="java-based-activity">
+<h2>Java based Activity<a class="headerlink" href="#java-based-activity" title="Permalink to this heading"></a></h2>
+<p>This JNI program uses a static initializer to load a shared library ndkexample, where the native method called stringFromNativeApplication() is defined. Once the method is invoked, it returns a String and is displayed in TextView.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.tarjet.ndkexample</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">androidx.appcompat.app.AppCompatActivity</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">android.widget.TextView</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.tarjet.ndkexample.databinding.ActivityMainBinding</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="o">{</span>
+
+    <span class="c1">// Used to load the &#39;ndkexample&#39; library on application startup.</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">&quot;ndkexample&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">ActivityMainBinding</span> <span class="n">binding</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+
+        <span class="n">binding</span> <span class="o">=</span> <span class="n">ActivityMainBinding</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">getLayoutInflater</span><span class="o">());</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">binding</span><span class="o">.</span><span class="na">getRoot</span><span class="o">());</span>
+
+        <span class="c1">// Example of a call to a native method</span>
+        <span class="n">TextView</span> <span class="n">tv</span> <span class="o">=</span> <span class="n">binding</span><span class="o">.</span><span class="na">sampleText</span><span class="o">;</span>
+        <span class="n">tv</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">stringFromNativeApplication</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">    * A native method that is implemented by the &#39;ndkexample&#39; native library,</span>
+<span class="cm">    * which is packaged with this application.</span>
+<span class="cm">    */</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">stringFromNativeApplication</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="c-based-native-application">
+<h2>C++ based Native Application<a class="headerlink" href="#c-based-native-application" title="Permalink to this heading"></a></h2>
+<p>This simple C++ based Native application explains when a JNI call to API is invoked a string is returned.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span>
+<span class="n">Java_com_somename_ndkexample_MainActivity_stringFromNativeApplication</span><span class="p">(</span>
+<span class="n">JNIEnv</span><span class="o">*</span> <span class="n">env</span><span class="p">,</span>
+<span class="n">jobject</span> <span class="cm">/* this */</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">hello</span> <span class="o">=</span> <span class="s">&quot;Hello from C++&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">env</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">hello</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cmake">
+<h2>Cmake<a class="headerlink" href="#cmake" title="Permalink to this heading"></a></h2>
+<p>C++ based native application uses CMake as make system.</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span> <span class="s">3.18.1</span><span class="p">)</span>
+<span class="c"># Name of Project</span>
+<span class="nb">project</span><span class="p">(</span><span class="s2">&quot;ndkexample&quot;</span><span class="p">)</span>
+
+<span class="nb">add_library</span><span class="p">(</span> <span class="c"># Sets the name of the library.</span>
+<span class="s">ndkexample</span>
+
+<span class="c"># Sets the library as a shared library.</span>
+<span class="s">SHARED</span>
+
+<span class="c"># Provides a relative path to your source file(s).</span>
+<span class="s">native-lib.cpp</span><span class="p">)</span>
+
+<span class="nb">find_library</span><span class="p">(</span> <span class="c"># Sets the name of the path variable.</span>
+<span class="s">log-lib</span>
+
+<span class="c"># Specifies the name of the NDK library that</span>
+<span class="c"># you want CMake to locate.</span>
+<span class="s">log</span><span class="p">)</span>
+
+<span class="nb">target_link_libraries</span><span class="p">(</span> <span class="c"># Specifies the target library.</span>
+<span class="s">ndkexample</span>
+
+<span class="c"># Links the target library to the log library</span>
+<span class="c"># included in the NDK.</span>
+<span class="o">${</span><span class="nv">log-lib</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="gradle">
+<h2>Gradle<a class="headerlink" href="#gradle" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-gradle.png"><img alt="../../_images/sdk-gradle.png" src="../../_images/sdk-gradle.png" style="width: 1112.0px; height: 815.0px;" /></a>
+</figure>
+</section>
+<section id="build-and-run">
+<h2>Build and Run<a class="headerlink" href="#build-and-run" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/sdk-buildrun.png"><img alt="../../_images/sdk-buildrun.png" src="../../_images/sdk-buildrun.png" style="width: 358.0px; height: 771.0px;" /></a>
+</figure>
+</section>
+<hr class="docutils" />
+<section id="system-services">
+<h2><strong>System Services</strong><a class="headerlink" href="#system-services" title="Permalink to this heading"></a></h2>
+<p>System services are derived from SystemService class. They reside in com.android.server package in AOSP tree. System Services are started by SystemServer hence they run as a System process which gives them additional privileges which normal Android Service will never get. System Service plays a key role in exposing functions to access or control hardware and Linux Kernel to Android Applications. SystemServices has a different Sepolicy and has fewer restrictions as Compared system_app or unknown_app.</p>
+<p>System services can be registered and obtained by the following methods:</p>
+</section>
+<section id="implementation-steps">
+<h2>Implementation steps<a class="headerlink" href="#implementation-steps" title="Permalink to this heading"></a></h2>
+<p><strong>1. Register</strong></p>
+<p>A service can be added using method ServiceManager.addService.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">addService</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">IBinder</span> <span class="n">service</span><span class="p">)</span>
+
+<span class="n">Parameter</span><span class="p">:</span>
+
+<span class="n">The</span> <span class="n">method</span> <span class="n">addService</span><span class="p">()</span> <span class="n">has</span> <span class="n">the</span> <span class="n">following</span> <span class="n">parameter</span><span class="p">:</span>
+
+<span class="n">String</span> <span class="n">name</span> <span class="o">-</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">new</span> <span class="n">service</span>
+<span class="n">IBinder</span> <span class="n">service</span> <span class="o">-</span> <span class="n">the</span> <span class="n">service</span> <span class="nb">object</span>
+
+<span class="n">Example</span><span class="p">:</span>
+
+<span class="n">ServiceManager</span><span class="o">.</span><span class="n">addService</span><span class="p">(</span><span class="s2">&quot;TestSystemService&quot;</span><span class="p">,</span> <span class="n">this</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>2. Obtain</strong></p>
+<p>A service can be obtained using method ServiceManager.getService.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">public</span> <span class="n">static</span> <span class="n">IBinder</span> <span class="n">getService</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="n">Parameter</span>
+
+<span class="n">The</span> <span class="n">method</span> <span class="n">getService</span><span class="p">()</span> <span class="n">has</span> <span class="n">the</span> <span class="n">following</span> <span class="n">parameter</span><span class="p">:</span>
+
+<span class="n">String</span> <span class="n">name</span> <span class="o">-</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">service</span> <span class="n">to</span> <span class="n">get</span>
+
+
+<span class="n">IBinder</span> <span class="n">b</span> <span class="o">=</span> <span class="n">ServiceManager</span><span class="o">.</span><span class="n">getService</span><span class="p">(</span><span class="s2">&quot;TestSystemService&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>3. Registering under System Service</strong></p>
+<p>A system service needs to be registered under SystemService in <code class="docutils literal notranslate"><span class="pre">SystemServiceRegistry.java</span></code> and adding it into <code class="docutils literal notranslate"><span class="pre">SystemServer.java</span></code>.
+The Path is found under: <code class="docutils literal notranslate"><span class="pre">frameworks/base/core/java/android/app/</span></code>:</p>
+<p><strong>SystemServiceRegistry.java</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">registerService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">,</span> <span class="n">TestSystemServiceManager</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+    <span class="k">new</span> <span class="n">CachedServiceFetcher</span><span class="o">&lt;</span><span class="n">TestSystemServiceServiceManager</span><span class="o">&gt;()</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">TestSystemServiceManager</span> <span class="nf">createService</span><span class="o">(</span><span class="n">ContextImpl</span> <span class="n">ctx</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">ServiceNotFoundException</span> <span class="o">{</span>
+        <span class="n">IBinder</span> <span class="n">binder</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span><span class="c1">//ctx.getApplicationInfo().targetSdkVersion &gt;= Build.VERSION_CODES.O) {</span>
+            <span class="n">binder</span> <span class="o">=</span> <span class="n">ServiceManager</span><span class="o">.</span><span class="na">getServiceOrThrow</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">binder</span> <span class="o">=</span> <span class="n">ServiceManager</span><span class="o">.</span><span class="na">getService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">TestSystemServiceManager</span><span class="o">(</span><span class="n">ctx</span><span class="o">,</span><span class="n">ITestSystemServiceManagerAidlInterface</span><span class="o">.</span><span class="na">Stub</span><span class="o">.</span><span class="na">asInterface</span><span class="o">(</span><span class="n">binder</span><span class="o">));</span>
+    <span class="o">}});</span>
+</pre></div>
+</div>
+<p><strong>SystemServer.java</strong></p>
+<p>In SystemServer add your service inside startBootstrapServices(). You will find other default system services under
+path <code class="docutils literal notranslate"><span class="pre">/frameworks/base/services/java/com/android/server/SystemServer.java</span></code></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">TestSystemService</span> <span class="n">androidservice</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+<span class="k">try</span><span class="o">{</span>
+    <span class="n">traceBeginAndSlog</span><span class="o">(</span><span class="s">&quot;TestSystemService&quot;</span><span class="o">);</span>
+    <span class="n">androidservice</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TestSystemService</span><span class="o">(</span><span class="n">mSystemContext</span><span class="o">);</span>
+    <span class="n">ServiceManager</span><span class="o">.</span><span class="na">addService</span><span class="o">(</span><span class="n">Context</span><span class="o">.</span><span class="na">TESTSYSTEM_SERVICE</span><span class="o">,</span><span class="n">androidservice</span><span class="o">);</span>
+<span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Throwable</span> <span class="n">e</span><span class="o">){</span>
+    <span class="n">Slog</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;Starting TestSystemService failed!!! &quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="n">traceEnd</span><span class="o">();</span>
+</pre></div>
+</div>
+<p><strong>Context</strong></p>
+<p>Declare the context in Context.java under path /frameworks/base/core/java/android/content/Context.java</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">TESTSYSTEM_SERVICE</span> <span class="o">=</span> <span class="s">&quot;TestSystemService&quot;</span><span class="o">;</span>
+</pre></div>
+</div>
+<p><strong>Update Makefile</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">api</span><span class="o">-</span><span class="n">stubs</span><span class="o">-</span><span class="n">docs</span><span class="o">-</span><span class="n">update</span><span class="o">-</span><span class="n">current</span><span class="o">-</span><span class="n">api</span>
+</pre></div>
+</div>
+<p><strong>Selinux</strong></p>
+<p>Add Selinux policy which provides permissions for your Service. The file can be found under <code class="docutils literal notranslate"><span class="pre">system/sepolicy/private/service_contexts</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TestSystemService</span> <span class="n">u</span><span class="p">:</span><span class="n">object_r</span><span class="p">:</span><span class="n">testsystem_service</span><span class="p">:</span><span class="n">s0</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="system-properties">
+<h2><strong>System Properties</strong><a class="headerlink" href="#system-properties" title="Permalink to this heading"></a></h2>
+<p>System properties are a way to share global data across OS. Each partition can use its own system properties internally. System properties start with a prefix, which can be ro for properties only set once, or persist for properties that should still exist after a reboot. The properties can be set read-only or writable, or the values can be rolled back.</p>
+<p>Some Examples of Android’s System Property</p>
+<p><strong>ro.build.id</strong></p>
+<p>Gives the build number of the current Android Os running in device</p>
+<p><strong>ro.build.type</strong></p>
+<p>Gives the type of build the device has currently running such as Engineering Debug, Engineering Build, Release</p>
+</section>
+<section id="command-line">
+<h2>Command Line<a class="headerlink" href="#command-line" title="Permalink to this heading"></a></h2>
+<p>A system property can be created, set and read using command line. However it is not persistent and needs to be set again after reboot, unless it is automatically created using init rc script.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1">### Create a property</span>
+adb_shell# setprop propertykey propertyvalue
+
+<span class="c1">### Get a Property</span>
+adb_shell# getprop propertykey
+</pre></div>
+</div>
+</section>
+<section id="run-time-access-of-system-property">
+<h2>Run Time Access of System Property<a class="headerlink" href="#run-time-access-of-system-property" title="Permalink to this heading"></a></h2>
+<p>A property can be accessed by a program during Android Runtime. Below is the Cpp example on how System Properties can be accessed during Runtime.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">String</span> <span class="n">propertyvalue</span><span class="p">;</span>
+<span class="n">System</span><span class="p">.</span><span class="n">setProperty</span><span class="p">(</span><span class="s">&quot;propertykey&quot;</span><span class="p">,</span> <span class="s">&quot;propertyvalue&quot;</span><span class="p">);</span>
+<span class="n">myprop</span> <span class="o">=</span> <span class="n">System</span><span class="p">.</span><span class="n">getProperty</span><span class="p">(</span><span class="s">&quot;propertyvalue&quot;</span><span class="p">);</span>
+<span class="n">Log</span><span class="p">.</span><span class="n">i</span><span class="p">(</span><span class="n">TAG</span><span class="p">,</span> <span class="s">&quot;propertykey value: &quot;</span> <span class="o">+</span> <span class="n">propertyvalue</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="predefined">
+<h2>Predefined<a class="headerlink" href="#predefined" title="Permalink to this heading"></a></h2>
+<p>There are also ways to define a predefined system property when Android is being built.</p>
+<p><strong>Define System Properties under Proto File</strong></p>
+<p>Define system properties as APIs with Sysprop Description files (.sysprop), which use a TextFormat of protobuf, with the following schema:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// File: sysprop.proto</span>
+
+<span class="n">syntax</span> <span class="o">=</span> <span class="s">&quot;proto3&quot;</span><span class="p">;</span>
+
+<span class="n">package</span> <span class="n">sysprop</span><span class="p">;</span>
+
+<span class="k">enum</span> <span class="n">Access</span> <span class="p">{</span>
+    <span class="n">Readonly</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Writeonce</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">ReadWrite</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="n">Owner</span> <span class="p">{</span>
+    <span class="n">Platform</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Vendor</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">Odm</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="n">Scope</span> <span class="p">{</span>
+    <span class="n">Public</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Internal</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="n">Type</span> <span class="p">{</span>
+    <span class="n">Boolean</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Integer</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">Long</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">Double</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="n">String</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">Enum</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="n">UInt</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="n">ULong</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+    <span class="n">BooleanList</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+    <span class="n">IntegerList</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+    <span class="n">LongList</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+    <span class="n">DoubleList</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+    <span class="n">StringList</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+    <span class="n">EnumList</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
+    <span class="n">UIntList</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+    <span class="n">ULongList</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">message</span> <span class="n">Property</span> <span class="p">{</span>
+    <span class="n">string</span> <span class="n">api_name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">Type</span> <span class="n">type</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">Access</span> <span class="n">access</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="n">Scope</span> <span class="n">scope</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">prop_name</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">enum_values</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">integer_as_bool</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">legacy_prop_name</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">message</span> <span class="n">Properties</span> <span class="p">{</span>
+    <span class="n">Owner</span> <span class="n">owner</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">string</span> <span class="n">module</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">repeated</span> <span class="n">Property</span> <span class="n">prop</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Sysprop Description file</strong></p>
+<p>A Sysprop Description file contains a property message that describes a set of properties. The meaning of its fields are as follows.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Field</strong></p></td>
+<td><p><strong>Meaning</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>owner</p></td>
+<td><p>Set to the partition that owns the properties: Platform, Vendor, or Odm.</p></td>
+</tr>
+<tr class="row-odd"><td><p>module</p></td>
+<td><div class="line-block">
+<div class="line">Used to create a namespace (C++) or static final class (Java) in which</div>
+<div class="line">generated APIs are placed. For example, com.android.sysprop.BuildProperties</div>
+<div class="line">will be namespace com::android::sysprop::BuildProperties in C++, and the</div>
+<div class="line">BuildProperties class in the package in com.android.sysprop in Java.</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>prop</p></td>
+<td><p>List of properties.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Property</strong></p>
+<p>The meanings of the Property message fields are as follows.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Field</strong></p></td>
+<td><p><strong>Meaning</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>api_name</p></td>
+<td><p>The name of the generated API.</p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p>The type of this property.</p></td>
+</tr>
+<tr class="row-even"><td><p>access</p></td>
+<td><div class="line-block">
+<div class="line">Readonly: Generates getter API only</div>
+<div class="line">Writeonce, ReadWrite: Generates getter and setter APIs</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>scope</p></td>
+<td><div class="line-block">
+<div class="line">Internal: Only the owner can access.</div>
+<div class="line">Public: Everyone can access, except for NDK modules.</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>prop_name</p></td>
+<td><p>The name of the underlying system property, for example ro.build.date.</p></td>
+</tr>
+<tr class="row-odd"><td><p>enum_values</p></td>
+<td><div class="line-block">
+<div class="line">(Enum, EnumList only) A bar(|)-separated string that consists of possible</div>
+<div class="line">enum values. For example, value1|value2.</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sysprop Description file</strong></p>
+<p>Here’s an example of a Sysprop Description file defining three properties:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># File: android/sysprop/PlatformProperties.sysprop</span>
+
+<span class="n">owner</span><span class="p">:</span> <span class="n">Platform</span>
+<span class="n">module</span><span class="p">:</span> <span class="s2">&quot;android.sysprop.PlatformProperties&quot;</span>
+<span class="n">prop</span> <span class="p">{</span>
+    <span class="n">api_name</span><span class="p">:</span> <span class="s2">&quot;build_date&quot;</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">String</span>
+    <span class="n">prop_name</span><span class="p">:</span> <span class="s2">&quot;ro.build.date&quot;</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">Public</span>
+    <span class="n">access</span><span class="p">:</span> <span class="n">Readonly</span>
+<span class="p">}</span>
+<span class="n">prop</span> <span class="p">{</span>
+    <span class="n">api_name</span><span class="p">:</span> <span class="s2">&quot;date_utc&quot;</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Integer</span>
+    <span class="n">prop_name</span><span class="p">:</span> <span class="s2">&quot;ro.build.date_utc&quot;</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">Internal</span>
+    <span class="n">access</span><span class="p">:</span> <span class="n">Readonly</span>
+<span class="p">}</span>
+<span class="n">prop</span> <span class="p">{</span>
+    <span class="n">api_name</span><span class="p">:</span> <span class="s2">&quot;device_status&quot;</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Enum</span>
+    <span class="n">enum_values</span><span class="p">:</span> <span class="s2">&quot;on|off|unknown&quot;</span>
+    <span class="n">prop_name</span><span class="p">:</span> <span class="s2">&quot;device.status&quot;</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="n">Public</span>
+    <span class="n">access</span><span class="p">:</span> <span class="n">ReadWrite</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Defining system properties libraries</strong></p>
+<p>You can now define sysprop_library modules with Sysprop Description files. sysprop_library serves as an API for both C++ and Java. The build system internally generates one java_library and one cc_library for each instance of sysprop_library.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">File</span><span class="p">:</span> <span class="n">Android</span><span class="o">.</span><span class="n">bp</span>
+<span class="n">sysprop_library</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;PlatformProperties&quot;</span><span class="p">,</span>
+    <span class="n">srcs</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;android/sysprop/PlatformProperties.sysprop&quot;</span><span class="p">],</span>
+    <span class="n">property_owner</span><span class="p">:</span> <span class="s2">&quot;Platform&quot;</span><span class="p">,</span>
+    <span class="n">vendor_available</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You must include API lists files in the source for API checks. To do this, create API files and an api directory. Put the api directory in the same directory as Android.bp.
+The API filenames are <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;-current.txt</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;-latest.txt</span></code>. <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;-current.txt</span></code> holds the API signatures of current source codes,
+and <code class="docutils literal notranslate"><span class="pre">&lt;module_name&gt;-latest.txt</span></code> holds the latest frozen API signatures. The build system checks whether the APIs are changed by comparing these API files with
+generated API files at build time and emits an error message and instructions to update <code class="docutils literal notranslate"><span class="pre">current.txt</span></code> file if current.txt doesn’t match with the source codes.
+Here’s an example directory and file organization:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── api
+│ ├── PlatformProperties-current.txt
+│ └── PlatformProperties-latest.txt
+└── Android.bp
+</pre></div>
+</div>
+<p><strong>Makefile</strong></p>
+<p>Both Java and C++ client modules can link against sysprop_library to use generated APIs. The build system creates links from clients to generated C++ and Java libraries, thus giving clients access to generated APIs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">java_library</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;JavaClient&quot;</span><span class="p">,</span>
+    <span class="n">srcs</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;java_access.java&quot;</span><span class="p">],</span>
+    <span class="n">libs</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PlatformProperties&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">cc_binary</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;cc_client&quot;</span><span class="p">,</span>
+    <span class="n">srcs</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cpp_access.cpp&quot;</span><span class="p">],</span>
+    <span class="n">shared_libs</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;PlatformProperties&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Java Example</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">android.sysprop.PlatformProperties</span><span class="o">;</span>
+<span class="c1">//…</span>
+<span class="kd">static</span> <span class="kt">void</span> <span class="nf">java_access</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">//…</span>
+    <span class="c1">// read &quot;ro.build.date_utc&quot;. default value is -1</span>
+    <span class="n">Integer</span> <span class="n">dateUtc</span> <span class="o">=</span> <span class="n">PlatformProperties</span><span class="o">.</span><span class="na">date_utc</span><span class="o">().</span><span class="na">orElse</span><span class="o">(-</span><span class="mi">1</span><span class="o">);</span>
+
+    <span class="c1">// set &quot;device.status&quot; to &quot;unknown&quot; if &quot;ro.build.date&quot; is not set</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">PlatformProperties</span><span class="o">.</span><span class="na">build_date</span><span class="o">().</span><span class="na">isPresent</span><span class="o">())</span> <span class="o">{</span>
+        <span class="n">PlatformProperties</span><span class="o">.</span><span class="na">device_status</span><span class="o">(</span><span class="n">PlatformProperties</span><span class="o">.</span><span class="na">device_status_values</span><span class="o">.</span><span class="na">UNKNOWN</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="c1">//…</span>
+<span class="o">}</span>
+<span class="c1">//…</span>
+</pre></div>
+</div>
+<p><strong>CPP Example</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;android/sysprop/PlatformProperties.sysprop.h&gt;</span><span class="cp"></span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">android</span><span class="o">::</span><span class="n">sysprop</span><span class="p">;</span>
+
+<span class="c1">//…</span>
+
+<span class="kt">void</span> <span class="nf">cpp_access</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//…</span>
+    <span class="c1">// read &quot;ro.build.date&quot;. default value is &quot;(unknown)&quot;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">build_date</span> <span class="o">=</span> <span class="n">PlatformProperties</span><span class="o">::</span><span class="n">build_date</span><span class="p">().</span><span class="n">value_or</span><span class="p">(</span><span class="s">&quot;(unknown)&quot;</span><span class="p">);</span>
+
+    <span class="c1">// set &quot;device.status&quot; to &quot;on&quot; if it&#39;s &quot;unknown&quot; or not set</span>
+    <span class="k">using</span> <span class="n">PlatformProperties</span><span class="o">::</span><span class="n">device_status_values</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">status</span> <span class="o">=</span> <span class="n">PlatformProperties</span><span class="o">::</span><span class="n">device_status</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">status</span><span class="p">.</span><span class="n">has_value</span><span class="p">()</span> <span class="o">||</span> <span class="n">status</span><span class="p">.</span><span class="n">value</span><span class="p">()</span> <span class="o">==</span> <span class="n">device_status_values</span><span class="o">::</span><span class="n">UNKNOWN</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">PlatformProperties</span><span class="o">::</span><span class="n">device_status</span><span class="p">(</span><span class="n">device_status_values</span><span class="o">::</span><span class="n">ON</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">//…</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h2>Reference:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<p>[1]: <code class="docutils literal notranslate"><span class="pre">https://source.android.com/docs/core/architecture/sysprops-apis</span></code></p>
+<p>[2]: <code class="docutils literal notranslate"><span class="pre">https://source.android.com/docs/core/architecture/configuration/add-system-properties</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="hardware-abstraction-layer">
+<h2><strong>Hardware Abstraction Layer</strong><a class="headerlink" href="#hardware-abstraction-layer" title="Permalink to this heading"></a></h2>
+<p>A HAL allows the Android application/framework to communicate with the hardware specific device drivers. Android HAL defines a standard interface for hardware vendors to implement, which enables Android to be agnostic about lower-level driver implementations. Using a HAL allows you to implement functionality without affecting or modifying the higher level system. HAL implementations are packaged into modules and loaded by the Android system at the appropriate time.</p>
+<p>In Android 8.0 and higher, the lower-level layers are re-written to adopt a new, more modular architecture. Devices running Android 8.0 and higher must support HALs written in HIDL, with a few exceptions listed below.</p>
+<p>These HALs can be binderized or passthrough. In Android 11, HALs written in AIDL are also supported. All AIDL HALs are binderized.</p>
+</section>
+<section id="binderized-hals">
+<h2>Binderized HALs<a class="headerlink" href="#binderized-hals" title="Permalink to this heading"></a></h2>
+<p>HALs expressed in HAL interface definition language (HIDL) or Android interface definition language (AIDL). These HALs replace both conventional and legacy HALs used in earlier versions of Android. In a Binderized HAL, the Android framework and HALs communicate with each other using binder inter-process communication (IPC) calls. All devices launching with Android 8.0 or later must support binderized HALs only.</p>
+<p>Android requires the following HALS to to be binderized on all Android devices regardless of whether they are launch devices or upgrade devices:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.biometrics.fingerprint&#64;2.1.</span></code> Replaces fingerprintd which is no longer in Android 8.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.configstore&#64;1.0.</span></code> New in Android 8.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.dumpstate&#64;1.0.</span></code> The original interface provided by this HAL could not be shimmed and was changed. Because of this, dumpstate_board must be re-implemented on a given device (this is an optional HAL).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.graphics.allocator&#64;2.0.</span></code> Required to be binderized in Android 8.0 so file descriptors don’t have to be shared between trusted and untrusted processes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.radio&#64;1.0.</span></code> Replaces the interface provided by rild which lives in its own process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.usb&#64;1.0.</span></code> New in Android 8.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.wifi&#64;1.0.</span></code> New in Android 8.0, replaces the legacy Wi-Fi HAL library that was loaded into system_server.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.wifi.supplicant&#64;1.0.</span></code> A HIDL interface over the existing wpa_supplicant process.</p></li>
+</ul>
+</section>
+<section id="passthrough-hals">
+<h2>Passthrough HALs<a class="headerlink" href="#passthrough-hals" title="Permalink to this heading"></a></h2>
+<p>A HIDL-wrapped conventional or legacy HAL. These HALs wrap existing HALs and can serve the HAL in binderized and same-process (passthrough) modes. Devices upgrading to Android 8.0 can use passthrough HALs. This usually implies that only one client can link to it or the service must be implemented in a way that it does not need exclusive access to hardware. The upside is that you save the communication overhead of using Binder.</p>
+<p>Android requires the following HALs to be in passthrough mode on all Android devices regardless of whether they are launch devices or upgrade devices:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.graphics.mapper&#64;1.0.</span></code> Maps memory into the process it lives in.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.renderscript&#64;1.0.</span></code> Passes items in the same process (equivalent to openGL).</p></li>
+</ul>
+</section>
+<section id="same-process-hals">
+<h2>Same-Process HALs<a class="headerlink" href="#same-process-hals" title="Permalink to this heading"></a></h2>
+<p>Same-Process HALs (SP-HALs) always open in the same process in which they are used. They include all HALs not expressed in HIDL as well as some that are not binderized. Membership in the SP-HAL set is controlled only by Google, with no exceptions.</p>
+<p>SP-HALs include the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">openGL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Vulkan</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hidl.memory&#64;1.0</span> <span class="pre">(provided</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">Android</span> <span class="pre">system,</span> <span class="pre">always</span> <span class="pre">passthrough)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.graphics.mapper&#64;1.0.</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">android.hardware.renderscript&#64;1.0</span></code></p></li>
+</ul>
+</section>
+<section id="conventional-legacy-hals">
+<h2>Conventional &amp; legacy HALs<a class="headerlink" href="#conventional-legacy-hals" title="Permalink to this heading"></a></h2>
+<p>Conventional HALs (deprecated in Android 8.0) are interfaces that conform to a specific named and versioned application binary interface (ABI). The bulk of Android system interfaces (camera, audio, sensors, etc.) are in the form of conventional HALs, which are defined under hardware/libhardware/include/hardware.</p>
+<p>Legacy HALs (also deprecated in Android 8.0) are interfaces that predate conventional HALs. A few important subsystems (Wi-Fi, Radio Interface Layer, and Bluetooth) are legacy HALs. While there’s no uniform or standardized way to describe a legacy HAL, anything predating Android 8.0 that is not a conventional HAL is a legacy HAL. Parts of some legacy HALs are contained in libhardware_legacy, while other parts are interspersed throughout the codebase.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Refer</span> <span class="pre">Topic:</span> <span class="pre">Binder</span> <span class="pre">and</span> <span class="pre">Chapter:</span> <span class="pre">HIDL</span> <span class="pre">on</span> <span class="pre">how</span> <span class="pre">to</span> <span class="pre">create</span> <span class="pre">a</span> <span class="pre">sample</span> <span class="pre">HAL</span> <span class="pre">interface</span> <span class="pre">using</span> <span class="pre">HIDL</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="vhal-vehicle-hal">
+<h2><strong>VHAL - Vehicle HAL</strong><a class="headerlink" href="#vhal-vehicle-hal" title="Permalink to this heading"></a></h2>
+<p>Native Applications in Android are the application that are coded primarily in C/C++. This is done for creating abstraction layers for few interfaces in Kernel or Hardware. One such instances is Android Auto, where many signal from Vehicles are wrapped under C/C++ based native application. The signals from other vehicle units or ECUs(Electonic control unit) are read and passed through Android Framework by the native applications.</p>
+</section>
+<section id="id3">
+<h2>Implementation steps<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<p><strong>1. Define Vehicle Property in Vehicle HAL</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">enum</span> <span class="n">VehicleProperty</span><span class="p">:</span> <span class="n">android</span><span class="o">.</span><span class="n">hardware</span><span class="o">.</span><span class="n">automotive</span><span class="o">.</span><span class="n">vehicle</span><span class="nd">@2</span><span class="o">.</span><span class="mi">0</span><span class="p">::</span><span class="n">VehicleProperty</span> <span class="p">{</span>
+
+    <span class="n">SOME_VEHICLE_PROP</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mh">0x00EE</span>
+    <span class="o">|</span> <span class="n">VehiclePropertyGroup</span><span class="p">:</span><span class="n">VENDOR</span>
+    <span class="o">|</span> <span class="n">VehiclePropertyType</span><span class="p">:</span><span class="n">INT32</span>
+    <span class="o">|</span> <span class="n">VehicleArea</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">)</span>
+    <span class="o">//</span><span class="p">,</span>
+    <span class="o">//...</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>2. Define Vehicle Property Source Code</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nl">vhal20:</span><span class="o">:</span><span class="n">VehiclePropConfig</span> <span class="nf">propconfig_somevehicleprop</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">auto</span> <span class="n">someVehicleProp</span> <span class="o">=</span> <span class="n">vhal20</span><span class="o">::</span><span class="n">VehicleProperty</span><span class="o">::</span><span class="n">SOME_VEHICLE_PROP</span><span class="o">;</span>
+    <span class="n">vhal20</span><span class="o">::</span><span class="n">VehiclePropConfig</span> <span class="n">config</span><span class="o">;</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">prop</span> <span class="o">=</span> <span class="n">vhal20</span><span class="o">::</span><span class="n">toInt</span><span class="o">(</span><span class="n">someVehicleProp</span><span class="o">);</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">changeMode</span> <span class="o">=</span> <span class="n">vhal20</span><span class="o">::</span><span class="n">VehiclePropertyChangeMode</span><span class="o">::</span><span class="n">ON_CHANGE</span><span class="o">;</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">access</span> <span class="o">=</span> <span class="n">vhal20</span><span class="o">::</span><span class="n">VehiclePropertyAccess</span><span class="o">::</span><span class="n">READ_WRITE</span><span class="o">;</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">areaConfigs</span><span class="o">.</span><span class="na">resize</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">areaConfigs</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">areaId</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">areaConfigs</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">minInt32Value</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="n">config</span><span class="o">.</span><span class="na">areaConfigs</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">maxInt32Value</span> <span class="o">=</span> <span class="mi">7</span><span class="o">;</span>
+    <span class="k">return</span> <span class="n">config</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="interfaces">
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading"></a></h2>
+<p>The VHAL uses the following interfaces:</p>
+<p><strong>getAllPropConfigs() generates (vec&lt;VehiclePropConfig&gt;propConfigs)</strong>
+List the configuration of all properties supported by the VHAL. CarService uses supported properties only.</p>
+<p><strong>getPropConfigs(vec&lt;int32_t&gt; props) generates (StatusCode status,vec&lt;VehiclePropConfig&gt; propConfigs);</strong>
+Return the configuration of selected properties.</p>
+<p><strong>set(VehiclePropValue propValue) generates (StatusCodestatus);</strong>
+Write a value to property. Result of write is defined per property.</p>
+<p><strong>subscribe(IVehicleCallback callback, vec&lt;SubscribeOptions&gt; options) generates (StatusCode status);</strong>
+Start monitoring a property value change. For zoned property, unsubscribe(IVehicleCallback callback, int32_t propId) generates (StatusCode status);</p>
+</section>
+<section id="callbacks">
+<h2>Callbacks<a class="headerlink" href="#callbacks" title="Permalink to this heading"></a></h2>
+<p><strong>oneway onPropertyEvent(vec&lt;VehiclePropValue&gt;propValues);</strong>
+Notifies vehicle property’s value change. Should be done only for subscribed properties.</p>
+<p><strong>oneway onPropertySetError(StatusCode errorCode,int32_t propId,int32_tareaId);</strong>
+Return global VHAL level error or error per property. Global error causes the HAL to restart, which can lead to restarting other components (including applications).</p>
+</section>
+<section id="app-to-ecu-communication-through-vhal">
+<h2>APP to ECU Communication through VHAL<a class="headerlink" href="#app-to-ecu-communication-through-vhal" title="Permalink to this heading"></a></h2>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/vhal.png"><img alt="../../_images/vhal.png" src="../../_images/vhal.png" style="width: 1111.0px; height: 624.0px;" /></a>
+</figure>
+</section>
+<hr class="docutils" />
+<section id="vendor-native-development-kit-vndk">
+<h2><strong>Vendor Native Development Kit (VNDK)</strong><a class="headerlink" href="#vendor-native-development-kit-vndk" title="Permalink to this heading"></a></h2>
+<p>The Vendor Native Development Kit (VNDK) is a set of libraries exclusively for vendors to implement their HALs. The VNDK ships in system.img and is dynamically linked to vendor code at runtime.</p>
+</section>
+<section id="purpose-of-vndk">
+<h2>Purpose of VNDK<a class="headerlink" href="#purpose-of-vndk" title="Permalink to this heading"></a></h2>
+<p>Android 8.0 and higher enables framework-only updates in which the system partition can be upgraded to the latest version while vendor partitions are left unchanged. This implies that binaries built at different times must be able to work with each other; VNDK covers API/ABI changes across Android releases.</p>
+<p>Framework-only updates include the following challenges:
+- Dependency between framework modules and vendor modules. Before Android 8.0, modules from both sides could link with modules from the other side. However, dependencies from vendor modules imposed undesired restrictions to framework modules development.
+- Extensions to AOSP libraries. Android 8.0 and higher requires all Android devices to pass CTS when the system partition is replaced with a standard Generic System Image (GSI). However, as vendors extend AOSP libraries to boost performance or to add extra functionalities for their HIDL implementations, flashing the system partition with a standard GSI might break a vendor’s HIDL implementation. (For guidelines on preventing such breakages, see VNDK extensions.)</p>
+<p>To address these challenges, Android 8.0 introduces several techniques such as VNDK, HIDL, hwbinder, device tree overlay, and sepolicy overlay.</p>
+</section>
+<section id="vndk-concepts">
+<h2>VNDK concepts<a class="headerlink" href="#vndk-concepts" title="Permalink to this heading"></a></h2>
+<p>In an ideal Android 8.0 and higher world, framework processes do not load vendor shared libraries, all vendor processes load only vendor shared libraries (and a portion of framework shared libraries), and communications between framework processes and vendor processes are governed by HIDL and hardware binder.</p>
+<p>Such a world includes the possibility that stable, public APIs from framework shared libraries might not be sufficient for vendor module developers (although APIs can change between Android releases), requiring that some portion of framework shared libraries be accessible to vendor processes. In addition, as performance requirements can lead to compromises, some response-time-critical HALs must be treated differently.</p>
+<p><strong>Framework shared libraries for vendor</strong></p>
+<p>There are two approaches to support vendor modules across multiple Android releases:</p>
+<ul class="simple">
+<li><p>Stabilize the ABIs/APIs of the framework shared libraries. New framework modules and old vendor modules can use the same shared library to reduce memory footprint and storage size. A unique shared library also avoids several double-loading issues. However, the development cost to maintain stable ABIs/APIs is high and it is unrealistic to stabilize all ABIs/APIs exported by every framework shared library.</p></li>
+<li><p>Copy old framework shared libraries. Comes with the strong restriction against side channels, defined as all mechanisms to communicate among framework modules and vendor modules, including (but not limited to) binder, socket, pipe, shared memory, shared file, and system properties. There must be no communication unless the communication protocol is frozen and stable (e.g. HIDL through hwbinder). Double-loading shared libraries might cause problems as well; for example, if an object created by the new library is passed into the functions from the old library, an error may occur as these libraries may interpret the object differently.</p></li>
+</ul>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/vndkfw.png"><img alt="../../_images/vndkfw.png" src="../../_images/vndkfw.png" style="width: 805.0px; height: 442.0px;" /></a>
+</figure>
+<p>Framework shared libraries are classified into three sub-categories:</p>
+<p><strong>LL-NDK Libraries</strong></p>
+<p>LL-NDK Libraries are Framework Shared Libraries that are known to be stable. Their developers are committed to maintain their API/ABI stabilities. LL-NDK includes the following libraries: libEGL.so, libGLESv1_CM.so, libGLESv2.so, libGLESv3.so, libandroid_net.so, libc.so, libdl.so, liblog.so, libm.so, libnativewindow.so, libneuralnetworks.so, libsync.so, libvndksupport.so, and libvulkan.so,</p>
+<p><strong>Eligible VNDK Libraries</strong></p>
+<p>Eligible VNDK Libraries (VNDK) are Framework Shared Libraries that are safe to be copied twice. Framework Modules and Vendor Modules can link with their own copies. A framework shared library can become an eligible VNDK library only if it satisfies the following criteria:
+- It does not send/receive IPCs to/from the framework.
+- It is not related to ART virtual machine.
+- It does not read/write files/partitions with unstable file formats.
+- It does not have special software license which requires legal reviews.
+- Its code owner does not have objections to vendor usages.</p>
+<p><strong>Framework-Only Libraries</strong></p>
+<p>Framework-Only Libraries (FWK-ONLY) are Framework Shared Libraries that do not belong to the categories mentioned above. These libraries are considered framework internal implementation details and must not be accessed by vendor modules. These Libraries have unstable ABIs/APIs and no API/ABI compatibility guarantees.</p>
+<p><strong>Same-Process HAL (SP-HAL)</strong></p>
+<p>Same-Process HAL (SP-HAL) is a set of predetermined HALs implemented as Vendor Shared Libraries and loaded into Framework Processes. SP-HALs are isolated by a linker namespace (controls the libraries and symbols that are visible to the shared libraries). SP-HALs must depend only on LL-NDK and VNDK-SP.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/vndksphal.png"><img alt="../../_images/vndksphal.png" src="../../_images/vndksphal.png" style="width: 834.0px; height: 474.0px;" /></a>
+</figure>
+<p>VNDK-SP is a predefined subset of eligible VNDK libraries. VNDK-SP libraries are carefully reviewed to ensure double-loading VNDK-SP libraries into framework processes does not cause problems. Both SP-HALs and VNDK-SPs are defined by Google.</p>
+<p>The following libraries are approved SP-HALs:
+- <code class="docutils literal notranslate"><span class="pre">libGLESv1_CM_${driver}.so</span></code>
+- <code class="docutils literal notranslate"><span class="pre">libGLESv2_${driver}.so</span></code>
+- <code class="docutils literal notranslate"><span class="pre">libGLESv3_${driver}.so</span></code>
+- <code class="docutils literal notranslate"><span class="pre">libEGL_${driver}.so</span></code>
+- <code class="docutils literal notranslate"><span class="pre">vulkan.${driver}.so</span></code>
+- <code class="docutils literal notranslate"><span class="pre">android.hardware.renderscript&#64;1.0-impl.so</span></code>
+- <code class="docutils literal notranslate"><span class="pre">android.hardware.graphics.mapper&#64;2.0-impl.so</span></code></p>
+<p>VNDK-SP libraries specify vndk: <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">support_system_process:</span> <span class="pre">true</span> <span class="pre">}</span></code> in their <code class="docutils literal notranslate"><span class="pre">Android.bp</span></code> files.
+If <code class="docutils literal notranslate"><span class="pre">vendor_available:</span> <span class="pre">false</span></code> is also specified, then these libraries are called VNDK-SP-Private and they are invisible to SP-HALS.</p>
+<p>The following are framework-only libraries with RS exceptions (FWK-ONLY-RS):
+libft2.so (Renderscript)
+libmediandk.so (Renderscript)</p>
+</section>
+<section id="vndk-versioning">
+<h2>VNDK versioning<a class="headerlink" href="#vndk-versioning" title="Permalink to this heading"></a></h2>
+<p>In Android 9, VNDK shared libraries are versioned:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ro.vndk.version</span></code> system property is automatically added to <code class="docutils literal notranslate"><span class="pre">/vendor/default.prop</span></code>.
+VNDK shared libraries are installed to <code class="docutils literal notranslate"><span class="pre">/system/lib[64]/vndk-${ro.vndk.version}</span></code>.
+VNDK-SP shared libraries are installed to <code class="docutils literal notranslate"><span class="pre">/system/lib[64]/vndk-sp-${ro.vndk.version}</span></code>.
+The dynamic linker configuration file is installed to <code class="docutils literal notranslate"><span class="pre">/system/etc/ld.config.${ro.vndk.version}.txt</span></code>.</p>
+</section>
+<section id="id4">
+<h2>Reference:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
+<p>[1]: <code class="docutils literal notranslate"><span class="pre">https://source.android.com/devices/architecture/vndk</span></code></p>
+</section>
+<hr class="docutils" />
+<section id="logging-and-debugging">
+<h2><strong>Logging and Debugging</strong><a class="headerlink" href="#logging-and-debugging" title="Permalink to this heading"></a></h2>
+<p>This topic covers the way to Logging, Log Analysis and Debugging netive applications in Android.</p>
+</section>
+<section id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="Permalink to this heading"></a></h2>
+<p>Android uses Logcat tool to display Logs on ADB Console or Logcat window of Android studio. Android Logging in general displays the system messages, garbage collection as and when it occur. The logs are displayed in realtime and also keeps the history.</p>
+<section id="logging-message-types">
+<h3>Logging Message Types<a class="headerlink" href="#logging-message-types" title="Permalink to this heading"></a></h3>
+<p>Following are the Logging Message types display from the highest to lowest priority.</p>
+<p><strong>C++:</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">ALOGE</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span><span class="n">message</span><span class="p">);</span> <span class="c1">//Error Message</span>
+<span class="n">ALOGW</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span><span class="n">message</span><span class="p">);</span> <span class="c1">//Warning Message</span>
+<span class="n">ALOGI</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span><span class="n">message</span><span class="p">);</span> <span class="c1">//Information Message</span>
+<span class="n">ALOGD</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span><span class="n">message</span><span class="p">);</span> <span class="c1">//Debug Message</span>
+<span class="n">ALOGV</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span><span class="n">message</span><span class="p">);</span> <span class="c1">//Verbose Message</span>
+</pre></div>
+</div>
+<p><strong>Java:</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">Log</span><span class="p">.</span><span class="n">e</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="p">);</span> <span class="c1">//Error Message</span>
+<span class="n">Log</span><span class="p">.</span><span class="n">w</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="p">);</span> <span class="c1">//Warning Message</span>
+<span class="n">Log</span><span class="p">.</span><span class="n">i</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="p">);</span> <span class="c1">//Information Message</span>
+<span class="n">Log</span><span class="p">.</span><span class="n">d</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="p">);</span> <span class="c1">//Debug Message</span>
+<span class="n">Log</span><span class="p">.</span><span class="n">v</span><span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">String</span><span class="p">);</span> <span class="c1">//Verbose Message</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="logcat-command-line-tool">
+<h2>Logcat Command Line Tool<a class="headerlink" href="#logcat-command-line-tool" title="Permalink to this heading"></a></h2>
+<p><strong>Options</strong></p>
+<p>The following table describes the command line options of logcat.</p>
+<p>Option and Description</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="n">buffer</span><span class="o">&gt;</span>
+<span class="n">Loads</span> <span class="n">an</span> <span class="n">alternate</span> <span class="n">log</span> <span class="n">buffer</span> <span class="k">for</span> <span class="n">viewing</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">event</span> <span class="ow">or</span> <span class="n">radio</span><span class="o">.</span> <span class="n">The</span> <span class="n">main</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">by</span> <span class="n">default</span><span class="o">.</span> <span class="n">See</span> <span class="n">Viewing</span> <span class="n">Alternative</span> <span class="n">Log</span> <span class="n">Buffers</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">c</span>
+<span class="n">Clears</span> <span class="p">(</span><span class="n">flushes</span><span class="p">)</span> <span class="n">the</span> <span class="n">entire</span> <span class="n">log</span> <span class="ow">and</span> <span class="n">exits</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">d</span>
+<span class="n">Dumps</span> <span class="n">the</span> <span class="n">log</span> <span class="n">to</span> <span class="n">the</span> <span class="n">screen</span> <span class="ow">and</span> <span class="n">exits</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">f</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;</span>
+<span class="n">Writes</span> <span class="n">log</span> <span class="n">message</span> <span class="n">output</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">&gt;.</span> <span class="n">The</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">stdout</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">g</span>
+<span class="n">Prints</span> <span class="n">the</span> <span class="n">size</span> <span class="n">of</span> <span class="n">the</span> <span class="n">specified</span> <span class="n">log</span> <span class="n">buffer</span> <span class="ow">and</span> <span class="n">exits</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">n</span> <span class="o">&lt;</span><span class="n">count</span><span class="o">&gt;</span>
+<span class="n">Sets</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">rotated</span> <span class="n">logs</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">count</span><span class="o">&gt;.</span> <span class="n">The</span> <span class="n">default</span> <span class="n">value</span> <span class="ow">is</span> <span class="mf">4.</span> <span class="n">Requires</span> <span class="n">the</span> <span class="o">-</span><span class="n">r</span> <span class="n">option</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">r</span> <span class="o">&lt;</span><span class="n">kbytes</span><span class="o">&gt;</span>
+<span class="n">Rotates</span> <span class="n">the</span> <span class="n">log</span> <span class="n">file</span> <span class="n">every</span> <span class="o">&lt;</span><span class="n">kbytes</span><span class="o">&gt;</span> <span class="n">of</span> <span class="n">output</span><span class="o">.</span> <span class="n">The</span> <span class="n">default</span> <span class="n">value</span> <span class="ow">is</span> <span class="mf">16.</span> <span class="n">Requires</span> <span class="n">the</span> <span class="o">-</span><span class="n">f</span> <span class="n">option</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">s</span>
+<span class="n">Sets</span> <span class="n">the</span> <span class="n">default</span> <span class="nb">filter</span> <span class="n">spec</span> <span class="n">to</span> <span class="n">silent</span><span class="o">.</span>
+
+<span class="o">-</span><span class="n">v</span> <span class="o">&lt;</span><span class="nb">format</span><span class="o">&gt;</span>
+<span class="n">Sets</span> <span class="n">the</span> <span class="n">output</span> <span class="nb">format</span> <span class="k">for</span> <span class="n">log</span> <span class="n">messages</span><span class="o">.</span> <span class="n">The</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">brief</span> <span class="nb">format</span><span class="o">.</span> <span class="n">For</span> <span class="n">a</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">supported</span> <span class="n">formats</span><span class="p">,</span> <span class="n">see</span> <span class="n">Controlling</span> <span class="n">Log</span> <span class="n">Output</span> <span class="n">Format</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>Logcat - Useful Command</strong></p>
+<p>Logcat commands can be used in adb console. Following are some useful commands used to debug or display Log messages</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>adb_shell$ logcat -b &lt;service&gt;
+View the buffer that contains specified service related messages. eg gnss, sensor, radio
+
+adb_shell$ logcat -b event
+View the buffer containing events-related messages.
+
+adb_shell$ logcat -b main
+default
+
+adb_shell$ logcat -c
+Clears the entire log and exits.
+
+adb_shell$ logcat -d
+Dumps the log to the screen and exits.
+
+adb_shell$ logcat -f logs.text
+Writes log message output to logs.text
+
+adb_shell$ logcat -g
+Prints the size of the specified log buffer and exits.
+
+adb_shell$ logcat -n &lt;count&gt;
+Sets the maximum number of rotated logs to &lt;count&gt;.
+
+adb_shell$ logcat -r &lt;kbytes&gt;
+Rotates the log file every &lt;kbytes&gt; of output. The default value is <span class="m">16</span>. Requires the -f option.
+
+adb_shell$ logcat -v brief
+Display priority/tag and PID of the process issuing the message <span class="o">(</span>default format<span class="o">)</span>.
+
+adb_shell$ logcat -v process
+Display PID only.
+
+adb_shell$ logcat -v tag
+Display the priority/tag only.
+
+adb_shell$ logcat -v raw
+Display the raw log message, with no other metadata fields.
+
+adb_shell$ logcat -v <span class="nb">time</span>
+Display the date, invocation time, priority/tag, and PID of the process issuing the message.
+
+adb_shell$ logcat -v threadtime
+Display the date, invocation time, priority, tag, and the PID and TID of the thread issuing the message.
+
+adb_shell$ logcat -v long
+Display all metadata fields and separate messages with blank lines.
+</pre></div>
+</div>
+</section>
+<section id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Permalink to this heading"></a></h2>
+<p>GDB can be used to debug a native application.</p>
+<p><strong>Set GDB Server on Device:</strong></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Set SeLinux to permissive mode
+<span class="c1"># su -c setenforce 0</span>
+
+Push the gdbserver to the device
+<span class="c1"># adb push ~/android-sdk-linux/ndk-bundle/prebuilt/android-&lt;arch&gt;/gdbserver/gdbserver /data/local/tmp</span>
+
+Change permissions of gdbserver to Executable
+adb_shell$ chmod <span class="m">777</span> /data/local/tmp/gdbserver
+
+Initiate the forwarding of a TCP port on which GDB
+adb forward tcp:5555 tcp:5555
+
+Run the Application with GDB
+adb_shell$ ./data/local/tmp/gdbserver :5555 ./&lt;path&gt;/testapplication
+
+If above <span class="k">case</span> doesnot work, fetch the pid of the process by using <span class="nb">command</span>
+adb_shell$ ps <span class="p">|</span> grep testapplication
+adb_shell$ ./data/local/tmp/gdbserver :5555 &lt;PID of testapplication&gt;
+
+The application will <span class="nb">wait</span> <span class="k">for</span> the client to connect
+</pre></div>
+</div>
+<p><strong>Set GDB Client on Host PC:</strong></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>hostpc$ aarch64-linux-android-gdb
+hostpc$ <span class="nb">set</span> sysroot
+hostpc$ target remote &lt;device-ip-address&gt;:&lt;<span class="m">5555</span>&gt;
+hostpc$ <span class="k">continue</span>
+</pre></div>
+</div>
+<p>Following this you will be able to debug the application that runs on target device from HostPC.</p>
+</section>
+<section id="crash-dumps-and-tombstones">
+<h2>Crash dumps and tombstones<a class="headerlink" href="#crash-dumps-and-tombstones" title="Permalink to this heading"></a></h2>
+<p>When a service crashes, a crash dump is written to logcat and a more detailed tombstone file is generated in path /data/tombstones/. The tombstone contains stack traces for all the threads in the crashing process, a full memory map, and a list of all open file descriptors.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../05-BootAndPartitions/BootAndPartitions.html" class="btn btn-neutral float-left" title="BootAndPartitions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../07-AndroidIPC/AndroidIPC.html" class="btn btn-neutral float-right" title="AndroidIPC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

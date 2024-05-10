@@ -1,0 +1,287 @@
+AppCoreComponents
+=====================================
+
+**Activities**
+--------------------
+
+An Activity is an application component that provides a screen with which users can interact in order to do something, such as dial the phone, take a photo, send an email, or view a map. Each activity is given a window in which to draw its user interface. The window typically fills the screen, but may be smaller than the screen and float on top of other windows.
+
+Creating an Activity:
+------------------------
+To create an activity, you must create a subclass of Activity (or an existing subclass of it). In your subclass, you need to implement callback methods that the system calls when the activity transitions between various states of its lifecycle, such as when the activity is being created, stopped, resumed, or destroyed.
+
+Template:
+
+.. code-block:: 
+
+    public class ExampleActivity extends Activity {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // The activity is being created.
+        }
+
+        @Override
+        protected void onStart() {
+            super.onStart();
+            // The activity is about to become visible.
+        }
+
+        @Override
+        protected void onResume() {
+            super.onResume();
+            // The activity has become visible (it is now "resumed")
+        }
+
+        @Override
+        protected void onPause() {
+            super.onPause();
+            // Another activity is taking focus (this activity is about to be "paused").
+        }
+
+        @Override
+        protected void onStop() {
+            super.onStop();
+            // The activity is no longer visible (it is now "stopped")
+        }
+
+        @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            // The activity is about to be destroyed
+        }
+    }
+
+
+Activity Lifecycle Flowchart
+-------------------------------
+.. figure:: activities.png
+   :scale: 100 %
+
+
+Reference:
+--------------------
+[1]: ``https://stuff.mit.edu/afs/sipb/project/android/docs/guide/components/activities.html``
+
+--------------------
+
+**Services**
+--------------------
+A Service is an application component that can perform long-running operations in the background and does not provide a user interface. Another application component can start a service and it will continue to run in the background even if the user switches to another application. Additionally, a component can bind to a service to interact with it and even perform interprocess communication (IPC). For example, a service might handle network transactions, play music, perform file I/O, or interact with a content provider, all from the background.
+
+A service can essentially take two forms:
+
+Started
+~~~~~~~~
+A service is "started" when an application component (such as an activity) starts it by calling startService(). Once started, a service can run in the background indefinitely, even if the component that started it is destroyed. Usually, a started service performs a single operation and does not return a result to the caller. For example, it might download or upload a file over the network. When the operation is done, the service should stop itself.
+
+Bound
+~~~~~~~~
+A service is "bound" when an application component binds to it by calling bindService(). A bound service offers a client-server interface that allows components to interact with the service, send requests, get results, and even do so across processes with interprocess communication (IPC). A bound service runs only as long as another application component is bound to it. Multiple components can bind to the service at once, but when all of them unbind, the service is destroyed.
+
+Callbacks:
+--------------
+To create a service, you must create a subclass of Service (or one of its existing subclasses). In your implementation, you need to override some callback methods that handle key aspects of the service lifecycle and provide a mechanism for components to bind to the service, if appropriate. The most important callback methods you should override are:
+
+onStartCommand()
+~~~~~~~~~~~~~~~~~~
+The system calls this method when another component, such as an activity, requests that the service be started, by calling startService(). Once this method executes, the service is started and can run in the background indefinitely. If you implement this, it is your responsibility to stop the service when its work is done, by calling stopSelf() or stopService().
+
+onBind()
+~~~~~~~~~~~~~~~
+The system calls this method when another component wants to bind with the service (such as to perform RPC), by calling bindService(). In your implementation of this method, you must provide an interface that clients use to communicate with the service, by returning an IBinder. You must always implement this method, but if you don't want to allow binding, then you should return null.
+
+onCreate()
+~~~~~~~~~~~~~~~
+The system calls this method when the service is first created, to perform one-time setup procedures (before it calls either onStartCommand() or onBind()). If the service is already running, this method is not called.
+
+onDestroy()
+~~~~~~~~~~~~~~~
+The system calls this method when the service is no longer used and is being destroyed. Your service should implement this to clean up any resources such as threads, registered listeners, receivers, etc. This is the last call the service receives.
+
+Template:
+~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+    public class ExampleService extends Service {
+        int mStartMode; // indicates how to behave if the service is killed
+        IBinder mBinder; // interface for clients that bind
+        boolean mAllowRebind; // indicates whether onRebind should be used
+
+        @Override
+        public void onCreate() {
+            // The service is being created
+        }
+
+        @Override
+        public int onStartCommand(Intent intent, int flags, int startId) {
+            // The service is starting, due to a call to startService()
+            return mStartMode;
+        }
+
+        @Override
+        public IBinder onBind(Intent intent) {
+            // A client is binding to the service with bindService()
+            return mBinder;
+        }
+
+        @Override
+        public boolean onUnbind(Intent intent) {
+            // All clients have unbound with unbindService()
+            return mAllowRebind;
+        }
+
+        @Override
+        public void onRebind(Intent intent) {
+            // A client is binding to the service with bindService(),
+            // after onUnbind() has already been called
+        }
+
+        @Override
+        public void onDestroy() {
+            // The service is no longer used and is being destroyed
+        }
+    }
+
+
+Service Lifecycle Flowchart
+-------------------------------
+.. figure:: services.png
+   :scale: 100 %
+
+
+Reference:
+--------------------
+[1]: ``https://stuff.mit.edu/afs/sipb/project/android/docs/guide/components/services.html``
+
+--------------------------
+
+**Broadcast Receivers**
+--------------------------
+
+Broadcast receiver are one of the four core android components. Broadcast Receivers are intended to be used to receive and respond to broadcast messages from other applications or from the system. An app can also initiate broadcasts to let other apps know that some resource will be available to the device and soon will be available for them to use. An example for broadcast receiver can be when WiFi is turned on or off it is broadcasted to the system and broadcast receiver who will intercept this communication and will initiate appropriate action.
+
+A broadcast receiver is implemented as a subclass of BroadcastReceiver class and each message is broadcasted as an Intent object.
+
+Handling Broadcast Receivers
+--------------------------------
+
+Manifest File:
+~~~~~~~~~~~~~~~~
+
+.. code-block:: 
+
+    <receiver android:name=".MyBroadcastReceiver" android:exported="true">
+    <intent-filter>
+    <action android:name="android.net.conn.CONNECTIVITY_CHANGE""/>
+    </intent-filter>
+    </receiver>
+
+
+BroadcastReceiver Register with Intents:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+    IntentFilter intentFilter = new IntentFilter();
+    intentFilter.addAction(getPackageName() + "android.net.conn.CONNECTIVITY_CHANGE");
+
+    MyBroadcastReceiver myReceiver = new MyBroadcastReceiver();
+    registerReceiver(myReceiver, filter);
+
+
+BroadcastReceiver UnRegister:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: java
+
+    @Override protected void onPause() {
+        unregisterReceiver(myReceiver);
+        super.onPause();
+    }
+
+--------------------------
+
+**Content Providers**
+--------------------------
+
+Content providers are one of the four core android components. They are manage access to a structured set of data that is stored in Sqlite Database. Content providers can be used to share data between two different apps. Content Providers internally uses Sqlite library.
+
+Accessing a provider
+------------------------
+An application accesses the data from a content provider with a ContentResolver client object. The ContentResolver methods provide the basic "CRUD" (create, retrieve, update, and delete) functions of persistent storage. The ContentResolver object in the client application's process and the ContentProvider object in the application that owns the provider automatically handle inter-process communication. ContentProvider also acts as an abstraction layer between database and the external appearance of data as tables. To access a provider, the application has to request permissions in its manifest file. This is described in more detail in the section Content Provider Permissions.
+
+For example, to get a list of the words and their locales from the User Dictionary Provider, you call ContentResolver.query(). The query() method calls the ContentProvider.query() method defined by the User Dictionary Provider. The following lines of code show a ContentResolver.query() call:
+
+.. code-block:: java
+
+    // Queries the user dictionary and returns results
+    mCursor = getContentResolver().query(
+        UserDictionary.Words.CONTENT_URI, // The content URI of the words table
+        mProjection, // The columns to return for each row
+        mSelectionClause // Selection criteria
+        mSelectionArgs, // Selection criteria
+        mSortOrder); // The sort order for the returned rows
+
+
+    // This defines a one-element String array to contain the selection argument.
+    String[] mSelectionArgs = {""};
+
+    // Gets a word from the UI
+    mSearchString = mSearchWord.getText().toString();
+
+    // Remember to insert code here to check for invalid or malicious input.
+
+    // If the word is the empty string, gets everything
+    if (TextUtils.isEmpty(mSearchString)) {
+        // Setting the selection clause to null will return all words
+        mSelectionClause = null;
+        mSelectionArgs[0] = "";
+    } else {
+        // Constructs a selection clause that matches the word that the user entered.
+        mSelectionClause = UserDictionary.Words.WORD + " = ?";
+
+        // Moves the user's input string to the selection arguments.
+        mSelectionArgs[0] = mSearchString;
+    }
+
+    // Does a query against the table and returns a Cursor object
+    mCursor = getContentResolver().query(
+        UserDictionary.Words.CONTENT_URI, // The content URI of the words table
+        mProjection, // The columns to return for each row
+        mSelectionClause // Either null, or the word the user entered
+        mSelectionArgs, // Either empty, or the string the user entered
+        mSortOrder); // The sort order for the returned rows
+
+    // Some providers return null if an error occurs, others throw an exception
+    if (null == mCursor) {
+        /*
+        * Insert code here to handle the error. Be sure not to use the cursor! You may want to
+        * call android.util.Log.e() to log this error.
+        */
+        // If the Cursor is empty, the provider found no matches
+    } else if (mCursor.getCount() < 1) {
+
+        /*
+        * Insert code here to notify the user that the search was unsuccessful. This isn't necessarily
+        * an error. You may want to offer the user the option to insert a new row, or re-type the
+        * search term.
+        */
+
+    } else {
+        // Insert code here to do something with the results
+    }
+
+
+Reference:
+--------------------
+[1]: ``https://stuff.mit.edu/afs/sipb/project/android/docs/guide/topics/providers/content-providers.html``
+
+
+
+
+
+
+
+ 

@@ -1,0 +1,24 @@
+############
+Easwar
+############
+
+
+About
+---------
+Site Hosting programming notes. 
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: CV
+
+   profile.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: OS
+
+   reference.rst
+
+
+
