@@ -5,7 +5,10 @@ Easwarnet
 
 Notes
 ---------
-Handy notes for Embedded Software Development in Embedded Android and Embedded Linux. 
+- Notes for Embedded Software Development in Embedded Android and Embedded Linux.
+- Log of my experiences and findings in the tech world
+- A Collection of useful information for devs
+
 
 
 .. toctree::
@@ -17,6 +20,14 @@ Handy notes for Embedded Software Development in Embedded Android and Embedded L
    cpp-container.rst
    cpp-stdlib.rst
    cpp-general.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: AOSP Notes
+   
+   aosp-general.rst
+   aosp-haltheory.rst
+   aosp-ipc.rst
 
 .. toctree::
    :maxdepth: 1
@@ -50,11 +61,4 @@ Handy notes for Embedded Software Development in Embedded Android and Embedded L
    c-general.rst
    c-basicalgo.rst
    c-tricks.rst
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Reference
-
-   reference.rst
-   profile.rst
 

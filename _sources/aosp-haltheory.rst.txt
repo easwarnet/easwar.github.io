@@ -1,0 +1,158 @@
+AOSP - Theory of HAL
+=======================
+
+**Different types of HALs**
+--------------------------------
+
+Here's a breakdown of the different types of HALs (Hardware Abstraction Layers) you'll encounter in Android:
+
+**1. Binderized HALs:**
+
+* Introduced in Android 8.0 (Oreo) and mandatory for devices launching with this version or later.
+* Utilize the Binder IPC (Inter-Process Communication) mechanism for communication between the Android framework and the HAL service.
+* Offer several advantages:
+    * **Security:** Enforces stricter security boundaries between processes through Binder's permission model and sandboxing.
+    * **Stability:** Binder provides a robust communication channel with error handling and data marshalling/unmarshalling capabilities.
+    * **Flexibility:** Binderized HALs can run in separate processes from the framework, allowing for modularity and independent development.
+* Implementation involves:
+    * Defining the HAL interface using the Hardware Interface Definition Language (HIDL).
+    * Writing the HAL service in C++ that implements the defined methods.
+
+**2. Passthrough HALs:**
+
+* Primarily used for devices upgrading to Android O from earlier versions.
+* Act as a wrapper around existing conventional or legacy HALs.
+* Offer two modes:
+    * **Binderized mode:** Exposes the legacy HAL through a Binderized interface, allowing communication using Binder IPC.
+    * **Same-process (Passthrough) mode:** Provides direct access to the legacy HAL within the same process as the framework client, bypassing Binder.
+* Advantages:
+    * Enables gradual migration of legacy HALs to the Binderized model.
+    * Avoids complete rewriting of existing HAL code for devices upgrading to newer Android versions.
+* Disadvantages:
+    * Same-process mode can have security implications if proper isolation mechanisms are not implemented.
+    * Not recommended for new HAL development due to potential security risks and limitations.
+
+**3. Same-Process HALs:**
+
+* A specific mode within Passthrough HALs, allowing direct in-process access to the legacy HAL service.
+* Offers faster communication compared to Binderized mode due to the absence of inter-process overhead.
+* However, same-process mode comes with security concerns:
+    * Tight coupling between the framework and HAL can lead to cascading failures if the HAL crashes.
+    * Requires careful implementation to ensure proper memory management and isolation between components.
+
+**4. Legacy HALs:**
+
+* Predecessors to Binderized and Passthrough HALs, used in Android versions before Oreo.
+* Implemented directly in the framework source code or provided by device vendors.
+* Often lack a well-defined interface or utilize non-standardized communication mechanisms.
+* With the introduction of Binderized HALs, legacy versions are being phased out in favor of a more secure and modular approach.
+
+**Choosing the Right HAL Type:**
+
+* For new HAL development in Android 8.0 and later, **Binderized HALs** are the preferred choice due to their security, stability, and flexibility.
+* **Passthrough HALs** can be a temporary solution for migrating legacy HALs to newer Android versions but should be transitioned to Binderized HALs eventually.
+* **Same-process mode** should be used cautiously due to potential security risks and is generally not recommended for new development.
+* **Legacy HALs** are no longer the recommended approach and should be updated to Binderized versions for better maintainability and security.
+
+
+
+Legacy HALs, while deprecated in Android 8.0 (Oreo) and later, are still important to understand for historical context and potentially encountering them in older devices. Here's an explanation with an example:
+
+**Legacy HALs:**
+
+* Pre-date the standardized Binderized HAL approach introduced in Android 8.0.
+* Lack a well-defined interface and often use non-standard communication mechanisms.
+* Can be found in the AOSP source code under various locations, making them difficult to manage and maintain.
+
+**Example: Audio Legacy HAL:**
+
+A common example of a legacy HAL is the audio subsystem. In older versions of AOSP (pre-Oreo), the audio HAL might be implemented as:
+
+* Code scattered throughout the `hardware/libhardware` directory, with header files potentially located in `hardware/include/hardware`.
+* Functions for audio control, playback, and recording might have non-descriptive names and lack a consistent interface.
+* Communication between the framework and the HAL could be achieved through custom mechanisms like ioctls (control operations) or memory-mapped I/O.
+
+**Drawbacks of Legacy HALs:**
+
+* **Security concerns:** Lack of a proper separation between framework and HAL can lead to vulnerabilities.
+* **Maintainability issues:** Inconsistent interface and scattered codebase make them difficult to understand and update.
+* **Limited flexibility:** Difficult to adapt or extend functionality without modifying the framework code itself.
+
+**Legacy HAL vs. Binderized HAL:**
+
+The table below summarizes the key differences between Legacy HALs and Binderized HALs:
+
++-------------------------+-----------------------------+--------------------------------+
+| Feature                 | Legacy HAL                  | Binderized HAL                 |
++=========================+=============================+================================+
+| Interface               | Non-standardized, scattered | Standardized using HIDL        |
++-------------------------+-----------------------------+--------------------------------+
+| Communication           | Custom mechanisms (ioctls)  | Binder IPC                     |
++-------------------------+-----------------------------+--------------------------------+
+| Security                | Lower security guarantees   | Enforced security boundaries   |
++-------------------------+-----------------------------+--------------------------------+
+| Maintainability         | Difficult to maintain       | More modular and maintainable  |
++-------------------------+-----------------------------+--------------------------------+
+| Flexibility             | Limited flexibility         | More flexible and extensible   |
++-------------------------+-----------------------------+--------------------------------+
+
+**Conclusion:**
+
+While legacy HALs served their purpose in earlier Android versions, Binderized HALs offer a superior approach for modern development. Understanding legacy HALs is still valuable for historical context and potentially troubleshooting older devices. If you encounter legacy HALs in your AOSP exploration, remember their limitations and the advantages of migrating to Binderized HALs whenever possible.
+
+--------------------
+
+**HALs in Android**
+--------------------------------
+
+Creating an Android HAL (Hardware Abstraction Layer) involves several steps, but it can be a rewarding experience for developers who want to interact directly with hardware components. Here's a breakdown of the process:
+
+**1. Define the HAL Interface:**
+
+- Start by defining the interface for your HAL using Hardware Interface Definition Language (HIDL). This file specifies the functions, data structures, and constants that the HAL will expose to the Android framework.
+- You can find existing HIDL files in the `hardware/interfaces` directory of the Android Open Source Project (AOSP).
+- Use a text editor or an IDE with HIDL support to write your interface file.
+
+**2. Implement the HAL Service:**
+
+- Once you have the interface defined, you need to implement the actual service that provides the functionality. This typically involves writing C++ code for the server-side implementation.
+- The service should implement the methods and data structures defined in the HAL interface.
+- You can use the `hardware/libhardware` directory in AOSP as a reference for existing HAL implementations.
+
+**3. Build the HAL Module:**
+
+- To build your HAL module, you need to create a `Android.mk` file that specifies the source files, dependencies, and build flags.
+- You can find examples of `Android.mk` files in the `hardware/interfaces` and `hardware/libhardware` directories of AOSP.
+- Use the `make` command to build your HAL module.
+
+**4. Test and Debug your HAL:**
+
+- Once your HAL module is built, you can test it using an emulator or a physical device.
+- The Android framework provides tools like `hidl-validator` and `hidl-server` to help you test your HAL functionality.
+- Use appropriate logging and debugging techniques to identify and fix any issues.
+
+**5. Integrate with the Android Framework:**
+
+- Finally, you need to integrate your HAL module with the Android framework. This typically involves adding entries to various AOSP configuration files like `BoardConfig.mk` and `default.conf`.
+- You may also need to modify the framework code to use your HAL service.
+
+**Here are some additional resources that you may find helpful:**
+
+* **Android HIDL Guide:** [https://source.android.com/docs/core/architecture/configuration/archive/interface](https://source.android.com/docs/core/architecture/configuration/archive/interface)
+* **Android HAL Overview:** [https://source.android.com/reference/hal](https://source.android.com/reference/hal)
+* **AOSP hardware/interfaces directory:** [https://android.googlesource.com/platform/hardware/interfaces/](https://android.googlesource.com/platform/hardware/interfaces/)
+* **AOSP hardware/libhardware directory:** [https://source.android.com/](https://source.android.com/)
+
+Remember, creating an Android HAL can be a complex process, so it's important to have a good understanding of Android development and HIDL before you begin. Be prepared to invest time and effort in learning and troubleshooting, but the satisfaction of successfully interacting with hardware directly can be well worth it!
+
+
+
+
+
+
+
+
+
+
+
+

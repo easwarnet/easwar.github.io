@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AOSP - General &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="AOSP - Theory of HAL" href="aosp-haltheory.html" />
+    <link rel="prev" title="C++ - General" href="cpp-general.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Notes</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AOSP - General</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#android-runtime-art-in-aosp"><strong>Android Runtime (ART) in AOSP</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-context"><strong>Security Context</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#wakelocks"><strong>Wakelocks</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aosp-haltheory.html">AOSP - Theory of HAL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aosp-ipc.html">AOSP - IPC</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="android/01-Introduction/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/02-AndroidBuildSystem/AndroidBuildSystem.html">AndroidBuildSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/03-AndroidTools/AndroidTools.html">AndroidTools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/04-SoftwareUpdate/SoftwareUpdate.html">Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/05-BootAndPartitions/BootAndPartitions.html">BootAndPartitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/06-NativeAppDevelopment/NativeAppDevelopment.html">NativeAppDevelopment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/07-AndroidIPC/AndroidIPC.html">AndroidIPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/08-AppCoreComponents/AppCoreComponents.html">AppCoreComponents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/09-TestFramework/TestFramework.html">TestFramework</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>AOSP - General</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="aosp-general">
+<h1>AOSP - General<a class="headerlink" href="#aosp-general" title="Permalink to this heading"></a></h1>
+<section id="android-runtime-art-in-aosp">
+<h2><strong>Android Runtime (ART) in AOSP</strong><a class="headerlink" href="#android-runtime-art-in-aosp" title="Permalink to this heading"></a></h2>
+<p>The Android Runtime (ART) is a core component of the Android system responsible for managing and executing app code on Android devices. Here’s a breakdown of key information about ART in the context of AOSP:</p>
+<p><strong>Functionality:</strong></p>
+<ul class="simple">
+<li><p>Loads and executes DEX (Dalvik Executable) files, the bytecode format used by Android apps.</p></li>
+<li><p>Manages memory allocation and garbage collection for apps.</p></li>
+<li><p>Provides security features like sandboxing to isolate apps from each other and the system.</p></li>
+<li><p>Optimizes app performance through Just-In-Time (JIT) compilation, where machine code is generated for frequently executed parts of the app.</p></li>
+</ul>
+<p><strong>Evolution and Benefits over Dalvik (Previous Runtime):</strong></p>
+<ul class="simple">
+<li><p>Introduced in Android 4.4 (KitKat) as a successor to Dalvik.</p></li>
+<li><dl class="simple">
+<dt>Offers several advantages over Dalvik:</dt><dd><ul>
+<li><p><strong>Improved Performance:</strong> Achieves faster app startup times and overall execution speed through advanced memory management and JIT compilation.</p></li>
+<li><p><strong>Enhanced Security:</strong> Provides a more robust security model with features like Address Space Layout Randomization (ASLR) to mitigate vulnerabilities.</p></li>
+<li><p><strong>Better Memory Efficiency:</strong> Optimizes memory usage by employing techniques like app memory compaction and low-latency garbage collection.</p></li>
+<li><p><strong>Advanced Garbage Collection:</strong> Implements a generational garbage collector for more efficient memory management.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>ART in AOSP Development:</strong></p>
+<ul class="simple">
+<li><p>The ART source code is located in the <cite>frameworks/base/core/jni</cite> directory within the AOSP tree.</p></li>
+<li><p>Developers can modify and contribute to ART’s functionality to improve performance, security, and other aspects of the runtime.</p></li>
+<li><dl class="simple">
+<dt>Understanding ART’s internals is crucial for developers working on:</dt><dd><ul>
+<li><p>Optimizing app performance.</p></li>
+<li><p>Debugging app-related issues.</p></li>
+<li><p>Contributing to the core Android framework.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Key Concepts:</strong></p>
+<ul class="simple">
+<li><p><strong>DEX files:</strong> Compiled bytecode representation of Android apps.</p></li>
+<li><p><strong>JIT compilation:</strong> Converting DEX bytecode to machine code for faster execution on the device’s processor.</p></li>
+<li><p><strong>Garbage collection:</strong> Reclaiming unused memory allocated by apps.</p></li>
+<li><p><strong>Sandboxing:</strong> Isolating apps from each other and the system to prevent unauthorized access and improve security.</p></li>
+</ul>
+<p><strong>Resources:</strong></p>
+<ul class="simple">
+<li><p>Android developer documentation on ART: [<a class="reference external" href="https://source.android.com/docs/core/runtime](https://source.android.com/docs/core/runtime">https://source.android.com/docs/core/runtime](https://source.android.com/docs/core/runtime</a>)</p></li>
+<li><p>AOSP source code for ART: [<a class="reference external" href="https://source.android.com/](https://source.android.com/">https://source.android.com/](https://source.android.com/</a>) (navigate to the mentioned directory)</p></li>
+</ul>
+<p><strong>Additional Notes:</strong></p>
+<ul class="simple">
+<li><p>ART is constantly evolving with each new Android version. AOSP updates often include improvements and optimizations to the runtime.</p></li>
+<li><p>While ART is the default runtime for most modern Android devices, some legacy systems might still be using Dalvik.</p></li>
+</ul>
+<p>I hope this explanation provides a comprehensive overview of the Android Runtime (ART) in the context of AOSP! Feel free to ask if you have any further questions about specific aspects of ART or its role within the Android platform.</p>
+</section>
+<hr class="docutils" />
+<section id="security-context">
+<h2><strong>Security Context</strong><a class="headerlink" href="#security-context" title="Permalink to this heading"></a></h2>
+<p><strong>Meaning of “u:object_r:accessibility_service:s0” in the context of AOSP’s SELinux framework:</strong></p>
+<p><strong>Breakdown:</strong></p>
+<ul class="simple">
+<li><p><strong>u:</strong> User. This indicates that the rule applies to processes running as a user (as opposed to “system” processes).</p></li>
+<li><p><strong>object_r:</strong> Object type. This specifies that the rule governs a specific type of object in the SELinux system, in this case, an object of the “accessibility_service” type.</p></li>
+<li><p><strong>accessibility_service:</strong> The name of the SELinux domain to which this object belongs. This domain defines the permissions granted to processes or objects associated with accessibility services.</p></li>
+<li><p><strong>s0:</strong> Security level. This represents the lowest security level in SELinux, indicating that the object doesn’t contain highly sensitive information.</p></li>
+</ul>
+<p><strong>Purpose:</strong></p>
+<ul class="simple">
+<li><p><strong>Controls access to accessibility services:</strong> This rule enforces security restrictions on processes interacting with accessibility services, ensuring that only authorized processes can access their features and data.</p></li>
+<li><p><strong>Protects user privacy:</strong> Accessibility services often handle sensitive user data, such as screen content and input events. This rule helps safeguard this information by restricting access to authorized processes.</p></li>
+<li><p><strong>Prevents unauthorized actions:</strong> It helps mitigate potential security risks that could arise if malicious processes gained access to accessibility services.</p></li>
+</ul>
+<p><strong>Context:</strong></p>
+<ul class="simple">
+<li><p><strong>Service_contexts file:</strong> This file is part of AOSP’s SELinux configuration and defines security labels for various system services.</p></li>
+<li><p><strong>Accessibility services:</strong> These services enhance device accessibility for users with disabilities, providing features like text-to-speech, screen magnification, and voice control.</p></li>
+</ul>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p>This rule enforces security for accessibility services in AOSP.</p></li>
+<li><p>It protects user privacy and prevents unauthorized access.</p></li>
+<li><p>SELinux is a mandatory access control system that plays a crucial role in Android security.</p></li>
+</ul>
+<p>Table for security context in service_contexts in aosp:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Security Context</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>u:object_r:accessibility_service:s0</p></td>
+<td><p>Accessibility service object (low security)</p></td>
+</tr>
+<tr class="row-odd"><td><p>u:object_r:alarm_manager:s0</p></td>
+<td><p>Alarm manager object (low security)</p></td>
+</tr>
+<tr class="row-even"><td><p>u:object_r:audio_server:s0</p></td>
+<td><p>Audio server object (low security)</p></td>
+</tr>
+<tr class="row-odd"><td><p>u:object_r:battery_service:s0</p></td>
+<td><p>Battery service object (low security)</p></td>
+</tr>
+<tr class="row-even"><td><p>u:object_r:binder:s0</p></td>
+<td><p>Binder object (low security)</p></td>
+</tr>
+</tbody>
+</table>
+<p>This is just a small sample of the many security contexts that are defined in the service_contexts file. The actual list of contexts will vary depending on the specific AOSP version and device configuration.</p>
+</section>
+<hr class="docutils" />
+<section id="wakelocks">
+<h2><strong>Wakelocks</strong><a class="headerlink" href="#wakelocks" title="Permalink to this heading"></a></h2>
+<p>In the context of Android, a <strong>wakelock</strong> is a mechanism that prevents the device from entering sleep mode and keeps the CPU or specific components like the screen or network active. This functionality comes with both benefits and drawbacks, so it’s important to use wakelocks wisely.</p>
+<p><strong>Benefits:</strong></p>
+<ul class="simple">
+<li><p><strong>Ensures smooth app functionality:</strong> Some apps, like music players or navigation apps, need continuous access to resources like the CPU or network to function properly. A wakelock ensures that these resources remain available, preventing interruptions in playback or route guidance.</p></li>
+<li><p><strong>Enables background tasks:</strong> Certain tasks, like file downloads or data uploads, might benefit from a temporary wakelock to be completed efficiently without interruptions caused by the device going to sleep.</p></li>
+<li><p><strong>Provides responsiveness:</strong> Some apps offer functionalities that require immediate user interaction, like voice assistants or messaging platforms. A wakelock can prevent the device from sleeping and ensure prompt responses to user actions.</p></li>
+</ul>
+<p><strong>Drawbacks:</strong></p>
+<ul class="simple">
+<li><p><strong>Battery drain:</strong> Keeping the device awake significantly impacts battery life. Frequent or unnecessary wakelocks can drain the battery quickly, leading to shorter usage times.</p></li>
+<li><p><strong>Performance impact:</strong> Holding wakelocks for extended periods can put a strain on the CPU and other components, potentially affecting the overall performance and responsiveness of the device.</p></li>
+<li><p><strong>Heat generation:</strong> Continuous CPU activity due to wakelocks can generate heat, which can be detrimental to the device’s health and performance in the long run.</p></li>
+</ul>
+<p><strong>Using wakelocks responsibly:</strong></p>
+<p>It’s crucial to use wakelocks thoughtfully and for legitimate purposes. Here are some best practices:</p>
+<ul class="simple">
+<li><p><strong>Minimize usage:</strong> Only use wakelocks when absolutely necessary for app functionality.</p></li>
+<li><p><strong>Keep them short:</strong> Release wakelocks as soon as the task requiring them is completed.</p></li>
+<li><p><strong>Choose the right type:</strong> Different wakelock types offer varying levels of resource access. Use the most appropriate type for your specific need.</p></li>
+<li><p><strong>Monitor wakelocks:</strong> Utilize battery usage and developer tools to identify apps using excessive wakelocks and find ways to optimize their behavior.</p></li>
+</ul>
+<p>By understanding the benefits and drawbacks of wakelocks and using them responsibly, developers and users can contribute to a smoother, more efficient, and longer-lasting experience on their Android devices.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cpp-general.html" class="btn btn-neutral float-left" title="C++ - General" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="aosp-haltheory.html" class="btn btn-neutral float-right" title="AOSP - Theory of HAL" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

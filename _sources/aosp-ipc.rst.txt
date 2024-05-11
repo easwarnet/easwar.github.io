@@ -1,0 +1,258 @@
+AOSP - IPC
+=============
+
+**HIDL Callback**
+--------------------------------
+
+**Here's an example of how ICallback is used in HIDL to enable asynchronous communication between a client and a server:**
+
+**HAL Definition (`IHello.hal`):**
+
+.. code-block::
+
+    package vendor.sample.hello@1.0;
+
+    interface IHello {
+        init();
+        release();
+        setCallback(IHelloCallback callback);
+    };
+
+
+**Callback Interface (`IHelloCallback.hal`):**
+
+.. code-block::
+
+    package vendor.sample.hello@1.0;
+
+    interface IHelloCallback {
+        onEvent(string message);
+    };
+
+
+**Server Implementation (`HelloService.cpp`):**
+
+.. code-block:: c++
+
+    class HelloService : public IHello {
+    public:
+        // ... other methods ...
+
+        Return<void> setCallback(const sp<IHelloCallback>& callback) override {
+            mCallback = callback;
+            return Void();
+        }
+
+        void notifyClient() {
+            if (mCallback != nullptr) {
+                mCallback->onEvent("Hello from server!");
+            }
+        }
+
+    private:
+        sp<IHelloCallback> mCallback;
+    };
+
+
+**Client Implementation (`MainActivity.java`):**
+
+.. code-block:: java
+
+    public class MainActivity extends Activity {
+        private IHello mHelloService;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            // ... get service instance ...
+
+            mHelloService.setCallback(new IHelloCallback.Stub() {
+                @Override
+                public void onEvent(String message) {
+                    Log.d("MainActivity", "Received callback: " + message);
+                }
+            });
+        }
+
+        public void onButtonClick(View view) {
+            mHelloService.notifyClient();
+        }
+    }
+
+
+**Explanation:**
+
+1. **Interface Definition:**
+   - The `IHello` interface includes a method `setCallback` to register a client-side callback object.
+   - The `IHelloCallback` interface defines the callback method `onEvent` that the server will invoke.
+
+2. **Server Implementation:**
+   - The `HelloService` class implements `IHello`.
+   - `setCallback` stores the client's callback object.
+   - `notifyClient` uses the stored callback to send an asynchronous message to the client.
+
+3. **Client Implementation:**
+   - The client creates an implementation of `IHelloCallback`.
+   - It passes this callback object to the server's `setCallback` method.
+   - When the server calls `notifyClient`, the client's `onEvent` method is invoked.
+
+**Key Points:**
+
+- ICallback enables asynchronous communication between HIDL components.
+- The server can notify the client of events or results without the client actively polling.
+- This pattern is useful for long-running operations or events that occur at unpredictable times.
+
+--------------------
+
+**Binder**
+--------------------------------
+
+vndbinder and hwbinder are both inter-process communication (IPC) mechanisms used in Android for communication between processes at different security levels:
+
+**vndbinder:**
+
+* **Purpose:** Primarily used for communication between vendor processes (processes provided by device manufacturers) at the same security level.
+* **Security context:** Uses the `/dev/vndbinder` device node with the `vnd` security domain.
+* **Advantages:**
+    * Lightweight and efficient for vendor-to-vendor communication.
+    * More widely supported and documented than hwbinder.
+* **Disadvantages:**
+    * Not designed for system-to-vendor or vendor-to-system communication.
+    * Less stable and secure compared to hwbinder.
+
+**hwbinder:**
+
+* **Purpose:** Designed for secure and stable communication between any processes at different security levels, including:
+    * System processes and vendor processes.
+    * Vendor processes and vendor processes.
+    * System processes and hardware acceleration services (HALs).
+* **Security context:** Uses the `/dev/hwbinder` device node with the `hw` security domain.
+* **Advantages:**
+    * More secure and stable than vndbinder due to its stricter rules and sandboxing.
+    * Supports communication between processes at different security levels.
+    * Integrates well with HALs through HIDL (Hardware Interface Definition Language).
+* **Disadvantages:**
+    * More complex to implement and requires HAL design using HIDL.
+    * Newer than vndbinder and may have less widespread support.
+
+**Summary:**
+
+* **Choose vndbinder:** If you need efficient communication between vendor processes at the same security level and stability is not a major concern.
+* **Choose hwbinder:** If you need secure and stable communication between processes at different security levels, or if you are developing HALs using HIDL.
+
+Here are some additional points to consider:
+
+* Some Android versions may still be using vndbinder for specific purposes, but the trend is moving towards hwbinder for improved security and stability.
+* You can find more information about vndbinder and hwbinder in the Android Open Source Project (AOSP) documentation.
+
+I hope this explanation clarifies the differences between vndbinder and hwbinder and helps you choose the appropriate one for your needs!
+
+--------------------
+
+**AIDL**
+--------------------------------
+
+ **Here's an example illustrating Binder Proxy and Stub concepts in Android IPC:**
+
+**Interface Definition:**
+
+- **IMyService.aidl:**
+
+.. code-block:: java
+
+    package com.example.myservice;
+
+    interface IMyService {
+        int add(int a, int b);
+    }
+
+
+**Server Implementation:**
+
+- **MyService.java:**
+
+.. code-block:: java
+
+    package com.example.myservice;
+
+    public class MyService extends IMyService.Stub {
+        @Override
+        public int add(int a, int b) {
+            return a + b;
+        }
+    }
+
+
+**Client Implementation:**
+
+- **MainActivity.java:**
+
+.. code-block:: java
+
+    package com.example.myclient;
+
+    import com.example.myservice.IMyService;
+
+    public class MainActivity extends Activity {
+        private IMyService mService;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // ... get service instance using ServiceManager ...
+
+            int result = mService.add(5, 3); // Proxy calls remote method
+            Log.d("MainActivity", "Result: " + result);
+        }
+    }
+
+
+**Explanation:**
+
+1. **IMyService.aidl:** Defines the interface for remote communication, specifying methods clients can call.
+2. **MyService.java:** Implements the service, extending `IMyService.Stub` to handle remote calls.
+3. **MainActivity.java:** Client obtains a service instance (proxy) and invokes methods on it as if it were a local object.
+
+**Proxy and Stub:**
+
+- **Proxy (on client-side):**
+    - Acts as a local representation of the remote service.
+    - Forwards method calls to the Binder kernel driver.
+    - Marshalls arguments and results for transport.
+- **Stub (on server-side):**
+    - Receives method calls from the Binder driver.
+    - Unmarshalls arguments and dispatches them to the actual service implementation.
+    - Returns results through the Binder driver.
+
+**Key Points:**
+
+- The Binder framework hides the complexities of IPC behind proxy and stub objects.
+- Clients interact with remote services using a natural object-oriented approach.
+- The Binder driver transparently handles communication and data transfer between processes.
+
+**Additional Insights:**
+
+- Binder communication is asynchronous, allowing clients to continue execution while waiting for results.
+- Binder supports one-way transactions for performance optimization in certain scenarios.
+- Security is enforced through Binder's permission model and SELinux policies.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

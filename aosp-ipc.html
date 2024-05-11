@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AOSP - IPC &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Linux - Posix" href="linux-posix.html" />
+    <link rel="prev" title="AOSP - Theory of HAL" href="aosp-haltheory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="aosp-general.html">AOSP - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aosp-haltheory.html">AOSP - Theory of HAL</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AOSP - IPC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hidl-callback"><strong>HIDL Callback</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binder"><strong>Binder</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aidl"><strong>AIDL</strong></a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="android/01-Introduction/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/02-AndroidBuildSystem/AndroidBuildSystem.html">AndroidBuildSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/03-AndroidTools/AndroidTools.html">AndroidTools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/04-SoftwareUpdate/SoftwareUpdate.html">Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/05-BootAndPartitions/BootAndPartitions.html">BootAndPartitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/06-NativeAppDevelopment/NativeAppDevelopment.html">NativeAppDevelopment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/07-AndroidIPC/AndroidIPC.html">AndroidIPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/08-AppCoreComponents/AppCoreComponents.html">AppCoreComponents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/09-TestFramework/TestFramework.html">TestFramework</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>AOSP - IPC</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="aosp-ipc">
+<h1>AOSP - IPC<a class="headerlink" href="#aosp-ipc" title="Permalink to this heading"></a></h1>
+<section id="hidl-callback">
+<h2><strong>HIDL Callback</strong><a class="headerlink" href="#hidl-callback" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s an example of how ICallback is used in HIDL to enable asynchronous communication between a client and a server:</strong></p>
+<p><strong>HAL Definition (`IHello.hal`):</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">vendor</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">hello</span><span class="nd">@1</span><span class="o">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">IHello</span> <span class="p">{</span>
+    <span class="n">init</span><span class="p">();</span>
+    <span class="n">release</span><span class="p">();</span>
+    <span class="n">setCallback</span><span class="p">(</span><span class="n">IHelloCallback</span> <span class="n">callback</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Callback Interface (`IHelloCallback.hal`):</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">vendor</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">hello</span><span class="nd">@1</span><span class="o">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">IHelloCallback</span> <span class="p">{</span>
+    <span class="n">onEvent</span><span class="p">(</span><span class="n">string</span> <span class="n">message</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Server Implementation (`HelloService.cpp`):</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HelloService</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IHello</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// ... other methods ...</span>
+
+    <span class="n">Return</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">setCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">IHelloCallback</span><span class="o">&gt;&amp;</span> <span class="n">callback</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">mCallback</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nf">Void</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">notifyClient</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mCallback</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">mCallback</span><span class="o">-&gt;</span><span class="n">onEvent</span><span class="p">(</span><span class="s">&quot;Hello from server!&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IHelloCallback</span><span class="o">&gt;</span> <span class="n">mCallback</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Client Implementation (`MainActivity.java`):</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">IHello</span> <span class="n">mHelloService</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// ... get service instance ...</span>
+
+        <span class="n">mHelloService</span><span class="o">.</span><span class="na">setCallback</span><span class="o">(</span><span class="k">new</span> <span class="n">IHelloCallback</span><span class="o">.</span><span class="na">Stub</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onEvent</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">&quot;MainActivity&quot;</span><span class="o">,</span> <span class="s">&quot;Received callback: &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onButtonClick</span><span class="o">(</span><span class="n">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">mHelloService</span><span class="o">.</span><span class="na">notifyClient</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Explanation:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Interface Definition:</strong>
+- The <cite>IHello</cite> interface includes a method <cite>setCallback</cite> to register a client-side callback object.
+- The <cite>IHelloCallback</cite> interface defines the callback method <cite>onEvent</cite> that the server will invoke.</p></li>
+<li><p><strong>Server Implementation:</strong>
+- The <cite>HelloService</cite> class implements <cite>IHello</cite>.
+- <cite>setCallback</cite> stores the client’s callback object.
+- <cite>notifyClient</cite> uses the stored callback to send an asynchronous message to the client.</p></li>
+<li><p><strong>Client Implementation:</strong>
+- The client creates an implementation of <cite>IHelloCallback</cite>.
+- It passes this callback object to the server’s <cite>setCallback</cite> method.
+- When the server calls <cite>notifyClient</cite>, the client’s <cite>onEvent</cite> method is invoked.</p></li>
+</ol>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p>ICallback enables asynchronous communication between HIDL components.</p></li>
+<li><p>The server can notify the client of events or results without the client actively polling.</p></li>
+<li><p>This pattern is useful for long-running operations or events that occur at unpredictable times.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="binder">
+<h2><strong>Binder</strong><a class="headerlink" href="#binder" title="Permalink to this heading"></a></h2>
+<p>vndbinder and hwbinder are both inter-process communication (IPC) mechanisms used in Android for communication between processes at different security levels:</p>
+<p><strong>vndbinder:</strong></p>
+<ul class="simple">
+<li><p><strong>Purpose:</strong> Primarily used for communication between vendor processes (processes provided by device manufacturers) at the same security level.</p></li>
+<li><p><strong>Security context:</strong> Uses the <cite>/dev/vndbinder</cite> device node with the <cite>vnd</cite> security domain.</p></li>
+<li><dl class="simple">
+<dt><strong>Advantages:</strong></dt><dd><ul>
+<li><p>Lightweight and efficient for vendor-to-vendor communication.</p></li>
+<li><p>More widely supported and documented than hwbinder.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Disadvantages:</strong></dt><dd><ul>
+<li><p>Not designed for system-to-vendor or vendor-to-system communication.</p></li>
+<li><p>Less stable and secure compared to hwbinder.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>hwbinder:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Purpose:</strong> Designed for secure and stable communication between any processes at different security levels, including:</dt><dd><ul>
+<li><p>System processes and vendor processes.</p></li>
+<li><p>Vendor processes and vendor processes.</p></li>
+<li><p>System processes and hardware acceleration services (HALs).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Security context:</strong> Uses the <cite>/dev/hwbinder</cite> device node with the <cite>hw</cite> security domain.</p></li>
+<li><dl class="simple">
+<dt><strong>Advantages:</strong></dt><dd><ul>
+<li><p>More secure and stable than vndbinder due to its stricter rules and sandboxing.</p></li>
+<li><p>Supports communication between processes at different security levels.</p></li>
+<li><p>Integrates well with HALs through HIDL (Hardware Interface Definition Language).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Disadvantages:</strong></dt><dd><ul>
+<li><p>More complex to implement and requires HAL design using HIDL.</p></li>
+<li><p>Newer than vndbinder and may have less widespread support.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Summary:</strong></p>
+<ul class="simple">
+<li><p><strong>Choose vndbinder:</strong> If you need efficient communication between vendor processes at the same security level and stability is not a major concern.</p></li>
+<li><p><strong>Choose hwbinder:</strong> If you need secure and stable communication between processes at different security levels, or if you are developing HALs using HIDL.</p></li>
+</ul>
+<p>Here are some additional points to consider:</p>
+<ul class="simple">
+<li><p>Some Android versions may still be using vndbinder for specific purposes, but the trend is moving towards hwbinder for improved security and stability.</p></li>
+<li><p>You can find more information about vndbinder and hwbinder in the Android Open Source Project (AOSP) documentation.</p></li>
+</ul>
+<p>I hope this explanation clarifies the differences between vndbinder and hwbinder and helps you choose the appropriate one for your needs!</p>
+</section>
+<hr class="docutils" />
+<section id="aidl">
+<h2><strong>AIDL</strong><a class="headerlink" href="#aidl" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p><strong>Here’s an example illustrating Binder Proxy and Stub concepts in Android IPC:</strong></p>
+</div></blockquote>
+<p><strong>Interface Definition:</strong></p>
+<ul class="simple">
+<li><p><strong>IMyService.aidl:</strong></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.example.myservice</span><span class="o">;</span>
+
+<span class="kd">interface</span> <span class="nc">IMyService</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Server Implementation:</strong></p>
+<ul class="simple">
+<li><p><strong>MyService.java:</strong></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.example.myservice</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="kd">extends</span> <span class="n">IMyService</span><span class="o">.</span><span class="na">Stub</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Client Implementation:</strong></p>
+<ul class="simple">
+<li><p><strong>MainActivity.java:</strong></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.example.myclient</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.example.myservice.IMyService</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">IMyService</span> <span class="n">mService</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="c1">// ... get service instance using ServiceManager ...</span>
+
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mService</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">);</span> <span class="c1">// Proxy calls remote method</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">&quot;MainActivity&quot;</span><span class="o">,</span> <span class="s">&quot;Result: &quot;</span> <span class="o">+</span> <span class="n">result</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Explanation:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>IMyService.aidl:</strong> Defines the interface for remote communication, specifying methods clients can call.</p></li>
+<li><p><strong>MyService.java:</strong> Implements the service, extending <cite>IMyService.Stub</cite> to handle remote calls.</p></li>
+<li><p><strong>MainActivity.java:</strong> Client obtains a service instance (proxy) and invokes methods on it as if it were a local object.</p></li>
+</ol>
+<p><strong>Proxy and Stub:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Proxy (on client-side):</strong></dt><dd><ul>
+<li><p>Acts as a local representation of the remote service.</p></li>
+<li><p>Forwards method calls to the Binder kernel driver.</p></li>
+<li><p>Marshalls arguments and results for transport.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Stub (on server-side):</strong></dt><dd><ul>
+<li><p>Receives method calls from the Binder driver.</p></li>
+<li><p>Unmarshalls arguments and dispatches them to the actual service implementation.</p></li>
+<li><p>Returns results through the Binder driver.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p>The Binder framework hides the complexities of IPC behind proxy and stub objects.</p></li>
+<li><p>Clients interact with remote services using a natural object-oriented approach.</p></li>
+<li><p>The Binder driver transparently handles communication and data transfer between processes.</p></li>
+</ul>
+<p><strong>Additional Insights:</strong></p>
+<ul class="simple">
+<li><p>Binder communication is asynchronous, allowing clients to continue execution while waiting for results.</p></li>
+<li><p>Binder supports one-way transactions for performance optimization in certain scenarios.</p></li>
+<li><p>Security is enforced through Binder’s permission model and SELinux policies.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="aosp-haltheory.html" class="btn btn-neutral float-left" title="AOSP - Theory of HAL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="linux-posix.html" class="btn btn-neutral float-right" title="Linux - Posix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
