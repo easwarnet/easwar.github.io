@@ -51,7 +51,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">AOSP - General</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#android-runtime-art-in-aosp"><strong>Android Runtime (ART) in AOSP</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#security-context"><strong>Security Context</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-server"><strong>System Server</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#wakelocks"><strong>Wakelocks</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#apex"><strong>APEX</strong></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="aosp-haltheory.html">AOSP - Theory of HAL</a></li>
@@ -227,6 +229,50 @@
 <p>This is just a small sample of the many security contexts that are defined in the service_contexts file. The actual list of contexts will vary depending on the specific AOSP version and device configuration.</p>
 </section>
 <hr class="docutils" />
+<section id="system-server">
+<h2><strong>System Server</strong><a class="headerlink" href="#system-server" title="Permalink to this heading"></a></h2>
+<p>The system server in Android is a crucial process that acts like the maestro of the Android orchestra, managing and coordinating various core services essential for the entire system’s operation. Here’s a detailed breakdown of its role:</p>
+<p><strong>What it Does:</strong></p>
+<ul class="simple">
+<li><p><strong>System Initialization:</strong> The system server is launched during the boot process and initializes the core Android framework.</p></li>
+<li><dl class="simple">
+<dt><strong>Service Management:</strong> It acts as a central hub, starting and managing numerous system services that provide functionalities like:</dt><dd><ul>
+<li><p>Power Management</p></li>
+<li><p>Activity Management (launching and managing apps)</p></li>
+<li><p>Telephony (cellular network connectivity)</p></li>
+<li><p>Package Management (installing, updating, and removing apps)</p></li>
+<li><p>Account Management (user accounts and sync)</p></li>
+<li><p>Window Management (handling app windows on the screen)</p></li>
+<li><p>Bluetooth Management</p></li>
+<li><p>Battery Service (monitoring battery levels)</p></li>
+<li><p>Alarm Service (scheduling and triggering alarms)</p></li>
+<li><p>Sensor Service (accessing device sensors)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Service Registration:</strong> The system server acts as a service registry, allowing other system components and apps to discover and interact with these services.</p></li>
+<li><p><strong>Communication Facilitation:</strong> It facilitates communication between various system services, enabling them to exchange data and collaborate effectively.</p></li>
+</ul>
+<p><strong>Benefits of a Centralized System Server:</strong></p>
+<ul class="simple">
+<li><p><strong>Efficiency:</strong> By managing services centrally, the system server avoids redundancy and ensures efficient resource utilization.</p></li>
+<li><p><strong>Modular Design:</strong> It promotes a modular system architecture where individual services can be developed, maintained, and updated independently.</p></li>
+<li><p><strong>Security:</strong> The system server can enforce security policies and access controls on system services, enhancing overall system security.</p></li>
+</ul>
+<p><strong>How it Works:</strong></p>
+<ul class="simple">
+<li><p>The system server code resides in the <cite>frameworks/base/services/java/com/android/server</cite> directory within the Android Open Source Project (AOSP).</p></li>
+<li><p>It is written in Java and interacts with native code components through the Java Native Interface (JNI) when needed.</p></li>
+<li><p>The system server starts various services sequentially, ensuring that dependencies between services are properly addressed.</p></li>
+<li><p>Once started, these services run as individual threads within the system server process, or in some cases, as separate processes.</p></li>
+</ul>
+<p><strong>Analogy:</strong></p>
+<p>Think of the system server as the conductor of an orchestra. Each musician (service) plays a specific instrument (functionality), but the conductor (system server) coordinates them all, ensuring they play in harmony to create a beautiful symphony (a smooth and functional Android experience).</p>
+<p><strong>In Conclusion:</strong></p>
+<p>The system server plays an indispensable role in the Android system. By centralizing service management and communication, it lays the foundation for a stable, efficient, and modular Android platform. Understanding its role is essential for developers and anyone who wants a deeper understanding of the inner workings of Android.</p>
+</section>
+<hr class="docutils" />
 <section id="wakelocks">
 <h2><strong>Wakelocks</strong><a class="headerlink" href="#wakelocks" title="Permalink to this heading"></a></h2>
 <p>In the context of Android, a <strong>wakelock</strong> is a mechanism that prevents the device from entering sleep mode and keeps the CPU or specific components like the screen or network active. This functionality comes with both benefits and drawbacks, so it’s important to use wakelocks wisely.</p>
@@ -251,6 +297,79 @@
 <li><p><strong>Monitor wakelocks:</strong> Utilize battery usage and developer tools to identify apps using excessive wakelocks and find ways to optimize their behavior.</p></li>
 </ul>
 <p>By understanding the benefits and drawbacks of wakelocks and using them responsibly, developers and users can contribute to a smoother, more efficient, and longer-lasting experience on their Android devices.</p>
+</section>
+<hr class="docutils" />
+<section id="apex">
+<h2><strong>APEX</strong><a class="headerlink" href="#apex" title="Permalink to this heading"></a></h2>
+<p>In the context of the Android Open Source Project (AOSP), “APEX” stands for “Android Packages EXtensions.” APEX is a package format introduced in Android 10 (API level 29) to address several challenges related to system updates, security, and disk space management.</p>
+<p>Here’s a brief overview of APEX and its significance in AOSP:</p>
+<ol class="arabic simple">
+<li><p><strong>Modularization</strong>: APEX allows certain system components, such as native libraries, binaries, and even entire applications, to be modularized into individual packages. This modularization improves the manageability and updateability of the Android system.</p></li>
+<li><p><strong>Security Updates</strong>: APEX modules can be updated independently of the full system image. This means that critical security updates and bug fixes can be delivered more quickly to users without requiring a full system update. It also reduces the risk of device fragmentation due to outdated components.</p></li>
+<li><p><strong>Disk Space Optimization</strong>: By allowing components to be shared among multiple users and profiles on a device, APEX helps optimize disk space usage. Instead of having redundant copies of the same components for each user, APEX modules can be shared at the system level.</p></li>
+<li><p><strong>Runtime Isolation</strong>: APEX modules are mounted as read-only filesystems and are isolated from the rest of the system. This provides a level of security by preventing unauthorized modifications to critical system components.</p></li>
+<li><p><strong>Dynamic Loading</strong>: APEX modules are dynamically loaded into the Android runtime when needed, reducing memory overhead and improving runtime performance.</p></li>
+</ol>
+<p>APEX modules are stored in a special partition on the device (<cite>/apex</cite>) and are mounted at runtime as overlay filesystems. They are managed by the <cite>apexd</cite> daemon, which handles installation, activation, and updates of APEX modules.</p>
+<p>Overall, APEX plays a crucial role in modernizing the Android platform by improving security, updateability, and resource management. It allows for a more modular and flexible approach to system development and maintenance.</p>
+<p>Creating an APEX package for a native application in the Android Open Source Project (AOSP) involves several steps. Below, I’ll outline the general process along with an example.</p>
+<ol class="arabic simple">
+<li><p><strong>Prepare the Application</strong>:
+- Write your native application code.
+- Ensure that your application has a well-defined structure and can be built as a standalone executable.</p></li>
+<li><p><strong>Write the APEX Packaging Configuration</strong>:
+- Create an APEX configuration file (<cite>apex_manifest.json</cite>) that specifies the contents and metadata of your APEX package.
+- Define the <cite>name</cite>, <cite>version</cite>, <cite>provides</cite>, and other necessary fields.
+- List the files and directories that should be included in the APEX package.</p></li>
+<li><p><strong>Create Build Rules</strong>:
+- Write build rules to compile your application and package it as part of the APEX build process.
+- Configure the build system to generate the necessary artifacts for your APEX package.</p></li>
+<li><p><strong>Build the APEX Package</strong>:
+- Build the AOSP with your APEX package included.
+- Verify that the APEX package is generated successfully.</p></li>
+<li><p><strong>Test the APEX Package</strong>:
+- Deploy the APEX package to a test device or emulator.
+- Verify that the native application functions correctly within the APEX environment.</p></li>
+</ol>
+<p>Below is a simplified example to illustrate the process:</p>
+<p>### 1. Prepare the Application</p>
+<p>Suppose you have a simple native application written in C++ named <cite>my_native_app</cite>. The application consists of source files located in <cite>/path/to/my_native_app/src</cite>.</p>
+<p>### 2. Write the APEX Packaging Configuration</p>
+<p>Create an APEX configuration file named <cite>apex_manifest.json</cite>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;com.example.my_native_app&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;provides&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;my_native_app&quot;</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;executable&quot;</span><span class="p">:</span> <span class="s2">&quot;/system/bin/my_native_app&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;libs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;/system/lib/libmy_native_lib.so&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>### 3. Create Build Rules</p>
+<p>Update the AOSP build system to include your APEX package. Add build rules to compile your native application and package it as part of the APEX build process.</p>
+<div class="highlight-make notranslate"><div class="highlight"><pre><span></span><span class="c"># Add build rule for my_native_app</span>
+<span class="nv">PRODUCT_PACKAGES</span> <span class="o">+=</span> my_native_app
+
+<span class="c"># Define build rules for my_native_app</span>
+<span class="cp">include $(CLEAR_VARS)</span>
+<span class="nv">LOCAL_MODULE</span> <span class="o">:=</span> my_native_app
+<span class="nv">LOCAL_SRC_FILES</span> <span class="o">:=</span> /path/to/my_native_app/src/main.cpp
+<span class="nv">LOCAL_SHARED_LIBRARIES</span> <span class="o">:=</span> my_native_lib
+<span class="cp">include $(BUILD_EXECUTABLE)</span>
+</pre></div>
+</div>
+<p>### 4. Build the APEX Package</p>
+<p>Build the AOSP with your APEX package included:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make -j &lt;num_threads&gt;
+</pre></div>
+</div>
+<p>### 5. Test the APEX Package</p>
+<p>Deploy the APEX package to a test device or emulator. Verify that the native application functions correctly within the APEX environment.</p>
+<p>This example provides a basic overview of how to create an APEX package for a native application in AOSP. Depending on the complexity of your application and packaging requirements, additional configuration and customization may be necessary.</p>
 </section>
 </section>
 

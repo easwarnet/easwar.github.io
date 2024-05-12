@@ -42,8 +42,8 @@ C++ - Container
 
 --------------------------------------------------------
 
-Extract Method in Std::Set
-----------------------------
+**Extract Method in Std::Set**
+---------------------------------
 
 **In C++17, the `extract` method was introduced for associative containers like `std::set` to provide an efficient way to remove elements without unnecessary copies or moves.**
 
@@ -99,7 +99,7 @@ Extract Method in Std::Set
 
 --------------------------------------------------------
 
-unordered_map vs map
+**unordered_map vs map**
 ----------------------------
 
 **Here's a comparison of std::unordered_map and std::map in C++, highlighting their key differences and when to choose each:**
@@ -151,8 +151,8 @@ unordered_map vs map
 
 --------------------------------------------------------
 
-std::set vs std::vector
-----------------------------
+**std::set vs std::vector**
+-------------------------------
 
 **Here's a comparison of std::set and std::vector in C++, highlighting their key differences and when to choose each:**
 
@@ -205,8 +205,8 @@ std::set vs std::vector
 
 --------------------------------------------------------
 
-std::forward_list vs std::vector
-------------------------------------
+**std::forward_list vs std::vector**
+---------------------------------------
 
 **Here's a comparison of std::forward_list and std::vector in C++, highlighting their key differences and when to choose each:**
 
@@ -258,8 +258,8 @@ std::forward_list vs std::vector
 
 --------------------------------------------------------
 
-std::list vs std::unordered_map
---------------------------------
+**std::list vs std::unordered_map**
+-------------------------------------
 
 **The speed of std::list and std::unordered_map depends on the specific operations you're performing:**
 
@@ -296,6 +296,188 @@ std::list vs std::unordered_map
 - Choose std::list for fast insertions/removals anywhere in the list, flexibility with order and duplicates, and frequent traversals.
 - Choose std::unordered_map for lightning-fast lookups by key, when you don't need ordering and can handle potential hash collisions.
 - The best choice depends on your specific use case and performance requirements.
+
+-------------------------------------------------
+
+**Find in Different Containers**
+-------------------------------------
+
+Different containers in C++ provide various methods to find elements based on their characteristics. Here's a breakdown of common approaches for some containers:
+
+**1. Arrays:**
+
+* Arrays don't have built-in search functionalities. You can use a loop to iterate through the elements and compare them with the target value.
+
+**2. Vectors:**
+
+* `std::find` algorithm: This generic algorithm takes iterators (start and end) and a value to search for. It returns an iterator pointing to the first element that matches the value, or `end` if not found.
+
+.. code-block:: c++
+
+    std::vector<int> myVector = {1, 2, 3, 4};
+    int valueToFind = 3;
+    auto it = std::find(myVector.begin(), myVector.end(), valueToFind);
+
+    if (it != myVector.end()) {
+      std::cout << "Element found at index: " << std::distance(myVector.begin(), it) << std::endl;
+    } else {
+      std::cout << "Element not found." << std::endl;
+    }
+
+* `std::find_if` algorithm: Similar to `std::find`, but takes a predicate (a function or lambda) that determines the search condition.
+
+**3. Lists:**
+
+* `std::find` algorithm: Works the same as with vectors, taking iterators and a value to search for.
+
+**4. Sets and Unordered Sets:**
+
+* `std::find` algorithm: Not recommended for sets/unordered_sets as they don't maintain element order. Use member functions specifically designed for these containers:
+* `std::set::count`: Returns the number of elements with a specific value (indicates existence, not position).
+* `std::set::find`: Returns an iterator pointing to the element with the value, or `end` if not found.
+* `std::unordered_set::count` and `std::unordered_set::find` (same as set counterparts).
+
+**5. Maps and Unordered Maps:**
+
+* `std::find` algorithm: Not recommended for maps/unordered_maps as they search by key, not value. Use member functions:
+* `std::map::count`: Returns the number of key-value pairs with a specific key (indicates existence, not position).
+* `std::map::find`: Returns an iterator pointing to the key-value pair with the specified key, or `end` if not found.
+* `std::unordered_map::count` and `std::unordered_map::find` (same as map counterparts).
+
+**Choosing the Right Approach:**
+
+* For arrays, use a loop-based search.
+* For vectors and lists, `std::find` or `std::find_if` are suitable for value-based searches.
+* For sets/unordered_sets, use `count` to check existence or `find` to get the element/iterator if it exists. Search by key, not value.
+* For maps/unordered_maps, use `count` to check existence by key or `find` to get the key-value pair if the key exists. Search by key, not value.
+
+Consider the container type and your search criteria (value or key) when selecting the appropriate method.
+
+Here's a breakdown of finding elements in different C++ containers along with their time complexities:
+
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| **Container**  | **Method**                   | **Time Complexity** | **Notes**                                                                              | 
++================+==============================+=====================+========================================================================================+
+| Array          | Loop-based search            | O(n)                | Iterates through all elements, linear in the size (n) of the array.                    |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Vector         | `std::find`                  | O(n)                | Iterates through elements in the worst case, linear in the size (n) of the vector.     |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Vector         | `std::find_if`               | O(n)                | Similar to `std::find`, iterates in the worst case, linear in size.                    |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| List           | `std::find`                  | O(n)                | Iterates through elements in the worst case, linear in the size (n) of the list.       |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Set            | `std::set::count`            | O(log n)            | Uses a balanced search tree for efficient lookups, logarithmic in size.                |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Set            | `std::set::find`             | O(log n)            | Similar to `count`, efficient lookup using a balanced search tree.                     |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Unordered Set  | `std::unordered_set::count`  | O(1) (average)      | Uses hashing for fast lookups, on average constant time. Can be O(n) in the worst case.|
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Unordered Set  | `std::unordered_set::find`   | O(1) (average)      | Similar to `count`, on average constant time, but O(n) in the worst case.              |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Map            | `std::map::count`            | O(log n)            | Uses a balanced search tree for efficient lookups, logarithmic in size.                |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Map            | `std::map::find`             | O(log n)            | Similar to `count`, efficient lookup using a balanced search tree.                     |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+| Unordered Map  | `std::unordered_map::find`   | O(1) (average)      | Similar to `count`, on average constant time, but O(n) in the worst case.              |
++----------------+------------------------------+---------------------+----------------------------------------------------------------------------------------+
+
+**Explanation:**
+
+* Arrays don't have built-in search functionalities, so iterating through all elements (`O(n)`) is necessary.
+* Vectors and lists are linear data structures, so searching using `find` or `find_if` has a worst-case complexity of `O(n)` as it might need to iterate through all elements.
+* Sets and ordered maps utilize balanced search trees (e.g., red-black trees) for efficient lookups. Finding elements using `count` or `find` takes `O(log n)` time on average, which is logarithmic in the container's size.
+* Unordered sets and unordered maps leverage hashing for faster lookups. In the average case, finding elements using `count` or `find` takes constant time (`O(1)`), but it can deteriorate to linear time (`O(n)`) in the worst case (e.g., hash collisions).
+
+**Important Notes:**
+
+* The average-case complexity for unordered sets/maps assumes a good hash function and a moderate load factor (number of elements relative to the container's size).
+* For frequent searches, sets/ordered maps are generally preferred due to their guaranteed logarithmic time complexity.
+* For scenarios where occasional slowdowns during insertion/deletion are acceptable, unordered sets/maps might be suitable due to their potential for faster average-case lookups.
+
+Choose the container based on the access patterns (frequent searches vs. insertions/deletions) and the acceptable time complexity for your specific use case.
+
+
+-----------------------------
+
+**Erase in Different Containers**
+-------------------------------------
+
+Here's a breakdown of deleting or erasing elements in different C++ containers:
+
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| **Container** | **Method**                            | **Description**                                                                                      |
++===============+=======================================+======================================================================================================+
+| Array         | Not supported directly                | Arrays don't have built-in methods for erasing elements.                                             |
+|               |                                       | You can overwrite elements with other values or create a new array without the unwanted elements.    |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Vector        | `erase(iterator)`                     | Erases the element pointed to by the iterator. Returns a new iterator pointing to the element        |
+|               |                                       | after the erased one.                                                                                |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Vector        | `erase(iterator_start, iterator_end)` | Erases elements in the range [iterator_start, iterator_end). Both iterators must point to elements   |
+|               |                                       | within the vector.                                                                                   |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| List          | `erase(iterator)`                     | Erases the element pointed to by the iterator.                                                       |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| List          | `erase(iterator_start, iterator_end)` | Erases elements in the range [iterator_start, iterator_end). Both iterators must point to elements   |
+|               |                                       | within the list.                                                                                     |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Set           | `erase(value)`                        | Erases the element with the specified value (if it exists). Returns the number of elements erased    |
+|               |                                       | (0 or 1).                                                                                            |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Set           | `erase(iterator)`                     | Erases the element pointed to by the iterator.                                                       |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Unordered Set | Same as Set                           | Methods behave identically to sets.                                                                  |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Map           | `erase(key)`                          | Erases the key-value pair with the specified key (if it exists). Returns the number of elements      |
+|               |                                       | erased (0 or 1).                                                                                     |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Map           | `erase(iterator)`                     | Erases the element pointed to by the iterator.                                                       |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+| Unordered Map | Same as Map                           | Methods behave identically to maps.                                                                  |
++---------------+---------------------------------------+------------------------------------------------------------------------------------------------------+
+
+**Additional Notes:**
+
+* In some containers like vectors and lists, erasing elements might invalidate iterators pointing to subsequent elements due to shifting of elements in memory. Be cautious when using iterators after erasing.
+* Sets and unordered sets only store unique elements, so `erase(value)` will only remove one element at most, even if there are duplicates with the same value.
+* Maps and unordered maps store key-value pairs. `erase(key)` removes the entire pair associated with the specified key.
+
+**Here are some examples:**
+
+.. code-block:: c++
+
+    // Vector erase example
+    std::vector<int> myVector = {1, 2, 3, 4, 5};
+    auto it = myVector.begin() + 2; // Iterator pointing to element 3
+    myVector.erase(it); // Erases element 3
+
+    // Set erase example
+    std::set<std::string> mySet = {"apple", "banana", "cherry"};
+    mySet.erase("banana"); // Erases "banana" if it exists
+
+    // Map erase example
+    std::map<int, std::string> myMap = {{1, "one"}, {2, "two"}, {3, "three"}};
+    myMap.erase(2); // Erases the key-value pair with key 2
+
+Remember to choose the appropriate method based on the container type and whether you want to erase by value (sets/maps) or by iterator position (other containers). Consider potential iterator invalidation after erasing in containers like vectors and lists.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

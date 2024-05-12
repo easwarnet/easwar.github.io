@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AOSP - IPC &mdash; Easwarnet  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Linux - Posix" href="linux-posix.html" />
+    <link rel="prev" title="AOSP - Theory of HAL" href="aosp-haltheory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Easwarnet
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">C++</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cpp-smartptr.html">C++ - Smart Pointer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-inheritence.html">C++ - Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-container.html">C++ - Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp-general.html">C++ - General</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="aosp-general.html">AOSP - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="aosp-haltheory.html">AOSP - Theory of HAL</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AOSP - IPC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hidl-callback"><strong>HIDL Callback</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aidl-stub-and-proxy-in-c"><strong>AIDL stub and proxy in C++</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aidl"><strong>AIDL</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#oneway-in-aidl"><strong>Oneway in AIDL</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aidl-using-c"><strong>AIDL using C++</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hal-using-aidl"><strong>HAL using AIDL</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hal-using-aidl-in-c"><strong>HAL using AIDL in C++</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#servicemanager-in-aidl"><strong>ServiceManager in AIDL</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#binders"><strong>Binders</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vndbinder-vs-hwbinders"><strong>VndBinder vs HwBinders</strong></a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">OS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="linux-posix.html">Linux - Posix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linux-commands.html">Linux - Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="os-general.html">Os - General Concepts</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">AOSP Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="android/01-Introduction/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/02-AndroidBuildSystem/AndroidBuildSystem.html">AndroidBuildSystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/03-AndroidTools/AndroidTools.html">AndroidTools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/04-SoftwareUpdate/SoftwareUpdate.html">Flashing Android</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/05-BootAndPartitions/BootAndPartitions.html">BootAndPartitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/06-NativeAppDevelopment/NativeAppDevelopment.html">NativeAppDevelopment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/07-AndroidIPC/AndroidIPC.html">AndroidIPC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/08-AppCoreComponents/AppCoreComponents.html">AppCoreComponents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="android/09-TestFramework/TestFramework.html">TestFramework</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Embedded Beginner</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="os-rtos.html">Os - RTOS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-pointers.html">C - Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-funcpointers.html">C - Function Pointers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-general.html">C - General</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-basicalgo.html">C - Basic Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c-tricks.html">C - Tricks and Others</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Easwarnet</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>AOSP - IPC</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="aosp-ipc">
+<h1>AOSP - IPC<a class="headerlink" href="#aosp-ipc" title="Permalink to this heading"></a></h1>
+<section id="hidl-callback">
+<h2><strong>HIDL Callback</strong><a class="headerlink" href="#hidl-callback" title="Permalink to this heading"></a></h2>
+<p><strong>Here’s an example of how ICallback is used in HIDL to enable asynchronous communication between a client and a server:</strong></p>
+<p><strong>HAL Definition (`IHello.hal`):</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">vendor</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">hello</span><span class="nd">@1</span><span class="o">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">IHello</span> <span class="p">{</span>
+    <span class="n">init</span><span class="p">();</span>
+    <span class="n">release</span><span class="p">();</span>
+    <span class="n">setCallback</span><span class="p">(</span><span class="n">IHelloCallback</span> <span class="n">callback</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Callback Interface (`IHelloCallback.hal`):</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">vendor</span><span class="o">.</span><span class="n">sample</span><span class="o">.</span><span class="n">hello</span><span class="nd">@1</span><span class="o">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">IHelloCallback</span> <span class="p">{</span>
+    <span class="n">onEvent</span><span class="p">(</span><span class="n">string</span> <span class="n">message</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Server Implementation (`HelloService.cpp`):</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HelloService</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IHello</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// ... other methods ...</span>
+
+    <span class="n">Return</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">setCallback</span><span class="p">(</span><span class="k">const</span> <span class="n">sp</span><span class="o">&lt;</span><span class="n">IHelloCallback</span><span class="o">&gt;&amp;</span> <span class="n">callback</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="n">mCallback</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nf">Void</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">notifyClient</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mCallback</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">mCallback</span><span class="o">-&gt;</span><span class="n">onEvent</span><span class="p">(</span><span class="s">&quot;Hello from server!&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IHelloCallback</span><span class="o">&gt;</span> <span class="n">mCallback</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>Client Implementation (`MainActivity.java`):</strong></p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">IHello</span> <span class="n">mHelloService</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// ... get service instance ...</span>
+
+        <span class="n">mHelloService</span><span class="o">.</span><span class="na">setCallback</span><span class="o">(</span><span class="k">new</span> <span class="n">IHelloCallback</span><span class="o">.</span><span class="na">Stub</span><span class="o">()</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onEvent</span><span class="o">(</span><span class="n">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">&quot;MainActivity&quot;</span><span class="o">,</span> <span class="s">&quot;Received callback: &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onButtonClick</span><span class="o">(</span><span class="n">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">mHelloService</span><span class="o">.</span><span class="na">notifyClient</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Explanation:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Interface Definition:</strong>
+- The <cite>IHello</cite> interface includes a method <cite>setCallback</cite> to register a client-side callback object.
+- The <cite>IHelloCallback</cite> interface defines the callback method <cite>onEvent</cite> that the server will invoke.</p></li>
+<li><p><strong>Server Implementation:</strong>
+- The <cite>HelloService</cite> class implements <cite>IHello</cite>.
+- <cite>setCallback</cite> stores the client’s callback object.
+- <cite>notifyClient</cite> uses the stored callback to send an asynchronous message to the client.</p></li>
+<li><p><strong>Client Implementation:</strong>
+- The client creates an implementation of <cite>IHelloCallback</cite>.
+- It passes this callback object to the server’s <cite>setCallback</cite> method.
+- When the server calls <cite>notifyClient</cite>, the client’s <cite>onEvent</cite> method is invoked.</p></li>
+</ol>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p>ICallback enables asynchronous communication between HIDL components.</p></li>
+<li><p>The server can notify the client of events or results without the client actively polling.</p></li>
+<li><p>This pattern is useful for long-running operations or events that occur at unpredictable times.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="aidl-stub-and-proxy-in-c">
+<h2><strong>AIDL stub and proxy in C++</strong><a class="headerlink" href="#aidl-stub-and-proxy-in-c" title="Permalink to this heading"></a></h2>
+<p>how to create an AIDL (Android Interface Definition Language) stub and proxy in C++.</p>
+<p>First, let’s define a simple interface in AIDL. Create a file named <cite>ISimpleInterface.aidl</cite>:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// ISimpleInterface.aidl</span>
+<span class="n">package</span> <span class="n">com</span><span class="p">.</span><span class="n">example</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">ISimpleInterface</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Next, you need to compile this AIDL file to generate the necessary C++ files. Use the AIDL compiler to do this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aidl --lang<span class="o">=</span>c++ ISimpleInterface.aidl
+</pre></div>
+</div>
+<p>This will generate several C++ files including <cite>ISimpleInterface.h</cite>, <cite>ISimpleInterface.cpp</cite>, <cite>ISimpleInterfaceStub.cpp</cite>, and <cite>ISimpleInterfaceProxy.cpp</cite>.</p>
+<p>Now, let’s implement the server-side (stub) of this interface. You’ll need to implement the <cite>ISimpleInterface</cite> class defined in <cite>ISimpleInterface.h</cite> and <cite>ISimpleInterface.cpp</cite>. Here’s a simple implementation:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// ISimpleInterface.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&quot;ISimpleInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">android</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">binder</span> <span class="p">{</span>
+
+<span class="n">status_t</span> <span class="n">BnSimpleInterface</span><span class="o">::</span><span class="n">onTransact</span><span class="p">(</span>
+    <span class="kt">uint32_t</span> <span class="n">code</span><span class="p">,</span> <span class="k">const</span> <span class="n">Parcel</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">,</span> <span class="n">Parcel</span><span class="o">*</span> <span class="n">reply</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">flags</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nl">TRANSACTION_add</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">CHECK_INTERFACE</span><span class="p">(</span><span class="n">ISimpleInterface</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">reply</span><span class="p">);</span>
+            <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">readInt32</span><span class="p">();</span>
+            <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">readInt32</span><span class="p">();</span>
+            <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+            <span class="n">reply</span><span class="o">-&gt;</span><span class="n">writeInt32</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">NO_ERROR</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">default</span><span class="o">:</span>
+            <span class="k">return</span> <span class="n">BBinder</span><span class="o">::</span><span class="n">onTransact</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">reply</span><span class="p">,</span> <span class="n">flags</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="p">}</span>  <span class="c1">// namespace binder</span>
+<span class="p">}</span>  <span class="c1">// namespace android</span>
+</pre></div>
+</div>
+<p>Next, let’s implement the client-side (proxy) of this interface. This will be the code that interacts with the remote service. Here’s a simple example:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// ISimpleInterfaceClient.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&quot;ISimpleInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">android</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">binder</span> <span class="p">{</span>
+
+<span class="n">sp</span><span class="o">&lt;</span><span class="n">ISimpleInterface</span><span class="o">&gt;</span> <span class="n">ISimpleInterface</span><span class="o">::</span><span class="n">getClient</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IServiceManager</span><span class="o">&gt;</span> <span class="n">sm</span> <span class="o">=</span> <span class="n">defaultServiceManager</span><span class="p">();</span>
+    <span class="n">sp</span><span class="o">&lt;</span><span class="n">IBinder</span><span class="o">&gt;</span> <span class="n">binder</span> <span class="o">=</span> <span class="n">sm</span><span class="o">-&gt;</span><span class="n">getService</span><span class="p">(</span><span class="n">String16</span><span class="p">(</span><span class="s">&quot;com.example.SimpleInterface&quot;</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">binder</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">interface_cast</span><span class="o">&lt;</span><span class="n">ISimpleInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">binder</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">}</span>  <span class="c1">// namespace binder</span>
+<span class="p">}</span>  <span class="c1">// namespace android</span>
+</pre></div>
+</div>
+<p>This is a basic example of how to create an AIDL stub and proxy in C++. You can now use these components to communicate between a client and a server in an Android application. Note that in a real-world scenario, error handling and more robust implementation would be necessary. Additionally, you need to ensure that your service is registered properly with the Android system.</p>
+</section>
+<hr class="docutils" />
+<section id="aidl">
+<h2><strong>AIDL</strong><a class="headerlink" href="#aidl" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p><strong>Here’s an example illustrating Binder Proxy and Stub concepts in Android IPC:</strong></p>
+</div></blockquote>
+<p><strong>Interface Definition:</strong></p>
+<ul class="simple">
+<li><p><strong>IMyService.aidl:</strong></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.example.myservice</span><span class="o">;</span>
+
+<span class="kd">interface</span> <span class="nc">IMyService</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Server Implementation:</strong></p>
+<ul class="simple">
+<li><p><strong>MyService.java:</strong></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.example.myservice</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="kd">extends</span> <span class="n">IMyService</span><span class="o">.</span><span class="na">Stub</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Client Implementation:</strong></p>
+<ul class="simple">
+<li><p><strong>MainActivity.java:</strong></p></li>
+</ul>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">com.example.myclient</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.example.myservice.IMyService</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">IMyService</span> <span class="n">mService</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="c1">// ... get service instance using ServiceManager ...</span>
+
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mService</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">);</span> <span class="c1">// Proxy calls remote method</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">&quot;MainActivity&quot;</span><span class="o">,</span> <span class="s">&quot;Result: &quot;</span> <span class="o">+</span> <span class="n">result</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><strong>Explanation:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>IMyService.aidl:</strong> Defines the interface for remote communication, specifying methods clients can call.</p></li>
+<li><p><strong>MyService.java:</strong> Implements the service, extending <cite>IMyService.Stub</cite> to handle remote calls.</p></li>
+<li><p><strong>MainActivity.java:</strong> Client obtains a service instance (proxy) and invokes methods on it as if it were a local object.</p></li>
+</ol>
+<p><strong>Proxy and Stub:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Proxy (on client-side):</strong></dt><dd><ul>
+<li><p>Acts as a local representation of the remote service.</p></li>
+<li><p>Forwards method calls to the Binder kernel driver.</p></li>
+<li><p>Marshalls arguments and results for transport.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Stub (on server-side):</strong></dt><dd><ul>
+<li><p>Receives method calls from the Binder driver.</p></li>
+<li><p>Unmarshalls arguments and dispatches them to the actual service implementation.</p></li>
+<li><p>Returns results through the Binder driver.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Key Points:</strong></p>
+<ul class="simple">
+<li><p>The Binder framework hides the complexities of IPC behind proxy and stub objects.</p></li>
+<li><p>Clients interact with remote services using a natural object-oriented approach.</p></li>
+<li><p>The Binder driver transparently handles communication and data transfer between processes.</p></li>
+</ul>
+<p><strong>Additional Insights:</strong></p>
+<ul class="simple">
+<li><p>Binder communication is asynchronous, allowing clients to continue execution while waiting for results.</p></li>
+<li><p>Binder supports one-way transactions for performance optimization in certain scenarios.</p></li>
+<li><p>Security is enforced through Binder’s permission model and SELinux policies.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="oneway-in-aidl">
+<h2><strong>Oneway in AIDL</strong><a class="headerlink" href="#oneway-in-aidl" title="Permalink to this heading"></a></h2>
+<p>In AIDL (Android Interface Definition Language), the <cite>oneway</cite> keyword is used to indicate that a method call should be asynchronous. When a method in an AIDL interface is declared with the <cite>oneway</cite> keyword, it means that the caller of that method does not need to wait for the method to finish executing before continuing its own execution. Instead, the caller sends the request to the remote service and continues its own processing immediately without blocking.</p>
+<p>Here’s a basic example to illustrate the usage of <cite>oneway</cite> in AIDL:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">ExampleService</span><span class="o">.</span><span class="n">aidl</span>
+<span class="n">package</span> <span class="n">com</span><span class="o">.</span><span class="n">example</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">ExampleService</span> <span class="p">{</span>
+    <span class="n">oneway</span> <span class="n">void</span> <span class="n">doSomethingAsync</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example, the <cite>doSomethingAsync()</cite> method is declared with the <cite>oneway</cite> keyword. This means that when a client calls this method, it doesn’t wait for the method to complete its execution on the server side. The client sends the request and continues its own processing without waiting for a response from the server.</p>
+<p>It’s important to note a few key points about using <cite>oneway</cite> in AIDL:</p>
+<ol class="arabic simple">
+<li><p>The method declaration with <cite>oneway</cite> must not have a return type or out parameters.</p></li>
+<li><p>Exceptions thrown by the method on the server side are not propagated back to the client.</p></li>
+<li><p>There is no guarantee about the order in which <cite>oneway</cite> calls are executed on the server side.</p></li>
+</ol>
+<p><cite>oneway</cite> calls can be beneficial for scenarios where the client needs to make non-blocking calls to the server, especially when the client doesn’t need to receive a response immediately or when performance is a concern. However, it’s essential to carefully consider the implications of using <cite>oneway</cite> and ensure that it’s used appropriately based on the requirements of your application.</p>
+</section>
+<hr class="docutils" />
+<section id="aidl-using-c">
+<h2><strong>AIDL using C++</strong><a class="headerlink" href="#aidl-using-c" title="Permalink to this heading"></a></h2>
+<p>Creating an AIDL interface in C++ involves defining the interface, implementing the server-side, and generating the proxy for the client-side. Here’s a simple example illustrating these steps:</p>
+<p>### Step 1: Define the AIDL Interface</p>
+<p>Create an AIDL file named <cite>ISimpleInterface.aidl</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">ISimpleInterface</span><span class="o">.</span><span class="n">aidl</span>
+<span class="n">package</span> <span class="n">com</span><span class="o">.</span><span class="n">example</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">ISimpleInterface</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">add</span><span class="p">(</span><span class="nb">int</span> <span class="n">a</span><span class="p">,</span> <span class="nb">int</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>### Step 2: Implement the Server-Side (Service)</p>
+<p>Create a C++ class that implements the <cite>ISimpleInterface</cite> interface:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// SimpleInterface.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&quot;ISimpleInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">android</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">binder</span> <span class="p">{</span>
+
+<span class="k">class</span> <span class="nc">SimpleInterface</span> <span class="o">:</span> <span class="k">public</span> <span class="n">BnSimpleInterface</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">SimpleInterface</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">SimpleInterface</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">virtual</span> <span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace binder</span>
+<span class="p">}</span> <span class="c1">// namespace android</span>
+</pre></div>
+</div>
+<p>### Step 3: Generate the Proxy for the Client-Side</p>
+<p>Use the <cite>aidl</cite> compiler to generate the proxy code:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aidl --lang<span class="o">=</span>c++ ISimpleInterface.aidl
+</pre></div>
+</div>
+<p>This will generate C++ files for the proxy, including <cite>ISimpleInterface.h</cite>, <cite>ISimpleInterface.cpp</cite>, <cite>ISimpleInterfaceStub.cpp</cite>, and <cite>ISimpleInterfaceProxy.cpp</cite>.</p>
+<p>### Step 4: Use the Proxy in the Client</p>
+<p>Here’s how you can use the generated proxy in your client code:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// Client.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&quot;ISimpleInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">android</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">com</span><span class="o">::</span><span class="n">example</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">sp</span><span class="o">&lt;</span><span class="n">ISimpleInterface</span><span class="o">&gt;</span> <span class="n">service</span> <span class="o">=</span> <span class="n">ISimpleInterface</span><span class="o">::</span><span class="n">getService</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">service</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Handle error</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">service</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+    <span class="c1">// Do something with the result</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example, the client code uses the generated proxy <cite>ISimpleInterface::getService()</cite> to obtain a reference to the remote service. It then calls the <cite>add()</cite> method on the service object to perform the addition operation remotely.</p>
+<p>This is a simplified example demonstrating how to create an AIDL interface in C++, implement the server-side logic, generate the proxy for the client-side, and use it in the client code. Depending on your project setup and requirements, you may need to adjust the code accordingly.</p>
+</section>
+<hr class="docutils" />
+<section id="hal-using-aidl">
+<h2><strong>HAL using AIDL</strong><a class="headerlink" href="#hal-using-aidl" title="Permalink to this heading"></a></h2>
+<p>Implementing a HAL (Hardware Abstraction Layer) using AIDL (Android Interface Definition Language) in C++ involves several steps. Below are the general steps to implement AIDL in C++ for a HAL:</p>
+<ol class="arabic simple">
+<li><p><strong>Define the Interface in AIDL</strong>: Create an AIDL file defining the interface for your HAL. This file will specify the methods that your HAL will expose.</p></li>
+<li><p><strong>Compile AIDL</strong>: Use the AIDL compiler to generate C++ headers and stubs from your AIDL file.</p></li>
+<li><p><strong>Implement the Interface in C++</strong>: Write the implementation of the HAL interface in C++. This involves creating a class that implements the methods defined in the AIDL interface.</p></li>
+<li><p><strong>Create HAL Module</strong>: Implement the HAL module, which initializes the HAL service and registers it with the Android system.</p></li>
+<li><p><strong>Compile and Build</strong>: Compile your HAL module along with the generated AIDL stubs and any other necessary files.</p></li>
+<li><p><strong>Test and Debug</strong>: Test your HAL implementation on the target device and debug any issues that arise.</p></li>
+</ol>
+<p>Here’s a more detailed breakdown of each step:</p>
+<p>### 1. Define the Interface in AIDL</p>
+<p>Create an AIDL file (e.g., <cite>IMyHalInterface.aidl</cite>) defining your interface:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">package</span> <span class="n">com</span><span class="o">.</span><span class="n">example</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">IMyHalInterface</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">myFunction</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>### 2. Compile AIDL</p>
+<p>Compile the AIDL file to generate C++ headers and stubs:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aidl -d &lt;output_dir&gt; IMyHalInterface.aidl
+</pre></div>
+</div>
+<p>### 3. Implement the Interface in C++</p>
+<p>Create a C++ class that implements the methods defined in the AIDL interface:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// MyHalInterface.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&quot;IMyHalInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">android</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">hardware</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">myhal</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">V1_0</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">implementation</span> <span class="p">{</span>
+
+<span class="k">class</span> <span class="nc">MyHalInterface</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IMyHalInterface</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// Implement the methods of the interface</span>
+    <span class="k">virtual</span> <span class="kt">int32_t</span> <span class="n">myFunction</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="c1">// Your implementation here</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace implementation</span>
+<span class="p">}</span> <span class="c1">// namespace V1_0</span>
+<span class="p">}</span> <span class="c1">// namespace myhal</span>
+<span class="p">}</span> <span class="c1">// namespace hardware</span>
+<span class="p">}</span> <span class="c1">// namespace android</span>
+</pre></div>
+</div>
+<p>### 4. Create HAL Module</p>
+<p>Implement the main function to initialize and register the HAL service:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// main.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;hidl/HidlTransportSupport.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;MyHalInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">configureRpcThreadpool</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">joinRpcThreadpool</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">sp</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">status_t</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Initialize HAL service</span>
+    <span class="n">android</span><span class="o">::</span><span class="n">sp</span><span class="o">&lt;</span><span class="n">IMyHalInterface</span><span class="o">&gt;</span> <span class="n">halInterface</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyHalInterface</span><span class="p">();</span>
+
+    <span class="c1">// Register HAL service</span>
+    <span class="n">configureRpcThreadpool</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">true</span> <span class="cm">/*callerWillJoin*/</span><span class="p">);</span>
+    <span class="n">status_t</span> <span class="n">status</span> <span class="o">=</span> <span class="n">halInterface</span><span class="o">-&gt;</span><span class="n">registerAsService</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">!=</span> <span class="n">android</span><span class="o">::</span><span class="n">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Handle error</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Start the HAL service</span>
+    <span class="n">joinRpcThreadpool</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// Should never reach here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>### 5. Compile and Build</p>
+<p>Compile your HAL module along with the generated AIDL stubs and any other necessary files using your preferred build system (e.g., CMake, Android.mk).</p>
+<p>### 6. Test and Debug</p>
+<p>Deploy your HAL module to the target device and test its functionality. Debug any issues that arise during testing.</p>
+<p>By following these steps, you can implement a HAL using AIDL in C++ for your Android system. Remember to follow best practices, handle errors appropriately, and thoroughly test your HAL implementation.</p>
+</section>
+<hr class="docutils" />
+<section id="hal-using-aidl-in-c">
+<h2><strong>HAL using AIDL in C++</strong><a class="headerlink" href="#hal-using-aidl-in-c" title="Permalink to this heading"></a></h2>
+<p>To create a HAL (Hardware Abstraction Layer) using AIDL (Android Interface Definition Language) in C++, you typically define your interface in an AIDL file, then implement the interface in C++. Here’s a simple example:</p>
+<ol class="arabic simple">
+<li><p>Define your interface in an AIDL file (for example, <cite>IMyHalInterface.aidl</cite>):</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">IMyHalInterface</span><span class="o">.</span><span class="n">aidl</span>
+<span class="n">package</span> <span class="n">com</span><span class="o">.</span><span class="n">example</span><span class="p">;</span>
+
+<span class="n">interface</span> <span class="n">IMyHalInterface</span> <span class="p">{</span>
+    <span class="nb">int</span> <span class="n">myFunction</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Compile the AIDL file:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aidl IMyHalInterface.aidl
+</pre></div>
+</div>
+<p>This will generate a C++ header file (<cite>IMyHalInterface.h</cite>) and a proxy class (<cite>BpMyHalInterface.cpp</cite> and <cite>BnMyHalInterface.cpp</cite>).</p>
+<ol class="arabic simple" start="3">
+<li><p>Implement the interface in C++:</p></li>
+</ol>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// MyHalInterface.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&quot;IMyHalInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">namespace</span> <span class="n">android</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">hardware</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">myhal</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">V1_0</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="n">implementation</span> <span class="p">{</span>
+
+<span class="k">class</span> <span class="nc">MyHalInterface</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IMyHalInterface</span> <span class="p">{</span>
+    <span class="c1">// Implement the methods of the interface</span>
+    <span class="k">virtual</span> <span class="kt">int32_t</span> <span class="n">myFunction</span><span class="p">()</span> <span class="k">override</span> <span class="p">{</span>
+        <span class="c1">// Your implementation here</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span> <span class="c1">// namespace implementation</span>
+<span class="p">}</span> <span class="c1">// namespace V1_0</span>
+<span class="p">}</span> <span class="c1">// namespace myhal</span>
+<span class="p">}</span> <span class="c1">// namespace hardware</span>
+<span class="p">}</span> <span class="c1">// namespace android</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Implement the HAL module:</p></li>
+</ol>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// MyHalInterface.cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;hidl/HidlTransportSupport.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;MyHalInterface.h&quot;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">configureRpcThreadpool</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">hardware</span><span class="o">::</span><span class="n">joinRpcThreadpool</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">sp</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">android</span><span class="o">::</span><span class="n">status_t</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Initialize HAL service</span>
+    <span class="n">android</span><span class="o">::</span><span class="n">sp</span><span class="o">&lt;</span><span class="n">IMyHalInterface</span><span class="o">&gt;</span> <span class="n">halInterface</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyHalInterface</span><span class="p">();</span>
+
+    <span class="c1">// Register HAL service</span>
+    <span class="n">configureRpcThreadpool</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">true</span> <span class="cm">/*callerWillJoin*/</span><span class="p">);</span>
+    <span class="n">status_t</span> <span class="n">status</span> <span class="o">=</span> <span class="n">halInterface</span><span class="o">-&gt;</span><span class="n">registerAsService</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">status</span> <span class="o">!=</span> <span class="n">android</span><span class="o">::</span><span class="n">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Handle error</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Start the HAL service</span>
+    <span class="n">joinRpcThreadpool</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// Should never reach here</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is a basic example demonstrating how to create a HAL using AIDL in C++. Depending on your requirements and the complexity of your hardware interface, you may need to extend this example further. Additionally, error handling and other best practices should be implemented for a production-level HAL.</p>
+</section>
+<hr class="docutils" />
+<section id="servicemanager-in-aidl">
+<h2><strong>ServiceManager in AIDL</strong><a class="headerlink" href="#servicemanager-in-aidl" title="Permalink to this heading"></a></h2>
+<p>The <cite>ServiceManager</cite> and AIDL (Android Interface Definition Language) are both fundamental components of the Android system, and they work together to facilitate inter-process communication (IPC) between different parts of the system. Here’s the relationship between <cite>ServiceManager</cite> and AIDL:</p>
+<ol class="arabic simple">
+<li><p><strong>ServiceManager</strong>:
+- The <cite>ServiceManager</cite> is a system-level service registry in Android. It maintains a list of named services that can be accessed by other processes.
+- It provides a mechanism for processes to discover and communicate with system services and other components.</p></li>
+<li><p><strong>AIDL</strong>:
+- AIDL, or Android Interface Definition Language, is a language used to define interfaces for remote procedure calls between processes on Android.
+- AIDL allows you to define interfaces that describe the methods that can be called remotely. These interfaces can then be implemented by different processes.</p></li>
+</ol>
+<p>Relationship:
+- When you define an AIDL interface, you are essentially defining a contract for a service that can be accessed remotely.
+- The <cite>ServiceManager</cite> plays a crucial role in this interaction by allowing clients to discover and bind to services using their names.
+- Clients use the <cite>ServiceManager</cite> to obtain a reference to the desired service by specifying its name.
+- Once the client has obtained a reference to the service, it can then use the AIDL-generated proxy to make method calls on the remote service as if it were a local object.</p>
+<p>In summary, AIDL defines the interface that the service exposes, while the <cite>ServiceManager</cite> facilitates the discovery and binding of services by clients, enabling them to communicate with remote services using the defined AIDL interfaces.</p>
+<p>Here’s a simplified block diagram illustrating the relationship between AIDL (Android Interface Definition Language) and the Service Manager in Android:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-----------------+</span>            <span class="o">+---------------------+</span>
+<span class="o">|</span>                 <span class="o">|</span>            <span class="o">|</span>                     <span class="o">|</span>
+<span class="o">|</span> <span class="n">Client</span> <span class="n">Process</span>  <span class="o">|</span>            <span class="o">|</span>     <span class="n">Server</span> <span class="n">Process</span>  <span class="o">|</span>
+<span class="o">|</span>                 <span class="o">|</span>            <span class="o">|</span>                     <span class="o">|</span>
+<span class="o">+--------+--------+</span>            <span class="o">+----------+----------+</span>
+         <span class="o">|</span>                                <span class="o">|</span>
+         <span class="o">|</span> <span class="n">Binder</span> <span class="n">IPC</span>                     <span class="o">|</span> <span class="n">Binder</span> <span class="n">IPC</span>
+         <span class="o">|</span>                                <span class="o">|</span>
+<span class="o">+--------</span><span class="n">v</span><span class="o">--------+</span>            <span class="o">+----------</span><span class="n">v</span><span class="o">----------+</span>
+<span class="o">|</span>    <span class="n">Proxy</span>        <span class="o">|</span>            <span class="o">|</span>     <span class="n">Stub</span>            <span class="o">|</span>
+<span class="o">|</span>    <span class="p">(</span><span class="n">Client</span><span class="p">)</span>     <span class="o">|</span>            <span class="o">|</span>     <span class="p">(</span><span class="n">Server</span><span class="p">)</span>        <span class="o">|</span>
+<span class="o">+--------+--------+</span>            <span class="o">+----------+----------+</span>
+         <span class="o">|</span>                                <span class="o">|</span>
+         <span class="o">|</span> <span class="n">AIDL</span> <span class="n">Interface</span> <span class="n">Definition</span>      <span class="o">|</span> <span class="n">AIDL</span> <span class="n">Interface</span> <span class="n">Definition</span>
+         <span class="o">|</span>                                <span class="o">|</span>
+<span class="o">+--------</span><span class="n">v</span><span class="o">--------+</span>            <span class="o">+----------</span><span class="n">v</span><span class="o">----------+</span>
+<span class="o">|</span>   <span class="n">ServiceManager</span><span class="o">|</span>            <span class="o">|</span>     <span class="n">Service</span>         <span class="o">|</span>
+<span class="o">|</span>                 <span class="o">|</span>            <span class="o">|</span>     <span class="p">(</span><span class="n">Implementation</span><span class="p">)</span><span class="o">|</span>
+<span class="o">+-----------------+</span>            <span class="o">+---------------------+</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Client Process</strong>: This represents the process in which the client application is running. It wants to access services provided by the server process.</p></li>
+<li><p><strong>Server Process</strong>: This represents the process in which the service is implemented. It exposes functionality that can be accessed remotely by clients.</p></li>
+<li><p><strong>Proxy (Client)</strong>: AIDL generates proxy classes for client processes based on the AIDL interface definitions. The proxy acts as a local representative of the remote service, handling communication details such as marshalling data for IPC.</p></li>
+<li><p><strong>Stub (Server)</strong>: AIDL also generates stub classes for server processes. The stub receives method calls from clients via Binder IPC and forwards them to the actual service implementation.</p></li>
+<li><p><strong>AIDL Interface Definition</strong>: AIDL files define the interface that the client and server use to communicate. They specify the methods that can be called remotely, along with their parameters and return types.</p></li>
+<li><p><strong>ServiceManager</strong>: The ServiceManager is a system-level service registry that maintains a list of named services. Clients use the ServiceManager to obtain references to services by their names. The ServiceManager facilitates the binding between clients and services.</p></li>
+<li><p><strong>Service (Implementation)</strong>: This is the actual implementation of the service provided by the server process. It contains the logic to execute the methods defined in the AIDL interface.</p></li>
+<li><p><strong>Binder IPC</strong>: Binder is the underlying mechanism for Inter-Process Communication (IPC) in Android. It handles communication between client and server processes transparently, allowing them to interact as if they were local objects.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="binders">
+<h2><strong>Binders</strong><a class="headerlink" href="#binders" title="Permalink to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Binder</strong>:
+- Binder is the underlying Inter-Process Communication (IPC) mechanism used in the Android operating system.
+- It facilitates communication between different processes, allowing them to exchange data and invoke methods on objects located in other processes.
+- Binder uses a client-server model, where clients make requests to servers, and servers process those requests and send back responses.
+- It provides features like memory mapping, threading, and security mechanisms to ensure efficient and secure communication between processes.
+- Binder is implemented as a kernel driver (<cite>/dev/binder</cite>) and a set of user-space libraries (<cite>libbinder</cite> and <cite>libbinder_ndk</cite>) that provide APIs for working with Binder in Android applications.</p></li>
+<li><p><strong>HwBinder</strong>:
+- HwBinder, short for Hardware Binder, is a specialized variant of Binder tailored for communication between the Android framework and hardware components.
+- It is designed to provide efficient and reliable communication between the Android framework and device-specific HALs (Hardware Abstraction Layers).
+- HwBinder is used extensively in Android for communication with hardware components such as sensors, cameras, audio codecs, and more.
+- It introduces optimizations specifically aimed at reducing overhead and improving performance for hardware communication, such as support for passthrough mode and optimized memory management.</p></li>
+<li><p><strong>VndBinder</strong>:
+- VndBinder, short for Vendor Binder, is an extension of Binder that allows vendors to extend and customize the Binder framework for their specific requirements.
+- It provides a way for vendors to add custom features, protocols, and optimizations to Binder without modifying the core Android framework.
+- VndBinder is often used by device manufacturers and chipset vendors to implement proprietary communication protocols or optimize performance for specific hardware configurations.
+- It enables vendors to integrate their hardware components more seamlessly with the Android ecosystem while still adhering to the standard Binder interface.</p></li>
+</ol>
+<p>In summary, Binder is the foundational IPC mechanism in Android, HwBinder is a specialized version used for communication with hardware components, and VndBinder allows vendors to customize Binder for their specific needs. Together, these components form a powerful and flexible communication framework that enables efficient and secure interaction between different parts of the Android system.</p>
+</section>
+<hr class="docutils" />
+<section id="vndbinder-vs-hwbinders">
+<h2><strong>VndBinder vs HwBinders</strong><a class="headerlink" href="#vndbinder-vs-hwbinders" title="Permalink to this heading"></a></h2>
+<p>vndbinder and hwbinder are both inter-process communication (IPC) mechanisms used in Android for communication between processes at different security levels:</p>
+<p><strong>vndbinder:</strong></p>
+<ul class="simple">
+<li><p><strong>Purpose:</strong> Primarily used for communication between vendor processes (processes provided by device manufacturers) at the same security level.</p></li>
+<li><p><strong>Security context:</strong> Uses the <cite>/dev/vndbinder</cite> device node with the <cite>vnd</cite> security domain.</p></li>
+<li><dl class="simple">
+<dt><strong>Advantages:</strong></dt><dd><ul>
+<li><p>Lightweight and efficient for vendor-to-vendor communication.</p></li>
+<li><p>More widely supported and documented than hwbinder.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Disadvantages:</strong></dt><dd><ul>
+<li><p>Not designed for system-to-vendor or vendor-to-system communication.</p></li>
+<li><p>Less stable and secure compared to hwbinder.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>hwbinder:</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Purpose:</strong> Designed for secure and stable communication between any processes at different security levels, including:</dt><dd><ul>
+<li><p>System processes and vendor processes.</p></li>
+<li><p>Vendor processes and vendor processes.</p></li>
+<li><p>System processes and hardware acceleration services (HALs).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Security context:</strong> Uses the <cite>/dev/hwbinder</cite> device node with the <cite>hw</cite> security domain.</p></li>
+<li><dl class="simple">
+<dt><strong>Advantages:</strong></dt><dd><ul>
+<li><p>More secure and stable than vndbinder due to its stricter rules and sandboxing.</p></li>
+<li><p>Supports communication between processes at different security levels.</p></li>
+<li><p>Integrates well with HALs through HIDL (Hardware Interface Definition Language).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Disadvantages:</strong></dt><dd><ul>
+<li><p>More complex to implement and requires HAL design using HIDL.</p></li>
+<li><p>Newer than vndbinder and may have less widespread support.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Summary:</strong></p>
+<ul class="simple">
+<li><p><strong>Choose vndbinder:</strong> If you need efficient communication between vendor processes at the same security level and stability is not a major concern.</p></li>
+<li><p><strong>Choose hwbinder:</strong> If you need secure and stable communication between processes at different security levels, or if you are developing HALs using HIDL.</p></li>
+</ul>
+<p>Here are some additional points to consider:</p>
+<ul class="simple">
+<li><p>Some Android versions may still be using vndbinder for specific purposes, but the trend is moving towards hwbinder for improved security and stability.</p></li>
+<li><p>You can find more information about vndbinder and hwbinder in the Android Open Source Project (AOSP) documentation.</p></li>
+</ul>
+<p>I hope this explanation clarifies the differences between vndbinder and hwbinder and helps you choose the appropriate one for your needs!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="aosp-haltheory.html" class="btn btn-neutral float-left" title="AOSP - Theory of HAL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="linux-posix.html" class="btn btn-neutral float-right" title="Linux - Posix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Easwarnet.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

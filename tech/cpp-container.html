@@ -44,11 +44,13 @@
 <li class="toctree-l1"><a class="reference internal" href="cpp-inheritence.html">C++ - Inheritance</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">C++ - Container</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#list-of-containers"><strong>List Of Containers</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#extract-method-in-std-set">Extract Method in Std::Set</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#unordered-map-vs-map">unordered_map vs map</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#std-set-vs-std-vector">std::set vs std::vector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#std-forward-list-vs-std-vector">std::forward_list vs std::vector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#std-list-vs-std-unordered-map">std::list vs std::unordered_map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extract-method-in-std-set"><strong>Extract Method in Std::Set</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unordered-map-vs-map"><strong>unordered_map vs map</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#std-set-vs-std-vector"><strong>std::set vs std::vector</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#std-forward-list-vs-std-vector"><strong>std::forward_list vs std::vector</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#std-list-vs-std-unordered-map"><strong>std::list vs std::unordered_map</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-in-different-containers"><strong>Find in Different Containers</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#erase-in-different-containers"><strong>Erase in Different Containers</strong></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cpp-stdlib.html">C++ - StdLib</a></li>
@@ -153,7 +155,7 @@
 </section>
 <hr class="docutils" />
 <section id="extract-method-in-std-set">
-<h2>Extract Method in Std::Set<a class="headerlink" href="#extract-method-in-std-set" title="Permalink to this heading"></a></h2>
+<h2><strong>Extract Method in Std::Set</strong><a class="headerlink" href="#extract-method-in-std-set" title="Permalink to this heading"></a></h2>
 <p><strong>In C++17, the `extract` method was introduced for associative containers like `std::set` to provide an efficient way to remove elements without unnecessary copies or moves.</strong></p>
 <p><strong>Here’s how it works:</strong></p>
 <dl class="simple">
@@ -206,7 +208,7 @@
 </section>
 <hr class="docutils" />
 <section id="unordered-map-vs-map">
-<h2>unordered_map vs map<a class="headerlink" href="#unordered-map-vs-map" title="Permalink to this heading"></a></h2>
+<h2><strong>unordered_map vs map</strong><a class="headerlink" href="#unordered-map-vs-map" title="Permalink to this heading"></a></h2>
 <p><strong>Here’s a comparison of std::unordered_map and std::map in C++, highlighting their key differences and when to choose each:</strong></p>
 <p><strong>Key Differences:</strong></p>
 <table class="docutils align-default">
@@ -276,7 +278,7 @@
 </section>
 <hr class="docutils" />
 <section id="std-set-vs-std-vector">
-<h2>std::set vs std::vector<a class="headerlink" href="#std-set-vs-std-vector" title="Permalink to this heading"></a></h2>
+<h2><strong>std::set vs std::vector</strong><a class="headerlink" href="#std-set-vs-std-vector" title="Permalink to this heading"></a></h2>
 <p><strong>Here’s a comparison of std::set and std::vector in C++, highlighting their key differences and when to choose each:</strong></p>
 <p><strong>Key Differences:</strong></p>
 <table class="docutils align-default">
@@ -351,7 +353,7 @@
 </section>
 <hr class="docutils" />
 <section id="std-forward-list-vs-std-vector">
-<h2>std::forward_list vs std::vector<a class="headerlink" href="#std-forward-list-vs-std-vector" title="Permalink to this heading"></a></h2>
+<h2><strong>std::forward_list vs std::vector</strong><a class="headerlink" href="#std-forward-list-vs-std-vector" title="Permalink to this heading"></a></h2>
 <p><strong>Here’s a comparison of std::forward_list and std::vector in C++, highlighting their key differences and when to choose each:</strong></p>
 <p><strong>Key Differences:</strong></p>
 <table class="docutils align-default">
@@ -425,7 +427,7 @@
 </section>
 <hr class="docutils" />
 <section id="std-list-vs-std-unordered-map">
-<h2>std::list vs std::unordered_map<a class="headerlink" href="#std-list-vs-std-unordered-map" title="Permalink to this heading"></a></h2>
+<h2><strong>std::list vs std::unordered_map</strong><a class="headerlink" href="#std-list-vs-std-unordered-map" title="Permalink to this heading"></a></h2>
 <p><strong>The speed of std::list and std::unordered_map depends on the specific operations you’re performing:</strong></p>
 <p><strong>Key Operations and Performance:</strong></p>
 <table class="docutils align-default">
@@ -479,6 +481,238 @@
 <li><p>Choose std::unordered_map for lightning-fast lookups by key, when you don’t need ordering and can handle potential hash collisions.</p></li>
 <li><p>The best choice depends on your specific use case and performance requirements.</p></li>
 </ul>
+</section>
+<hr class="docutils" />
+<section id="find-in-different-containers">
+<h2><strong>Find in Different Containers</strong><a class="headerlink" href="#find-in-different-containers" title="Permalink to this heading"></a></h2>
+<p>Different containers in C++ provide various methods to find elements based on their characteristics. Here’s a breakdown of common approaches for some containers:</p>
+<p><strong>1. Arrays:</strong></p>
+<ul class="simple">
+<li><p>Arrays don’t have built-in search functionalities. You can use a loop to iterate through the elements and compare them with the target value.</p></li>
+</ul>
+<p><strong>2. Vectors:</strong></p>
+<ul class="simple">
+<li><p><cite>std::find</cite> algorithm: This generic algorithm takes iterators (start and end) and a value to search for. It returns an iterator pointing to the first element that matches the value, or <cite>end</cite> if not found.</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">myVector</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span>
+<span class="kt">int</span> <span class="n">valueToFind</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">myVector</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">myVector</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">valueToFind</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">!=</span> <span class="n">myVector</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Element found at index: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="p">(</span><span class="n">myVector</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">it</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Element not found.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>std::find_if</cite> algorithm: Similar to <cite>std::find</cite>, but takes a predicate (a function or lambda) that determines the search condition.</p></li>
+</ul>
+<p><strong>3. Lists:</strong></p>
+<ul class="simple">
+<li><p><cite>std::find</cite> algorithm: Works the same as with vectors, taking iterators and a value to search for.</p></li>
+</ul>
+<p><strong>4. Sets and Unordered Sets:</strong></p>
+<ul class="simple">
+<li><p><cite>std::find</cite> algorithm: Not recommended for sets/unordered_sets as they don’t maintain element order. Use member functions specifically designed for these containers:</p></li>
+<li><p><cite>std::set::count</cite>: Returns the number of elements with a specific value (indicates existence, not position).</p></li>
+<li><p><cite>std::set::find</cite>: Returns an iterator pointing to the element with the value, or <cite>end</cite> if not found.</p></li>
+<li><p><cite>std::unordered_set::count</cite> and <cite>std::unordered_set::find</cite> (same as set counterparts).</p></li>
+</ul>
+<p><strong>5. Maps and Unordered Maps:</strong></p>
+<ul class="simple">
+<li><p><cite>std::find</cite> algorithm: Not recommended for maps/unordered_maps as they search by key, not value. Use member functions:</p></li>
+<li><p><cite>std::map::count</cite>: Returns the number of key-value pairs with a specific key (indicates existence, not position).</p></li>
+<li><p><cite>std::map::find</cite>: Returns an iterator pointing to the key-value pair with the specified key, or <cite>end</cite> if not found.</p></li>
+<li><p><cite>std::unordered_map::count</cite> and <cite>std::unordered_map::find</cite> (same as map counterparts).</p></li>
+</ul>
+<p><strong>Choosing the Right Approach:</strong></p>
+<ul class="simple">
+<li><p>For arrays, use a loop-based search.</p></li>
+<li><p>For vectors and lists, <cite>std::find</cite> or <cite>std::find_if</cite> are suitable for value-based searches.</p></li>
+<li><p>For sets/unordered_sets, use <cite>count</cite> to check existence or <cite>find</cite> to get the element/iterator if it exists. Search by key, not value.</p></li>
+<li><p>For maps/unordered_maps, use <cite>count</cite> to check existence by key or <cite>find</cite> to get the key-value pair if the key exists. Search by key, not value.</p></li>
+</ul>
+<p>Consider the container type and your search criteria (value or key) when selecting the appropriate method.</p>
+<p>Here’s a breakdown of finding elements in different C++ containers along with their time complexities:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 19%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Container</strong></p></th>
+<th class="head"><p><strong>Method</strong></p></th>
+<th class="head"><p><strong>Time Complexity</strong></p></th>
+<th class="head"><p><strong>Notes</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Array</p></td>
+<td><p>Loop-based search</p></td>
+<td><p>O(n)</p></td>
+<td><p>Iterates through all elements, linear in the size (n) of the array.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Vector</p></td>
+<td><p><cite>std::find</cite></p></td>
+<td><p>O(n)</p></td>
+<td><p>Iterates through elements in the worst case, linear in the size (n) of the vector.</p></td>
+</tr>
+<tr class="row-even"><td><p>Vector</p></td>
+<td><p><cite>std::find_if</cite></p></td>
+<td><p>O(n)</p></td>
+<td><p>Similar to <cite>std::find</cite>, iterates in the worst case, linear in size.</p></td>
+</tr>
+<tr class="row-odd"><td><p>List</p></td>
+<td><p><cite>std::find</cite></p></td>
+<td><p>O(n)</p></td>
+<td><p>Iterates through elements in the worst case, linear in the size (n) of the list.</p></td>
+</tr>
+<tr class="row-even"><td><p>Set</p></td>
+<td><p><cite>std::set::count</cite></p></td>
+<td><p>O(log n)</p></td>
+<td><p>Uses a balanced search tree for efficient lookups, logarithmic in size.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Set</p></td>
+<td><p><cite>std::set::find</cite></p></td>
+<td><p>O(log n)</p></td>
+<td><p>Similar to <cite>count</cite>, efficient lookup using a balanced search tree.</p></td>
+</tr>
+<tr class="row-even"><td><p>Unordered Set</p></td>
+<td><p><cite>std::unordered_set::count</cite></p></td>
+<td><p>O(1) (average)</p></td>
+<td><p>Uses hashing for fast lookups, on average constant time. Can be O(n) in the worst case.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Unordered Set</p></td>
+<td><p><cite>std::unordered_set::find</cite></p></td>
+<td><p>O(1) (average)</p></td>
+<td><p>Similar to <cite>count</cite>, on average constant time, but O(n) in the worst case.</p></td>
+</tr>
+<tr class="row-even"><td><p>Map</p></td>
+<td><p><cite>std::map::count</cite></p></td>
+<td><p>O(log n)</p></td>
+<td><p>Uses a balanced search tree for efficient lookups, logarithmic in size.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Map</p></td>
+<td><p><cite>std::map::find</cite></p></td>
+<td><p>O(log n)</p></td>
+<td><p>Similar to <cite>count</cite>, efficient lookup using a balanced search tree.</p></td>
+</tr>
+<tr class="row-even"><td><p>Unordered Map</p></td>
+<td><p><cite>std::unordered_map::find</cite></p></td>
+<td><p>O(1) (average)</p></td>
+<td><p>Similar to <cite>count</cite>, on average constant time, but O(n) in the worst case.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Explanation:</strong></p>
+<ul class="simple">
+<li><p>Arrays don’t have built-in search functionalities, so iterating through all elements (<cite>O(n)</cite>) is necessary.</p></li>
+<li><p>Vectors and lists are linear data structures, so searching using <cite>find</cite> or <cite>find_if</cite> has a worst-case complexity of <cite>O(n)</cite> as it might need to iterate through all elements.</p></li>
+<li><p>Sets and ordered maps utilize balanced search trees (e.g., red-black trees) for efficient lookups. Finding elements using <cite>count</cite> or <cite>find</cite> takes <cite>O(log n)</cite> time on average, which is logarithmic in the container’s size.</p></li>
+<li><p>Unordered sets and unordered maps leverage hashing for faster lookups. In the average case, finding elements using <cite>count</cite> or <cite>find</cite> takes constant time (<cite>O(1)</cite>), but it can deteriorate to linear time (<cite>O(n)</cite>) in the worst case (e.g., hash collisions).</p></li>
+</ul>
+<p><strong>Important Notes:</strong></p>
+<ul class="simple">
+<li><p>The average-case complexity for unordered sets/maps assumes a good hash function and a moderate load factor (number of elements relative to the container’s size).</p></li>
+<li><p>For frequent searches, sets/ordered maps are generally preferred due to their guaranteed logarithmic time complexity.</p></li>
+<li><p>For scenarios where occasional slowdowns during insertion/deletion are acceptable, unordered sets/maps might be suitable due to their potential for faster average-case lookups.</p></li>
+</ul>
+<p>Choose the container based on the access patterns (frequent searches vs. insertions/deletions) and the acceptable time complexity for your specific use case.</p>
+</section>
+<hr class="docutils" />
+<section id="erase-in-different-containers">
+<h2><strong>Erase in Different Containers</strong><a class="headerlink" href="#erase-in-different-containers" title="Permalink to this heading"></a></h2>
+<p>Here’s a breakdown of deleting or erasing elements in different C++ containers:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 25%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Container</strong></p></th>
+<th class="head"><p><strong>Method</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Array</p></td>
+<td><p>Not supported directly</p></td>
+<td><p>Arrays don’t have built-in methods for erasing elements.
+You can overwrite elements with other values or create a new array without the unwanted elements.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Vector</p></td>
+<td><p><cite>erase(iterator)</cite></p></td>
+<td><p>Erases the element pointed to by the iterator. Returns a new iterator pointing to the element
+after the erased one.</p></td>
+</tr>
+<tr class="row-even"><td><p>Vector</p></td>
+<td><p><cite>erase(iterator_start, iterator_end)</cite></p></td>
+<td><p>Erases elements in the range [iterator_start, iterator_end). Both iterators must point to elements
+within the vector.</p></td>
+</tr>
+<tr class="row-odd"><td><p>List</p></td>
+<td><p><cite>erase(iterator)</cite></p></td>
+<td><p>Erases the element pointed to by the iterator.</p></td>
+</tr>
+<tr class="row-even"><td><p>List</p></td>
+<td><p><cite>erase(iterator_start, iterator_end)</cite></p></td>
+<td><p>Erases elements in the range [iterator_start, iterator_end). Both iterators must point to elements
+within the list.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Set</p></td>
+<td><p><cite>erase(value)</cite></p></td>
+<td><p>Erases the element with the specified value (if it exists). Returns the number of elements erased
+(0 or 1).</p></td>
+</tr>
+<tr class="row-even"><td><p>Set</p></td>
+<td><p><cite>erase(iterator)</cite></p></td>
+<td><p>Erases the element pointed to by the iterator.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Unordered Set</p></td>
+<td><p>Same as Set</p></td>
+<td><p>Methods behave identically to sets.</p></td>
+</tr>
+<tr class="row-even"><td><p>Map</p></td>
+<td><p><cite>erase(key)</cite></p></td>
+<td><p>Erases the key-value pair with the specified key (if it exists). Returns the number of elements
+erased (0 or 1).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Map</p></td>
+<td><p><cite>erase(iterator)</cite></p></td>
+<td><p>Erases the element pointed to by the iterator.</p></td>
+</tr>
+<tr class="row-even"><td><p>Unordered Map</p></td>
+<td><p>Same as Map</p></td>
+<td><p>Methods behave identically to maps.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Additional Notes:</strong></p>
+<ul class="simple">
+<li><p>In some containers like vectors and lists, erasing elements might invalidate iterators pointing to subsequent elements due to shifting of elements in memory. Be cautious when using iterators after erasing.</p></li>
+<li><p>Sets and unordered sets only store unique elements, so <cite>erase(value)</cite> will only remove one element at most, even if there are duplicates with the same value.</p></li>
+<li><p>Maps and unordered maps store key-value pairs. <cite>erase(key)</cite> removes the entire pair associated with the specified key.</p></li>
+</ul>
+<p><strong>Here are some examples:</strong></p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// Vector erase example</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">myVector</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">};</span>
+<span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">myVector</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// Iterator pointing to element 3</span>
+<span class="n">myVector</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">it</span><span class="p">);</span> <span class="c1">// Erases element 3</span>
+
+<span class="c1">// Set erase example</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">mySet</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;apple&quot;</span><span class="p">,</span> <span class="s">&quot;banana&quot;</span><span class="p">,</span> <span class="s">&quot;cherry&quot;</span><span class="p">};</span>
+<span class="n">mySet</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="s">&quot;banana&quot;</span><span class="p">);</span> <span class="c1">// Erases &quot;banana&quot; if it exists</span>
+
+<span class="c1">// Map erase example</span>
+<span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">myMap</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;one&quot;</span><span class="p">},</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="s">&quot;two&quot;</span><span class="p">},</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;three&quot;</span><span class="p">}};</span>
+<span class="n">myMap</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="c1">// Erases the key-value pair with key 2</span>
+</pre></div>
+</div>
+<p>Remember to choose the appropriate method based on the container type and whether you want to erase by value (sets/maps) or by iterator position (other containers). Consider potential iterator invalidation after erasing in containers like vectors and lists.</p>
 </section>
 </section>
 

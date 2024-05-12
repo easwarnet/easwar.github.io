@@ -1,0 +1,741 @@
+AOSP - IPC
+=============
+
+**HIDL Callback**
+--------------------------------
+
+**Here's an example of how ICallback is used in HIDL to enable asynchronous communication between a client and a server:**
+
+**HAL Definition (`IHello.hal`):**
+
+.. code-block::
+
+    package vendor.sample.hello@1.0;
+
+    interface IHello {
+        init();
+        release();
+        setCallback(IHelloCallback callback);
+    };
+
+
+**Callback Interface (`IHelloCallback.hal`):**
+
+.. code-block::
+
+    package vendor.sample.hello@1.0;
+
+    interface IHelloCallback {
+        onEvent(string message);
+    };
+
+
+**Server Implementation (`HelloService.cpp`):**
+
+.. code-block:: c++
+
+    class HelloService : public IHello {
+    public:
+        // ... other methods ...
+
+        Return<void> setCallback(const sp<IHelloCallback>& callback) override {
+            mCallback = callback;
+            return Void();
+        }
+
+        void notifyClient() {
+            if (mCallback != nullptr) {
+                mCallback->onEvent("Hello from server!");
+            }
+        }
+
+    private:
+        sp<IHelloCallback> mCallback;
+    };
+
+
+**Client Implementation (`MainActivity.java`):**
+
+.. code-block:: java
+
+    public class MainActivity extends Activity {
+        private IHello mHelloService;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            // ... get service instance ...
+
+            mHelloService.setCallback(new IHelloCallback.Stub() {
+                @Override
+                public void onEvent(String message) {
+                    Log.d("MainActivity", "Received callback: " + message);
+                }
+            });
+        }
+
+        public void onButtonClick(View view) {
+            mHelloService.notifyClient();
+        }
+    }
+
+
+**Explanation:**
+
+1. **Interface Definition:**
+   - The `IHello` interface includes a method `setCallback` to register a client-side callback object.
+   - The `IHelloCallback` interface defines the callback method `onEvent` that the server will invoke.
+
+2. **Server Implementation:**
+   - The `HelloService` class implements `IHello`.
+   - `setCallback` stores the client's callback object.
+   - `notifyClient` uses the stored callback to send an asynchronous message to the client.
+
+3. **Client Implementation:**
+   - The client creates an implementation of `IHelloCallback`.
+   - It passes this callback object to the server's `setCallback` method.
+   - When the server calls `notifyClient`, the client's `onEvent` method is invoked.
+
+**Key Points:**
+
+- ICallback enables asynchronous communication between HIDL components.
+- The server can notify the client of events or results without the client actively polling.
+- This pattern is useful for long-running operations or events that occur at unpredictable times.
+
+-----------------------
+
+**AIDL stub and proxy in C++**
+--------------------------------
+
+how to create an AIDL (Android Interface Definition Language) stub and proxy in C++.
+
+First, let's define a simple interface in AIDL. Create a file named `ISimpleInterface.aidl`:
+
+.. code-block:: c++
+
+    // ISimpleInterface.aidl
+    package com.example;
+
+    interface ISimpleInterface {
+        int add(int a, int b);
+    }
+
+Next, you need to compile this AIDL file to generate the necessary C++ files. Use the AIDL compiler to do this:
+
+.. code-block:: bash
+
+    aidl --lang=c++ ISimpleInterface.aidl
+
+
+This will generate several C++ files including `ISimpleInterface.h`, `ISimpleInterface.cpp`, `ISimpleInterfaceStub.cpp`, and `ISimpleInterfaceProxy.cpp`.
+
+Now, let's implement the server-side (stub) of this interface. You'll need to implement the `ISimpleInterface` class defined in `ISimpleInterface.h` and `ISimpleInterface.cpp`. Here's a simple implementation:
+
+.. code-block:: c++
+
+    // ISimpleInterface.cpp
+    #include "ISimpleInterface.h"
+
+    namespace android {
+    namespace binder {
+
+    status_t BnSimpleInterface::onTransact(
+        uint32_t code, const Parcel& data, Parcel* reply, uint32_t flags) {
+        switch (code) {
+            case TRANSACTION_add: {
+                CHECK_INTERFACE(ISimpleInterface, data, reply);
+                int a = data.readInt32();
+                int b = data.readInt32();
+                int result = add(a, b);
+                reply->writeInt32(result);
+                return NO_ERROR;
+            }
+            default:
+                return BBinder::onTransact(code, data, reply, flags);
+        }
+    }
+
+    }  // namespace binder
+    }  // namespace android
+
+Next, let's implement the client-side (proxy) of this interface. This will be the code that interacts with the remote service. Here's a simple example:
+
+.. code-block:: c++
+
+    // ISimpleInterfaceClient.cpp
+    #include "ISimpleInterface.h"
+
+    namespace android {
+    namespace binder {
+
+    sp<ISimpleInterface> ISimpleInterface::getClient() {
+        sp<IServiceManager> sm = defaultServiceManager();
+        sp<IBinder> binder = sm->getService(String16("com.example.SimpleInterface"));
+        if (binder == nullptr) {
+            return nullptr;
+        }
+        return interface_cast<ISimpleInterface>(binder);
+    }
+
+    }  // namespace binder
+    }  // namespace android
+
+This is a basic example of how to create an AIDL stub and proxy in C++. You can now use these components to communicate between a client and a server in an Android application. Note that in a real-world scenario, error handling and more robust implementation would be necessary. Additionally, you need to ensure that your service is registered properly with the Android system.
+
+
+--------------------
+
+**AIDL**
+--------------------------------
+
+ **Here's an example illustrating Binder Proxy and Stub concepts in Android IPC:**
+
+**Interface Definition:**
+
+- **IMyService.aidl:**
+
+.. code-block:: java
+
+    package com.example.myservice;
+
+    interface IMyService {
+        int add(int a, int b);
+    }
+
+
+**Server Implementation:**
+
+- **MyService.java:**
+
+.. code-block:: java
+
+    package com.example.myservice;
+
+    public class MyService extends IMyService.Stub {
+        @Override
+        public int add(int a, int b) {
+            return a + b;
+        }
+    }
+
+
+**Client Implementation:**
+
+- **MainActivity.java:**
+
+.. code-block:: java
+
+    package com.example.myclient;
+
+    import com.example.myservice.IMyService;
+
+    public class MainActivity extends Activity {
+        private IMyService mService;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            // ... get service instance using ServiceManager ...
+
+            int result = mService.add(5, 3); // Proxy calls remote method
+            Log.d("MainActivity", "Result: " + result);
+        }
+    }
+
+
+**Explanation:**
+
+1. **IMyService.aidl:** Defines the interface for remote communication, specifying methods clients can call.
+2. **MyService.java:** Implements the service, extending `IMyService.Stub` to handle remote calls.
+3. **MainActivity.java:** Client obtains a service instance (proxy) and invokes methods on it as if it were a local object.
+
+**Proxy and Stub:**
+
+- **Proxy (on client-side):**
+    - Acts as a local representation of the remote service.
+    - Forwards method calls to the Binder kernel driver.
+    - Marshalls arguments and results for transport.
+- **Stub (on server-side):**
+    - Receives method calls from the Binder driver.
+    - Unmarshalls arguments and dispatches them to the actual service implementation.
+    - Returns results through the Binder driver.
+
+**Key Points:**
+
+- The Binder framework hides the complexities of IPC behind proxy and stub objects.
+- Clients interact with remote services using a natural object-oriented approach.
+- The Binder driver transparently handles communication and data transfer between processes.
+
+**Additional Insights:**
+
+- Binder communication is asynchronous, allowing clients to continue execution while waiting for results.
+- Binder supports one-way transactions for performance optimization in certain scenarios.
+- Security is enforced through Binder's permission model and SELinux policies.
+
+--------------------
+
+**Oneway in AIDL**
+--------------------------------
+
+In AIDL (Android Interface Definition Language), the `oneway` keyword is used to indicate that a method call should be asynchronous. When a method in an AIDL interface is declared with the `oneway` keyword, it means that the caller of that method does not need to wait for the method to finish executing before continuing its own execution. Instead, the caller sends the request to the remote service and continues its own processing immediately without blocking.
+
+Here's a basic example to illustrate the usage of `oneway` in AIDL:
+
+.. code-block:: 
+
+    // ExampleService.aidl
+    package com.example;
+
+    interface ExampleService {
+        oneway void doSomethingAsync();
+    }
+
+In this example, the `doSomethingAsync()` method is declared with the `oneway` keyword. This means that when a client calls this method, it doesn't wait for the method to complete its execution on the server side. The client sends the request and continues its own processing without waiting for a response from the server.
+
+It's important to note a few key points about using `oneway` in AIDL:
+
+1. The method declaration with `oneway` must not have a return type or out parameters.
+2. Exceptions thrown by the method on the server side are not propagated back to the client.
+3. There is no guarantee about the order in which `oneway` calls are executed on the server side.
+
+`oneway` calls can be beneficial for scenarios where the client needs to make non-blocking calls to the server, especially when the client doesn't need to receive a response immediately or when performance is a concern. However, it's essential to carefully consider the implications of using `oneway` and ensure that it's used appropriately based on the requirements of your application.
+
+
+------------------------------------
+
+**AIDL using C++**
+--------------------------------
+
+Creating an AIDL interface in C++ involves defining the interface, implementing the server-side, and generating the proxy for the client-side. Here's a simple example illustrating these steps:
+
+### Step 1: Define the AIDL Interface
+
+Create an AIDL file named `ISimpleInterface.aidl`:
+
+.. code-block:: 
+
+    // ISimpleInterface.aidl
+    package com.example;
+
+    interface ISimpleInterface {
+        int add(int a, int b);
+    }
+
+### Step 2: Implement the Server-Side (Service)
+
+Create a C++ class that implements the `ISimpleInterface` interface:
+
+.. code-block:: c++
+
+    // SimpleInterface.cpp
+    #include "ISimpleInterface.h"
+
+    namespace android {
+    namespace binder {
+
+    class SimpleInterface : public BnSimpleInterface {
+    public:
+        SimpleInterface() {}
+        virtual ~SimpleInterface() {}
+
+        virtual int add(int a, int b) override {
+            return a + b;
+        }
+    };
+
+    } // namespace binder
+    } // namespace android
+
+### Step 3: Generate the Proxy for the Client-Side
+
+Use the `aidl` compiler to generate the proxy code:
+
+.. code-block:: bash
+
+    aidl --lang=c++ ISimpleInterface.aidl
+
+This will generate C++ files for the proxy, including `ISimpleInterface.h`, `ISimpleInterface.cpp`, `ISimpleInterfaceStub.cpp`, and `ISimpleInterfaceProxy.cpp`.
+
+### Step 4: Use the Proxy in the Client
+
+Here's how you can use the generated proxy in your client code:
+
+.. code-block:: c++
+
+    // Client.cpp
+    #include "ISimpleInterface.h"
+
+    using namespace android;
+    using namespace com::example;
+
+    int main() {
+        sp<ISimpleInterface> service = ISimpleInterface::getService();
+        if (service == nullptr) {
+            // Handle error
+            return 1;
+        }
+
+        int result = service->add(5, 3);
+        // Do something with the result
+
+        return 0;
+    }
+
+In this example, the client code uses the generated proxy `ISimpleInterface::getService()` to obtain a reference to the remote service. It then calls the `add()` method on the service object to perform the addition operation remotely.
+
+This is a simplified example demonstrating how to create an AIDL interface in C++, implement the server-side logic, generate the proxy for the client-side, and use it in the client code. Depending on your project setup and requirements, you may need to adjust the code accordingly.
+
+------------------------------------
+
+**HAL using AIDL**
+--------------------------------
+
+Implementing a HAL (Hardware Abstraction Layer) using AIDL (Android Interface Definition Language) in C++ involves several steps. Below are the general steps to implement AIDL in C++ for a HAL:
+
+1. **Define the Interface in AIDL**: Create an AIDL file defining the interface for your HAL. This file will specify the methods that your HAL will expose.
+
+2. **Compile AIDL**: Use the AIDL compiler to generate C++ headers and stubs from your AIDL file.
+
+3. **Implement the Interface in C++**: Write the implementation of the HAL interface in C++. This involves creating a class that implements the methods defined in the AIDL interface.
+
+4. **Create HAL Module**: Implement the HAL module, which initializes the HAL service and registers it with the Android system.
+
+5. **Compile and Build**: Compile your HAL module along with the generated AIDL stubs and any other necessary files.
+
+6. **Test and Debug**: Test your HAL implementation on the target device and debug any issues that arise.
+
+Here's a more detailed breakdown of each step:
+
+### 1. Define the Interface in AIDL
+
+Create an AIDL file (e.g., `IMyHalInterface.aidl`) defining your interface:
+
+.. code-block:: 
+
+    package com.example;
+
+    interface IMyHalInterface {
+        int myFunction();
+    }
+
+### 2. Compile AIDL
+
+Compile the AIDL file to generate C++ headers and stubs:
+
+.. code-block:: bash
+
+    aidl -d <output_dir> IMyHalInterface.aidl
+
+### 3. Implement the Interface in C++
+
+Create a C++ class that implements the methods defined in the AIDL interface:
+
+.. code-block:: c++
+
+    // MyHalInterface.cpp
+    #include "IMyHalInterface.h"
+
+    namespace android {
+    namespace hardware {
+    namespace myhal {
+    namespace V1_0 {
+    namespace implementation {
+
+    class MyHalInterface : public IMyHalInterface {
+    public:
+        // Implement the methods of the interface
+        virtual int32_t myFunction() override {
+            // Your implementation here
+            return 0;
+        }
+    };
+
+    } // namespace implementation
+    } // namespace V1_0
+    } // namespace myhal
+    } // namespace hardware
+    } // namespace android
+
+### 4. Create HAL Module
+
+Implement the main function to initialize and register the HAL service:
+
+.. code-block:: c++
+
+    // main.cpp
+    #include <hidl/HidlTransportSupport.h>
+    #include "MyHalInterface.h"
+
+    using android::hardware::configureRpcThreadpool;
+    using android::hardware::joinRpcThreadpool;
+    using android::sp;
+    using android::status_t;
+
+    int main() {
+        // Initialize HAL service
+        android::sp<IMyHalInterface> halInterface = new MyHalInterface();
+
+        // Register HAL service
+        configureRpcThreadpool(1, true /*callerWillJoin*/);
+        status_t status = halInterface->registerAsService();
+        if (status != android::OK) {
+            // Handle error
+            return 1;
+        }
+
+        // Start the HAL service
+        joinRpcThreadpool();
+        return 1; // Should never reach here
+    }
+
+### 5. Compile and Build
+
+Compile your HAL module along with the generated AIDL stubs and any other necessary files using your preferred build system (e.g., CMake, Android.mk).
+
+### 6. Test and Debug
+
+Deploy your HAL module to the target device and test its functionality. Debug any issues that arise during testing.
+
+By following these steps, you can implement a HAL using AIDL in C++ for your Android system. Remember to follow best practices, handle errors appropriately, and thoroughly test your HAL implementation.
+
+
+------------------------------------
+
+**HAL using AIDL in C++**
+--------------------------------
+
+To create a HAL (Hardware Abstraction Layer) using AIDL (Android Interface Definition Language) in C++, you typically define your interface in an AIDL file, then implement the interface in C++. Here's a simple example:
+
+1. Define your interface in an AIDL file (for example, `IMyHalInterface.aidl`):
+
+.. code-block::
+
+    // IMyHalInterface.aidl
+    package com.example;
+
+    interface IMyHalInterface {
+        int myFunction();
+    }
+
+2. Compile the AIDL file:
+
+.. code-block:: bash
+
+    aidl IMyHalInterface.aidl
+
+This will generate a C++ header file (`IMyHalInterface.h`) and a proxy class (`BpMyHalInterface.cpp` and `BnMyHalInterface.cpp`).
+
+3. Implement the interface in C++:
+
+.. code-block:: c++
+
+    // MyHalInterface.cpp
+    #include "IMyHalInterface.h"
+
+    namespace android {
+    namespace hardware {
+    namespace myhal {
+    namespace V1_0 {
+    namespace implementation {
+
+    class MyHalInterface : public IMyHalInterface {
+        // Implement the methods of the interface
+        virtual int32_t myFunction() override {
+            // Your implementation here
+            return 0;
+        }
+    };
+
+    } // namespace implementation
+    } // namespace V1_0
+    } // namespace myhal
+    } // namespace hardware
+    } // namespace android
+
+4. Implement the HAL module:
+
+.. code-block:: c++
+
+    // MyHalInterface.cpp
+    #include <hidl/HidlTransportSupport.h>
+    #include "MyHalInterface.h"
+
+    using android::hardware::configureRpcThreadpool;
+    using android::hardware::joinRpcThreadpool;
+    using android::sp;
+    using android::status_t;
+
+    int main() {
+        // Initialize HAL service
+        android::sp<IMyHalInterface> halInterface = new MyHalInterface();
+
+        // Register HAL service
+        configureRpcThreadpool(1, true /*callerWillJoin*/);
+        status_t status = halInterface->registerAsService();
+        if (status != android::OK) {
+            // Handle error
+            return 1;
+        }
+
+        // Start the HAL service
+        joinRpcThreadpool();
+        return 1; // Should never reach here
+    }
+
+This is a basic example demonstrating how to create a HAL using AIDL in C++. Depending on your requirements and the complexity of your hardware interface, you may need to extend this example further. Additionally, error handling and other best practices should be implemented for a production-level HAL.
+
+
+-----------------------------------
+
+**ServiceManager in AIDL**
+--------------------------------
+
+The `ServiceManager` and AIDL (Android Interface Definition Language) are both fundamental components of the Android system, and they work together to facilitate inter-process communication (IPC) between different parts of the system. Here's the relationship between `ServiceManager` and AIDL:
+
+1. **ServiceManager**:
+   - The `ServiceManager` is a system-level service registry in Android. It maintains a list of named services that can be accessed by other processes.
+   - It provides a mechanism for processes to discover and communicate with system services and other components.
+
+2. **AIDL**:
+   - AIDL, or Android Interface Definition Language, is a language used to define interfaces for remote procedure calls between processes on Android.
+   - AIDL allows you to define interfaces that describe the methods that can be called remotely. These interfaces can then be implemented by different processes.
+
+Relationship:
+- When you define an AIDL interface, you are essentially defining a contract for a service that can be accessed remotely.
+- The `ServiceManager` plays a crucial role in this interaction by allowing clients to discover and bind to services using their names.
+- Clients use the `ServiceManager` to obtain a reference to the desired service by specifying its name.
+- Once the client has obtained a reference to the service, it can then use the AIDL-generated proxy to make method calls on the remote service as if it were a local object.
+
+In summary, AIDL defines the interface that the service exposes, while the `ServiceManager` facilitates the discovery and binding of services by clients, enabling them to communicate with remote services using the defined AIDL interfaces.
+
+
+Here's a simplified block diagram illustrating the relationship between AIDL (Android Interface Definition Language) and the Service Manager in Android:
+
+
+.. code-block:: 
+
+      +-----------------+            +---------------------+
+      |                 |            |                     |
+      | Client Process  |            |     Server Process  |
+      |                 |            |                     |
+      +--------+--------+            +----------+----------+
+               |                                |
+               | Binder IPC                     | Binder IPC
+               |                                |
+      +--------v--------+            +----------v----------+
+      |    Proxy        |            |     Stub            |
+      |    (Client)     |            |     (Server)        |
+      +--------+--------+            +----------+----------+
+               |                                |
+               | AIDL Interface Definition      | AIDL Interface Definition
+               |                                |
+      +--------v--------+            +----------v----------+
+      |   ServiceManager|            |     Service         |
+      |                 |            |     (Implementation)|
+      +-----------------+            +---------------------+
+
+
+- **Client Process**: This represents the process in which the client application is running. It wants to access services provided by the server process.
+
+- **Server Process**: This represents the process in which the service is implemented. It exposes functionality that can be accessed remotely by clients.
+
+- **Proxy (Client)**: AIDL generates proxy classes for client processes based on the AIDL interface definitions. The proxy acts as a local representative of the remote service, handling communication details such as marshalling data for IPC.
+
+- **Stub (Server)**: AIDL also generates stub classes for server processes. The stub receives method calls from clients via Binder IPC and forwards them to the actual service implementation.
+
+- **AIDL Interface Definition**: AIDL files define the interface that the client and server use to communicate. They specify the methods that can be called remotely, along with their parameters and return types.
+
+- **ServiceManager**: The ServiceManager is a system-level service registry that maintains a list of named services. Clients use the ServiceManager to obtain references to services by their names. The ServiceManager facilitates the binding between clients and services.
+
+- **Service (Implementation)**: This is the actual implementation of the service provided by the server process. It contains the logic to execute the methods defined in the AIDL interface.
+
+- **Binder IPC**: Binder is the underlying mechanism for Inter-Process Communication (IPC) in Android. It handles communication between client and server processes transparently, allowing them to interact as if they were local objects.
+
+
+-----------------------------------
+
+**Binders**
+--------------------------------
+
+1. **Binder**:
+   - Binder is the underlying Inter-Process Communication (IPC) mechanism used in the Android operating system.
+   - It facilitates communication between different processes, allowing them to exchange data and invoke methods on objects located in other processes.
+   - Binder uses a client-server model, where clients make requests to servers, and servers process those requests and send back responses.
+   - It provides features like memory mapping, threading, and security mechanisms to ensure efficient and secure communication between processes.
+   - Binder is implemented as a kernel driver (`/dev/binder`) and a set of user-space libraries (`libbinder` and `libbinder_ndk`) that provide APIs for working with Binder in Android applications.
+
+2. **HwBinder**:
+   - HwBinder, short for Hardware Binder, is a specialized variant of Binder tailored for communication between the Android framework and hardware components.
+   - It is designed to provide efficient and reliable communication between the Android framework and device-specific HALs (Hardware Abstraction Layers).
+   - HwBinder is used extensively in Android for communication with hardware components such as sensors, cameras, audio codecs, and more.
+   - It introduces optimizations specifically aimed at reducing overhead and improving performance for hardware communication, such as support for passthrough mode and optimized memory management.
+
+3. **VndBinder**:
+   - VndBinder, short for Vendor Binder, is an extension of Binder that allows vendors to extend and customize the Binder framework for their specific requirements.
+   - It provides a way for vendors to add custom features, protocols, and optimizations to Binder without modifying the core Android framework.
+   - VndBinder is often used by device manufacturers and chipset vendors to implement proprietary communication protocols or optimize performance for specific hardware configurations.
+   - It enables vendors to integrate their hardware components more seamlessly with the Android ecosystem while still adhering to the standard Binder interface.
+
+In summary, Binder is the foundational IPC mechanism in Android, HwBinder is a specialized version used for communication with hardware components, and VndBinder allows vendors to customize Binder for their specific needs. Together, these components form a powerful and flexible communication framework that enables efficient and secure interaction between different parts of the Android system.
+
+--------------------------------
+
+**VndBinder vs HwBinders**
+--------------------------------
+vndbinder and hwbinder are both inter-process communication (IPC) mechanisms used in Android for communication between processes at different security levels:
+
+**vndbinder:**
+
+* **Purpose:** Primarily used for communication between vendor processes (processes provided by device manufacturers) at the same security level.
+* **Security context:** Uses the `/dev/vndbinder` device node with the `vnd` security domain.
+* **Advantages:**
+    * Lightweight and efficient for vendor-to-vendor communication.
+    * More widely supported and documented than hwbinder.
+* **Disadvantages:**
+    * Not designed for system-to-vendor or vendor-to-system communication.
+    * Less stable and secure compared to hwbinder.
+
+**hwbinder:**
+
+* **Purpose:** Designed for secure and stable communication between any processes at different security levels, including:
+    * System processes and vendor processes.
+    * Vendor processes and vendor processes.
+    * System processes and hardware acceleration services (HALs).
+* **Security context:** Uses the `/dev/hwbinder` device node with the `hw` security domain.
+* **Advantages:**
+    * More secure and stable than vndbinder due to its stricter rules and sandboxing.
+    * Supports communication between processes at different security levels.
+    * Integrates well with HALs through HIDL (Hardware Interface Definition Language).
+* **Disadvantages:**
+    * More complex to implement and requires HAL design using HIDL.
+    * Newer than vndbinder and may have less widespread support.
+
+**Summary:**
+
+* **Choose vndbinder:** If you need efficient communication between vendor processes at the same security level and stability is not a major concern.
+* **Choose hwbinder:** If you need secure and stable communication between processes at different security levels, or if you are developing HALs using HIDL.
+
+Here are some additional points to consider:
+
+* Some Android versions may still be using vndbinder for specific purposes, but the trend is moving towards hwbinder for improved security and stability.
+* You can find more information about vndbinder and hwbinder in the Android Open Source Project (AOSP) documentation.
+
+I hope this explanation clarifies the differences between vndbinder and hwbinder and helps you choose the appropriate one for your needs!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
